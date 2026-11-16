@@ -20,6 +20,12 @@
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License MIT" />
 </p>
 
+<p align="center">
+  <a href="https://sisigitadi.github.io/trainingWBK/">
+    <img src="https://img.shields.io/badge/%F0%9F%8C%90%20Live%20Website-GitHub%20Pages-047857?style=for-the-badge" alt="Live Website" />
+  </a>
+</p>
+
 ---
 
 ## Tentang Proyek

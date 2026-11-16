@@ -21,3 +21,10 @@ Dokumen ini memuat catatan audit teknis dan pembaruan fitur pada aplikasi web **
 ### 4. Pacing Rundown dan Pengalaman Belajar
 - Menampilkan waktu dan tanggal sinkron dengan 13 sesi rundown kegiatan, dilengkapi notifikasi otomatis saat jeda tersisa 15 menit atau kurang.
 - Menghilangkan mekanisme skor dan sertifikat agar peserta berfokus pada eksplorasi seluruh skenario insiden.
+
+### 5. Optimalisasi Tampilan Layar Ponsel (Mobile Viewport) & Deployment
+- Menghapus awalan "Narasumber:" di header sehingga tampilan langsung ringkas: `Sigit Adi Irianto, S.Kom. - sigitadi.id`.
+- Menerapkan pelacakan tinggi floating header secara dinamis berbasis `ResizeObserver` (`paddingTop: ${topBarHeight + 16}px`), menghilangkan isu tumpang tindih (*overlap*) kartu disclaimer pada layar ponsel.
+- Pipeline CI/CD GitHub Actions aktif dan terintegrasi otomatis dengan GitHub Pages:
+  - Repositori: `https://github.com/sisigitadi/trainingWBK`
+  - URL Live: `https://sisigitadi.github.io/trainingWBK/`
