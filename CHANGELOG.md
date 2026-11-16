@@ -4,6 +4,14 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.2.1] - 2026-11-16
+
+### Diperbaiki
+- **Optimalisasi Header Mobile:** Menghilangkan kata awalan "Narasumber:" di header navigasi sehingga langsung menampilkan nama dan tautan: `Sigit Adi Irianto, S.Kom. - sigitadi.id`, menghemat ruang dan mencegah wrap berlebih di layar ponsel.
+- **Pemberian Jarak Bebas Dinamis (Anti-Overlap):** Mengimplementasikan perhitungan tinggi header mengambang dinamis berbasis `ResizeObserver` (`paddingTop: ${topBarHeight + 16}px`) sehingga kartu `Catatan Contoh Studi Kasus (Entitas Rekaan)` tidak lagi tertutup oleh header rundown pada semua ukuran layar mobile (375px, 390px, dsb).
+
+---
+
 ## [2.2.0] - 2026-11-16
 
 ### Ditambahkan

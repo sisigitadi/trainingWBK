@@ -102,6 +102,8 @@ export function Layout({
 
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const closeDrawerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const topBarRef = useRef<HTMLDivElement | null>(null);
+  const [topBarHeight, setTopBarHeight] = useState<number>(100);
   const wasDrawerOpenRef = useRef(false);
   const clickCountRef = useRef(0);
   const lastClickTimeRef = useRef(0);
@@ -449,10 +451,37 @@ export function Layout({
     dismissedWarningKey !== rundownStatus.warningKey &&
     rundownStatus.warningMessage !== null;
 
+  useEffect(() => {
+    const element = topBarRef.current;
+    if (!element) return;
+
+    const updateHeight = () => {
+      if (topBarRef.current) {
+        setTopBarHeight(topBarRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(() => {
+        updateHeight();
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
+    } else {
+      window.addEventListener('resize', updateHeight);
+      return () => window.removeEventListener('resize', updateHeight);
+    }
+  }, [showRundownWarning, storageError, instructorMode]);
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#091322] dark:text-slate-100">
       <div className="no-print">
-        <div className="fixed inset-x-0 top-0 z-30 border-b border-slate-200/70 bg-white/80 shadow-sm backdrop-blur-md dark:border-slate-800/70 dark:bg-[#0B1F3A]/85">
+        <div
+          ref={topBarRef}
+          className="fixed inset-x-0 top-0 z-30 border-b border-slate-200/70 bg-white/80 shadow-sm backdrop-blur-md dark:border-slate-800/70 dark:bg-[#0B1F3A]/85"
+        >
           <header>
             <div className="mx-auto flex max-w-[1440px] flex-col gap-1.5 px-4 py-2 sm:px-6">
               <div className="flex flex-wrap items-center justify-between gap-2.5">
@@ -487,9 +516,9 @@ export function Layout({
                           type="button"
                           onClick={handleNarasumberClick}
                           className="inline-flex select-none items-center rounded px-1 py-0.5 text-left transition-colors hover:bg-slate-100 dark:hover:bg-white/10"
-                          title="Narasumber pelatihan (klik 9x untuk membuka fitur narasumber)"
+                          title="Klik 9x untuk membuka fitur narasumber"
                         >
-                          <span>Narasumber: Sigit Adi Irianto, S.Kom. -&nbsp;</span>
+                          <span>Sigit Adi Irianto, S.Kom. -&nbsp;</span>
                         </button>
                         <a
                           href="https://sigitadi.id/"
@@ -742,7 +771,8 @@ export function Layout({
         )}
 
         <div
-          className={`mx-auto w-full px-4 pt-24 pb-16 sm:px-6 sm:pt-28 sm:pb-20 ${
+          style={{ paddingTop: `${topBarHeight + 16}px` }}
+          className={`mx-auto w-full px-4 pb-16 sm:px-6 sm:pb-20 ${
             projectorMode ? 'max-w-6xl pb-28' : 'max-w-[1440px]'
           }`}
         >
@@ -754,7 +784,13 @@ export function Layout({
             }
           >
             {!projectorMode && (
-              <aside className="hidden lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-8.5rem)] lg:overflow-y-auto lg:pr-1">
+              <aside
+                style={{
+                  top: `${topBarHeight + 16}px`,
+                  maxHeight: `calc(100vh - ${topBarHeight + 48}px)`,
+                }}
+                className="hidden lg:sticky lg:block lg:overflow-y-auto lg:pr-1"
+              >
                 {renderSidebarContent()}
               </aside>
             )}
