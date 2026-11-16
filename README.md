@@ -1,0 +1,117 @@
+# Training IT Security Awareness and Cybersecurity Protection 2026
+
+<p align="center">
+  <img src="public/logo.jpg" alt="Logo Training IT Security Awareness" width="120" style="border-radius: 16px;" />
+</p>
+
+<p align="center">
+  <strong>Portal Pembelajaran & Simulasi Eksploratif Keamanan Siber Berbasis Klien (Zero-Backend)</strong>
+</p>
+
+<p align="center">
+  Narasumber: <strong>Sigit Adi Irianto, S.Kom.</strong> (<a href="https://sigitadi.id/">sigitadi.id</a>)
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18.3-blue.svg" alt="React 18" />
+  <img src="https://img.shields.io/badge/TypeScript-5.5-blue.svg" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-5.4-purple.svg" alt="Vite" />
+  <img src="https://img.shields.io/badge/TailwindCSS-3.4-teal.svg" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License MIT" />
+</p>
+
+---
+
+## Tentang Proyek
+
+Aplikasi web interaktif ini dirancang untuk mendukung pelatihan peningkatan kesadaran keamanan informasi bagi staf dan profesional IT di sektor perbankan dan layanan teknologi finansial. Aplikasi bersifat **pembelajaran eksploratif tanpa ujian skor/sertifikat**, memungkinkan peserta menguji langsung berbagai skenario insiden secara visual dan mandiri.
+
+> **Catatan Contoh Studi Kasus (Entitas Rekaan):**
+> Nama **PT. Sigit Adi Aman Siber (SaaS)** dan platform Core Banking System **SaaSCore** yang digunakan di dalam modul dan skenario simulasi merupakan entitas rekaan (tidak nyata) semata-mata untuk memudahkan pemahaman serta memberikan pengalaman belajar (*user experience*) yang selaras dengan alur kerja nyata.
+
+---
+
+## Fitur Utama
+
+1. **10 Modul Materi & Analogi Sehari-hari:**
+   - Pembahasan konsep keamanan siber mulai dari CIA Triad, Social Engineering, Autentikasi MFA, Enkripsi, hingga Respons Insiden.
+2. **10 Lab Simulasi Interaktif:**
+   - Simulasi alur audit CIA Triad, visualisasi rantai serangan (*attack path*), inspeksi email phishing, penguji kekuatan *passphrase*, klasifikasi data sensitif, audit keamanan endpoint, deteksi *Evil Twin* & URL palsu, triase insiden, audit Shadow IT, dan review kasus komprehensif.
+3. **Balloon Tooltips Interaktif:**
+   - Menggantikan kamus istilah statis; mengarahkan kursor (*hover*) pada kata teknis bergaris titik-titik menampilkan balon penjelasan praktis serta konteks operasional perbankan (50+ istilah teknis).
+4. **Header & Footer Mengambang (Floating & Translucent):**
+   - Menggunakan efek kaca transparan (*backdrop-blur-md*) yang tetap menempel di atas dan bawah layar saat digulir, dengan tata letak ringkas agar materi terbaca maksimal.
+5. **Jam Real-time & Peringatan Rundown:**
+   - Sinkronisasi waktu dengan 13 sesi rundown kegiatan, menampilkan hitung mundur dan banner otomatis ketika sesi tersisa 15 menit atau kurang.
+6. **Mode Narasumber (Pintasan 9x Klik):**
+   - Mengklik nama narasumber 9 kali berturut-turut membuka kendali instruktur: Cetak Handout A4, Mode Proyektor (+25% font & navigasi keyboard), Panduan Narasumber, dan tombol solusi lab.
+7. **Kartu Saku 7 Kebiasaan Emas & Handout A4:**
+   - Tata letak cetak ramah kertas (*print-friendly*) untuk menyimpan materi presentasi atau kartu saku sebagai panduan harian.
+
+---
+
+## Struktur Folder
+
+```text
+├── public/                 # Aset publik statis (logo, favicon)
+├── src/
+│   ├── components/
+│   │   ├── labs/           # 10 Modul Simulasi Lab
+│   │   ├── ui/             # Komponen UI (TermTooltip, RichTermText, Callout)
+│   │   ├── ClosingSummaryView.tsx
+│   │   ├── Layout.tsx      # Floating header & footer
+│   │   ├── MaterialView.tsx
+│   │   ├── ModulePage.tsx
+│   │   └── PrintableHandout.tsx
+│   ├── data/               # Data modul, istilah teknis, dan kebiasaan emas
+│   ├── lib/                # Router hash dan perhitungan rundown
+│   └── state/              # Manajemen progres lokal (LocalStorage)
+├── CHANGELOG.md            # Riwayat versi dan perubahan fitur
+├── REVISI.md               # Catatan kepatuhan audit dan matriks revisi
+└── vite.config.ts
+```
+
+---
+
+## Menjalankan Proyek Secara Lokal
+
+### Prasyarat
+- [Node.js](https://nodejs.org/) (versi 18 ke atas disarankan)
+- [pnpm](https://pnpm.io/) atau `npm`
+
+### Langkah Pemasangan
+
+```bash
+# Clone repositori
+git clone https://github.com/sisigitadi/trainingWBK.git
+cd trainingWBK
+
+# Pasang dependensi
+npm install
+# atau
+pnpm install
+
+# Jalankan server pengembangan
+npm run dev
+
+# Akses pada browser
+http://localhost:5173
+```
+
+### Membangun Versi Produksi
+
+```bash
+# Build untuk rilis produksi
+npm run build
+
+# Meninjau hasil build lokal
+npm run preview
+```
+
+---
+
+## Lisensi & Hak Cipta
+
+Dilisensikan di bawah [MIT License](LICENSE).
+
+Dikembangkan dengan dedikasi oleh **Sigit Adi Irianto, S.Kom.** - [sigitadi.id](https://sigitadi.id/) © 2026.

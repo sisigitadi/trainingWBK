@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --saas-navy: #0B1F3A;
+  --saas-surface: #FFFFFF;
+  --saas-surface-muted: #F8FAFC;
+  --saas-text: #0F172A;
+  --saas-text-muted: #475569;
+  --saas-border: #CBD5E1;
+  --saas-accent: #047857;
+  --saas-accent-hover: #065F46;
+}
+
+html.dark {
+  --saas-navy: #0B1F3A;
+  --saas-surface: #0F172A;
+  --saas-surface-muted: #091322;
+  --saas-text: #F1F5F9;
+  --saas-text-muted: #94A3B8;
+  --saas-border: #1E293B;
+  --saas-accent: #10B981;
+  --saas-accent-hover: #059669;
+}
+
+html {
+  font-size: 16px;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+html.projector {
+  font-size: 125%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--saas-surface-muted);
+  color: var(--saas-text);
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Accessible high-visibility emerald focus rings across interactive controls */
+*:focus-visible {
+  outline: 2px solid var(--saas-accent);
+  outline-offset: 2px;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  scroll-margin-top: 5rem;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    font-size: 11pt !important;
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body[data-print-target='card'] [data-print-sheet]:not([data-print-sheet='card']),
+  body[data-print-target='handout'] [data-print-sheet]:not([data-print-sheet='handout']) {
+    display: none !important;
+  }
+
+  .print-avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+}
