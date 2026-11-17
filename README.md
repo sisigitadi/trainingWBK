@@ -21,8 +21,8 @@
 </p>
 
 <p align="center">
-  <a href="https://sisigitadi.github.io/trainingWBK/">
-    <img src="https://img.shields.io/badge/%F0%9F%8C%90%20Live%20Website-GitHub%20Pages-047857?style=for-the-badge" alt="Live Website" />
+  <a href="https://trainingwbk.sigitadi.id/">
+    <img src="https://img.shields.io/badge/%F0%9F%8C%90%20Live%20Website-trainingwbk.sigitadi.id-047857?style=for-the-badge" alt="Live Website" />
   </a>
 </p>
 

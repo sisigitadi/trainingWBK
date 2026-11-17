@@ -4,6 +4,23 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.2.2] - 2026-11-17
+
+### Diperbaiki & Ditingkatkan
+- **Audit & Revisi Lembar Cetak Handout A4 (`PrintableHandout.tsx`):**
+  - Menghapus teks kata tahun pada header kolom metadata "Referensi & Tahun" menjadi "Referensi".
+  - Mengubah angka tahun menjadi teks tautan aktif `trainingwbk.sigitadi.id` dengan URL `https://trainingwbk.sigitadi.id/` yang dapat diklik langsung.
+  - Memberikan tautan aktif `https://sigitadi.id/` pada teks `sigitadi.id` di kolom identitas Narasumber.
+  - Menambahkan nomor halaman di footer setiap lembar halaman (`Halaman 1 dari 12` hingga `Halaman 12 dari 12`) yang dilengkapi tautan aktif `sigitadi.id` (`https://sigitadi.id/`).
+- **Styling Print A4 (`index.css`):**
+  - Mengatur ukuran font cetak menjadi `10pt` dan margin cetak optimal `10mm 12mm` agar tiap modul materi dan penutup tertata presisi pada 1 lembar A4 per modul.
+- **Konfigurasi Custom Domain:**
+  - Menambahkan berkas `public/CNAME` berisi `trainingwbk.sigitadi.id` untuk deployment terarah ke subdomain kustom.
+- **Sinkronisasi Dokumentasi (`HANDOUT_PRESENTASI.md`, `README.md`, `REVISI.md`):**
+  - Memperbarui tautan referensi dan lencana situs live menuju `https://trainingwbk.sigitadi.id/`.
+
+---
+
 ## [2.2.1] - 2026-11-16
 
 ### Diperbaiki

@@ -27,4 +27,11 @@ Dokumen ini memuat catatan audit teknis dan pembaruan fitur pada aplikasi web **
 - Menerapkan pelacakan tinggi floating header secara dinamis berbasis `ResizeObserver` (`paddingTop: ${topBarHeight + 16}px`), menghilangkan isu tumpang tindih (*overlap*) kartu disclaimer pada layar ponsel.
 - Pipeline CI/CD GitHub Actions aktif dan terintegrasi otomatis dengan GitHub Pages:
   - Repositori: `https://github.com/sisigitadi/trainingWBK`
-  - URL Live: `https://sisigitadi.github.io/trainingWBK/`
+  - URL Live: `https://trainingwbk.sigitadi.id/` (Fallback: `https://sisigitadi.github.io/trainingWBK/`)
+
+### 6. Audit & Revisi Cetak Handout Presentasi (A4) & Custom Domain
+- **Pembersihan Teks Tahun pada Header Handout:** Menghapus teks kata tahun pada label metadata "Referensi & Tahun" sehingga menjadi "Referensi" yang bersih dan fokus.
+- **Tautan Aktif Referensi Portal Training:** Mengubah angka tahun menjadi teks tautan aktif `trainingwbk.sigitadi.id` dengan target URL `https://trainingwbk.sigitadi.id/` yang dapat diklik langsung baik di web maupun saat diekspor ke PDF.
+- **Tautan Aktif Narasumber:** Mengintegrasikan tautan aktif `https://sigitadi.id/` pada teks `sigitadi.id` di kolom identitas narasumber.
+- **Footer Bernomor Halaman & Tautan di Setiap Halaman:** Memberikan footer standar di bagian bawah setiap lembar halaman (Halaman 1 Cover, Halaman 2–11 Modul 01–10, dan Halaman 12 Penutup) dengan format `Halaman X dari 12` serta tautan aktif `sigitadi.id` (`https://sigitadi.id/`).
+- **Konfigurasi Custom Domain:** Menambahkan file `public/CNAME` untuk deployment otomatis ke `trainingwbk.sigitadi.id` melalui GitHub Actions.

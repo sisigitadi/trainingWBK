@@ -59,12 +59,12 @@ textarea {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 12mm;
+    margin: 10mm 12mm 10mm 12mm;
   }
 
   html,
   body {
-    font-size: 11pt !important;
+    font-size: 10pt !important;
     background: #FFFFFF !important;
     color: #0F172A !important;
     overflow: visible !important;
