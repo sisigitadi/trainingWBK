@@ -116,6 +116,17 @@ npm run preview
 
 ---
 
+## Panduan Deployment Subdomain (trainingwbk.sigitadi.id)
+
+Untuk panduan lengkap konfigurasi DNS dan opsi hosting (GitHub Pages otomatis via CNAME atau upload cPanel DewaBiz), silakan rujuk berkas [PANDUAN_DEPLOYMENT.md](PANDUAN_DEPLOYMENT.md).
+
+1. **Metode Otomatis (GitHub Pages via CNAME):**
+   - Atur DNS record `trainingwbk` tipe `CNAME` mengarah ke `sisigitadi.github.io`.
+2. **Metode cPanel DewaBiz Hosting:**
+   - Gunakan arsip `dist-deploy.zip` dan ekstrak langsung di File Manager (`public_html/trainingwbk`).
+
+---
+
 ## Lisensi & Hak Cipta
 
 Dilisensikan di bawah [MIT License](LICENSE).
