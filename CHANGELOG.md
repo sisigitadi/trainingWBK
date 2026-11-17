@@ -4,6 +4,20 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.2.3] - 2026-11-17
+
+### Diperbaiki (Fix Cetak PDF Presisi 12 Halaman)
+- **Penyelesaian Isu Overflow Halaman (12 Halaman Presisi):**
+  - Mengatasi masalah pecahnya lembar modul yang sebelumnya menyebabkan hasil cetak membengkak menjadi 21 halaman dengan nomor halaman hilang pada halaman genap.
+  - Menata ulang layout vertikal lembar handout (`h-[272mm]` dengan `flex flex-col justify-between`), menjadikan Tujuan Pembelajaran dalam grid 2 kolom ringkas, dan mengoptimalkan spasi tabel Do's/Don'ts agar tiap modul menempati tepat 1 lembar A4 penuh tanpa overflow.
+- **Konsistensi Footer & Nomor Halaman di Seluruh Lembar:**
+  - Memastikan footer tersemat presisi di bagian bawah tiap halaman (bukan melayang di tengah konten).
+  - Seluruh 12 halaman kini memiliki nomor halaman runtut (`Halaman 1 dari 12` s.d. `Halaman 12 dari 12`) yang sinkron 100% dengan total lembar cetak fisik.
+- **Pembaruan Berkas PDF Master:**
+  - Memperbarui `Training IT Security Awareness and Cybersecurity Protection 2026.pdf` dengan hasil cetak 12 halaman presisi dan seluruh tautan aktif (`trainingwbk.sigitadi.id` & `sigitadi.id`).
+
+---
+
 ## [2.2.2] - 2026-11-17
 
 ### Diperbaiki & Ditingkatkan

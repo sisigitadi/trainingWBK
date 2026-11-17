@@ -11,31 +11,31 @@ export function PrintableHandout() {
       className="hidden print:block bg-white text-slate-900"
     >
       {/* HALAMAN 01: COVER & RUNDOWN */}
-      <section className="border-2 border-[#0B1F3A] p-6 flex min-h-[260mm] flex-col justify-between">
+      <section className="border-2 border-[#0B1F3A] p-5 flex h-[272mm] flex-col justify-between box-border">
         <div>
-          <div className="flex items-start justify-between gap-4 border-b-2 border-[#0B1F3A] pb-4">
+          <div className="flex items-start justify-between gap-4 border-b-2 border-[#0B1F3A] pb-3">
             <div>
               <p className="font-mono text-xs font-bold uppercase tracking-widest text-[#047857]">
                 Handout Materi Presentasi (A4)
               </p>
-              <h1 className="mt-1 text-2xl font-bold text-[#0B1F3A]">
+              <h1 className="mt-1 text-xl font-bold text-[#0B1F3A]">
                 Training IT Security Awareness and Cybersecurity Protection 2026
               </h1>
-              <p className="mt-1 text-sm font-semibold text-slate-700">
+              <p className="mt-0.5 text-xs font-semibold text-slate-700">
                 Contoh Skenario Operasional: PT. Sigit Adi Aman Siber (SaaS) &amp; Platform SaaSCore
               </p>
             </div>
             <img
               src="./logo.jpg"
               alt="Logo Training"
-              className="h-14 w-14 shrink-0 rounded border border-slate-300 object-cover"
+              className="h-12 w-12 shrink-0 rounded border border-slate-300 object-cover"
             />
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-4 border-b border-slate-300 pb-4 text-xs">
+          <div className="mt-3 grid grid-cols-2 gap-4 border-b border-slate-300 pb-3 text-xs">
             <div>
-              <p className="font-mono uppercase tracking-wide text-slate-500">Narasumber</p>
-              <p className="mt-0.5 text-sm font-bold text-[#0B1F3A]">
+              <p className="font-mono text-[10px] uppercase tracking-wide text-slate-500">Narasumber</p>
+              <p className="mt-0.5 text-xs font-bold text-[#0B1F3A]">
                 Sigit Adi Irianto, S.Kom. -&nbsp;
                 <a
                   href="https://sigitadi.id/"
@@ -48,8 +48,8 @@ export function PrintableHandout() {
               </p>
             </div>
             <div>
-              <p className="font-mono uppercase tracking-wide text-slate-500">Portal Pelatihan</p>
-              <p className="mt-0.5 text-sm font-bold text-[#0B1F3A]">
+              <p className="font-mono text-[10px] uppercase tracking-wide text-slate-500">Portal Pelatihan</p>
+              <p className="mt-0.5 text-xs font-bold text-[#0B1F3A]">
                 <a
                   href="https://trainingwbk.sigitadi.id/"
                   target="_blank"
@@ -62,15 +62,15 @@ export function PrintableHandout() {
             </div>
           </div>
 
-          <div className="mt-5 space-y-4">
+          <div className="mt-4 space-y-3">
             <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-[#0B1F3A]">
               Ringkasan Rundown Pelatihan (1 Hari Penuh)
             </h2>
 
-            <div className="space-y-3 text-xs">
+            <div className="space-y-2.5 text-xs">
               <div>
                 <h3 className="font-bold text-[#0B1F3A]">Sesi Pagi (08.30 - 12.00 WIB)</h3>
-                <ul className="mt-1 space-y-1 pl-4">
+                <ul className="mt-1 space-y-0.5 pl-4 text-[11px]">
                   {pagiModules.map((mod) => (
                     <li key={mod.id} className="list-disc">
                       <span className="font-mono font-semibold">{mod.timeSlot}</span> - {mod.title}
@@ -81,7 +81,7 @@ export function PrintableHandout() {
 
               <div>
                 <h3 className="font-bold text-[#0B1F3A]">Sesi Siang (13.00 - 16.00 WIB)</h3>
-                <ul className="mt-1 space-y-1 pl-4">
+                <ul className="mt-1 space-y-0.5 pl-4 text-[11px]">
                   {siangModules.map((mod) => (
                     <li key={mod.id} className="list-disc">
                       <span className="font-mono font-semibold">{mod.timeSlot}</span> - {mod.title}
@@ -92,14 +92,14 @@ export function PrintableHandout() {
 
               <div>
                 <h3 className="font-bold text-[#0B1F3A]">Sesi Penutup (16.00 WIB)</h3>
-                <p className="mt-1 pl-4">
+                <p className="mt-0.5 pl-4 text-[11px] text-slate-700">
                   Rangkuman Eksplorasi 10 Modul, Diskusi Tindak Lanjut, dan Kartu Saku 7 Kebiasaan Emas SaaS.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 rounded border border-slate-300 bg-slate-50 p-3 text-[11px] leading-relaxed text-slate-700">
+          <div className="mt-4 rounded border border-slate-300 bg-slate-50 p-2.5 text-[10.5px] leading-relaxed text-slate-700">
             <p className="font-bold text-[#0B1F3A]">
               Catatan Contoh Studi Kasus (Entitas Rekaan):
             </p>
@@ -109,7 +109,7 @@ export function PrintableHandout() {
           </div>
         </div>
 
-        <footer className="mt-6 border-t border-slate-300 pt-3 flex items-center justify-between font-mono text-[10px] text-slate-600">
+        <footer className="mt-4 border-t border-slate-300 pt-2 flex items-center justify-between font-mono text-[9.5px] text-slate-600">
           <div>
             Training IT Security Awareness and Cybersecurity Protection -&nbsp;
             <a
@@ -136,49 +136,49 @@ export function PrintableHandout() {
         return (
           <article
             key={mod.id}
-            className="print-page-break flex min-h-[260mm] flex-col justify-between space-y-3 text-xs"
+            className="print-page-break flex h-[272mm] flex-col justify-between text-xs box-border"
           >
-            <div className="space-y-3">
-              <header className="border-b-2 border-[#0B1F3A] pb-2">
-                <div className="flex items-center justify-between gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-[#047857]">
+            <div className="space-y-2">
+              <header className="border-b-2 border-[#0B1F3A] pb-1.5">
+                <div className="flex items-center justify-between gap-2 font-mono text-[9.5px] font-bold uppercase tracking-wider text-[#047857]">
                   <span>
                     {moduleCode} / {sessionLabel} ({mod.timeSlot})
                   </span>
                   <span>Durasi Panduan: {mod.instructorGuide.durationMinutes} Menit</span>
                 </div>
-                <h2 className="mt-1 text-lg font-bold text-[#0B1F3A]">{mod.title}</h2>
-                <p className="mt-0.5 text-xs text-slate-700">{mod.tagline}</p>
+                <h2 className="mt-0.5 text-base font-bold text-[#0B1F3A]">{mod.title}</h2>
+                <p className="text-[10.5px] text-slate-700 leading-snug">{mod.tagline}</p>
               </header>
 
-              <section className="print-avoid-break">
-                <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0B1F3A]">
+              <section>
+                <h3 className="font-mono text-[9.5px] font-bold uppercase tracking-wider text-[#0B1F3A]">
                   Tujuan Pembelajaran
                 </h3>
-                <ul className="mt-1 space-y-0.5 pl-4">
+                <ul className="mt-0.5 grid grid-cols-2 gap-x-4 gap-y-0.5 pl-4 text-[10px]">
                   {mod.objectives.map((obj, idx) => (
-                    <li key={idx} className="list-disc leading-snug">
+                    <li key={idx} className="list-disc leading-tight">
                       {obj}
                     </li>
                   ))}
                 </ul>
               </section>
 
-              <section className="space-y-2">
-                <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0B1F3A]">
+              <section className="space-y-1.5">
+                <h3 className="font-mono text-[9.5px] font-bold uppercase tracking-wider text-[#0B1F3A]">
                   Ringkasan Materi Inti
                 </h3>
                 {mod.sections.map((sec, sIdx) => (
-                  <div key={sIdx} className="print-avoid-break border-l-2 border-slate-300 pl-2.5">
-                    <h4 className="font-bold text-[#0B1F3A]">{sec.heading}</h4>
+                  <div key={sIdx} className="border-l-2 border-slate-300 pl-2">
+                    <h4 className="font-bold text-[10.5px] text-[#0B1F3A]">{sec.heading}</h4>
                     {sec.paragraphs.map((p, pIdx) => (
-                      <p key={pIdx} className="mt-0.5 leading-snug text-slate-800">
+                      <p key={pIdx} className="mt-0.5 text-[10px] leading-tight text-slate-800">
                         {p}
                       </p>
                     ))}
                     {sec.bullets && sec.bullets.length > 0 && (
-                      <ul className="mt-1 space-y-0.5 pl-4">
+                      <ul className="mt-0.5 space-y-0.5 pl-4 text-[9.5px]">
                         {sec.bullets.map((b, bIdx) => (
-                          <li key={bIdx} className="list-disc leading-snug text-slate-800">
+                          <li key={bIdx} className="list-disc leading-tight text-slate-800">
                             {b}
                           </li>
                         ))}
@@ -188,22 +188,22 @@ export function PrintableHandout() {
                 ))}
               </section>
 
-              <section className="print-avoid-break grid grid-cols-2 gap-2">
-                <div className="border border-[#047857]/50 bg-slate-50 p-2">
-                  <p className="font-mono text-[10px] font-bold uppercase text-[#047857]">
+              <section className="grid grid-cols-2 gap-2">
+                <div className="border border-[#047857]/50 bg-slate-50 p-1.5">
+                  <p className="font-mono text-[9px] font-bold uppercase text-[#047857]">
                     Analogi: {mod.analogy.title}
                   </p>
-                  <p className="mt-0.5 leading-snug text-slate-800">{mod.analogy.body}</p>
+                  <p className="mt-0.5 text-[9.5px] leading-tight text-slate-800">{mod.analogy.body}</p>
                 </div>
-                <div className="border border-slate-300 p-2">
-                  <p className="font-mono text-[10px] font-bold uppercase text-[#0B1F3A]">
+                <div className="border border-slate-300 p-1.5">
+                  <p className="font-mono text-[9px] font-bold uppercase text-[#0B1F3A]">
                     Studi Kasus Operasional SaaSCore
                   </p>
                   {mod.sasCases.slice(0, 1).map((c, cIdx) => (
                     <div key={cIdx} className="mt-0.5 space-y-0.5">
-                      <p className="font-bold text-slate-900">{c.title}</p>
-                      <p className="leading-snug text-slate-800">{c.whatHappened}</p>
-                      <p className="text-[10px] font-semibold text-[#047857]">
+                      <p className="font-bold text-[9.5px] text-slate-900">{c.title}</p>
+                      <p className="text-[9.5px] leading-tight text-slate-800">{c.whatHappened}</p>
+                      <p className="text-[9px] font-semibold text-[#047857]">
                         Pelajaran: {c.lesson}
                       </p>
                     </div>
@@ -211,20 +211,20 @@ export function PrintableHandout() {
                 </div>
               </section>
 
-              <section className="print-avoid-break">
-                <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0B1F3A]">
+              <section>
+                <h3 className="font-mono text-[9.5px] font-bold uppercase tracking-wider text-[#0B1F3A]">
                   Lakukan (Do&apos;s) vs Hindari (Don&apos;ts)
                 </h3>
-                <table className="mt-1 w-full border-collapse border border-slate-300 text-left text-[11px]">
+                <table className="mt-0.5 w-full border-collapse border border-slate-300 text-left text-[9.5px]">
                   <thead>
                     <tr className="bg-slate-100">
-                      <th className="border border-slate-300 px-2 py-1 font-bold text-[#047857]">
+                      <th className="border border-slate-300 px-1.5 py-0.5 font-bold text-[#047857]">
                         Lakukan (Do&apos;s)
                       </th>
-                      <th className="border border-slate-300 px-2 py-1 font-bold text-rose-700">
+                      <th className="border border-slate-300 px-1.5 py-0.5 font-bold text-rose-700">
                         Hindari (Don&apos;ts)
                       </th>
-                      <th className="border border-slate-300 px-2 py-1 font-bold text-[#0B1F3A]">
+                      <th className="border border-slate-300 px-1.5 py-0.5 font-bold text-[#0B1F3A]">
                         Alasan
                       </th>
                     </tr>
@@ -232,9 +232,9 @@ export function PrintableHandout() {
                   <tbody>
                     {mod.doDont.map((row, rIdx) => (
                       <tr key={rIdx} className="align-top">
-                        <td className="border border-slate-300 px-2 py-1">{row.doIt}</td>
-                        <td className="border border-slate-300 px-2 py-1">{row.dontIt}</td>
-                        <td className="border border-slate-300 px-2 py-1">{row.why}</td>
+                        <td className="border border-slate-300 px-1.5 py-0.5 leading-tight">{row.doIt}</td>
+                        <td className="border border-slate-300 px-1.5 py-0.5 leading-tight">{row.dontIt}</td>
+                        <td className="border border-slate-300 px-1.5 py-0.5 leading-tight">{row.why}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -242,7 +242,7 @@ export function PrintableHandout() {
               </section>
             </div>
 
-            <footer className="mt-4 border-t border-slate-300 pt-2 flex items-center justify-between font-mono text-[10px] text-slate-600">
+            <footer className="mt-2 border-t border-slate-300 pt-1.5 flex items-center justify-between font-mono text-[9.5px] text-slate-600">
               <div>
                 Training IT Security Awareness and Cybersecurity Protection -&nbsp;
                 <a
@@ -263,25 +263,25 @@ export function PrintableHandout() {
       })}
 
       {/* HALAMAN 12: PENUTUP & 7 KEBIASAAN EMAS */}
-      <section className="print-page-break flex min-h-[260mm] flex-col justify-between space-y-4">
-        <div className="space-y-4">
+      <section className="print-page-break flex h-[272mm] flex-col justify-between text-xs box-border">
+        <div>
           <header className="border-b-2 border-[#0B1F3A] pb-2">
             <p className="font-mono text-xs font-bold uppercase tracking-wider text-[#047857]">
               Penutup - Pegangan Harian Tim Operasional
             </p>
-            <h2 className="mt-1 text-xl font-bold text-[#0B1F3A]">
+            <h2 className="mt-1 text-lg font-bold text-[#0B1F3A]">
               7 Kebiasaan Emas Keamanan Siber PT. Sigit Adi Aman Siber (SaaS)
             </h2>
           </header>
 
-          <ol className="space-y-2.5 text-xs">
+          <ol className="mt-3 space-y-2 text-xs">
             {GOLDEN_RULES.map((rule) => (
-              <li key={rule.id} className="print-avoid-break border border-slate-300 p-3">
+              <li key={rule.id} className="border border-slate-300 p-2 text-[10.5px]">
                 <p className="font-bold text-[#0B1F3A]">
                   {rule.id}. {rule.title}
                 </p>
-                <p className="mt-1 leading-snug text-slate-800">{rule.rule}</p>
-                <p className="mt-1 text-[11px] text-slate-600">
+                <p className="mt-0.5 leading-tight text-slate-800">{rule.rule}</p>
+                <p className="mt-0.5 text-[10px] text-slate-600">
                   <span className="font-semibold">Alasan:</span> {rule.reason}
                 </p>
               </li>
@@ -289,7 +289,7 @@ export function PrintableHandout() {
           </ol>
         </div>
 
-        <footer className="border-t border-slate-300 pt-3 flex items-center justify-between font-mono text-[10px] text-slate-600">
+        <footer className="mt-3 border-t border-slate-300 pt-2 flex items-center justify-between font-mono text-[9.5px] text-slate-600">
           <div>
             Training IT Security Awareness and Cybersecurity Protection -&nbsp;
             <a
