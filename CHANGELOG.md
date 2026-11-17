@@ -8,10 +8,10 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ### Diperbaiki & Ditingkatkan
 - **Audit & Revisi Lembar Cetak Handout A4 (`PrintableHandout.tsx`):**
-  - Menghapus teks kata tahun pada header kolom metadata "Referensi & Tahun" menjadi "Referensi".
+  - Mengganti label kolom metadata di lembar pertama menjadi **"Portal Pelatihan"** (menggantikan "Referensi") agar selaras dan merepresentasikan portal pembelajaran interaktif.
   - Mengubah angka tahun menjadi teks tautan aktif `trainingwbk.sigitadi.id` dengan URL `https://trainingwbk.sigitadi.id/` yang dapat diklik langsung.
   - Memberikan tautan aktif `https://sigitadi.id/` pada teks `sigitadi.id` di kolom identitas Narasumber.
-  - Menambahkan nomor halaman di footer setiap lembar halaman (`Halaman 1 dari 12` hingga `Halaman 12 dari 12`) yang dilengkapi tautan aktif `sigitadi.id` (`https://sigitadi.id/`).
+  - Melengkapi teks nama kegiatan pada footer setiap lembar halaman menjadi **"Training IT Security Awareness and Cybersecurity Protection - sigitadi.id"** lengkap dengan nomor halaman (`Halaman 1 dari 12` hingga `Halaman 12 dari 12`).
 - **Styling Print A4 (`index.css`):**
   - Mengatur ukuran font cetak menjadi `10pt` dan margin cetak optimal `10mm 12mm` agar tiap modul materi dan penutup tertata presisi pada 1 lembar A4 per modul.
 - **Konfigurasi Custom Domain:**

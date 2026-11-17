@@ -30,8 +30,8 @@ Dokumen ini memuat catatan audit teknis dan pembaruan fitur pada aplikasi web **
   - URL Live: `https://trainingwbk.sigitadi.id/` (Fallback: `https://sisigitadi.github.io/trainingWBK/`)
 
 ### 6. Audit & Revisi Cetak Handout Presentasi (A4) & Custom Domain
-- **Pembersihan Teks Tahun pada Header Handout:** Menghapus teks kata tahun pada label metadata "Referensi & Tahun" sehingga menjadi "Referensi" yang bersih dan fokus.
-- **Tautan Aktif Referensi Portal Training:** Mengubah angka tahun menjadi teks tautan aktif `trainingwbk.sigitadi.id` dengan target URL `https://trainingwbk.sigitadi.id/` yang dapat diklik langsung baik di web maupun saat diekspor ke PDF.
+- **Label Metadata Portal Pelatihan:** Menyesuaikan label kolom metadata menjadi **"Portal Pelatihan"** sehingga mempertegas fungsi situs web sebagai platform pembelajaran interaktif.
+- **Tautan Aktif Portal Pelatihan:** Mengubah angka tahun menjadi teks tautan aktif `trainingwbk.sigitadi.id` dengan target URL `https://trainingwbk.sigitadi.id/` yang dapat diklik langsung baik di web maupun saat diekspor ke PDF.
 - **Tautan Aktif Narasumber:** Mengintegrasikan tautan aktif `https://sigitadi.id/` pada teks `sigitadi.id` di kolom identitas narasumber.
-- **Footer Bernomor Halaman & Tautan di Setiap Halaman:** Memberikan footer standar di bagian bawah setiap lembar halaman (Halaman 1 Cover, Halaman 2–11 Modul 01–10, dan Halaman 12 Penutup) dengan format `Halaman X dari 12` serta tautan aktif `sigitadi.id` (`https://sigitadi.id/`).
+- **Footer Bernomor Halaman & Judul Lengkap:** Memberikan footer standar di bagian bawah setiap lembar halaman (Halaman 1 Cover, Halaman 2–11 Modul 01–10, dan Halaman 12 Penutup) dengan nama program lengkap `Training IT Security Awareness and Cybersecurity Protection`, tautan aktif `sigitadi.id` (`https://sigitadi.id/`), serta nomor lembar `Halaman X dari 12`.
 - **Konfigurasi Custom Domain:** Menambahkan file `public/CNAME` untuk deployment otomatis ke `trainingwbk.sigitadi.id` melalui GitHub Actions.

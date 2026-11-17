@@ -2,7 +2,7 @@
 
 **Handout Presentasi Pelatihan Keamanan Siber**
 
-- **Referensi:** [trainingwbk.sigitadi.id](https://trainingwbk.sigitadi.id/)
+- **Portal Pelatihan:** [trainingwbk.sigitadi.id](https://trainingwbk.sigitadi.id/)
 - **Narasumber:** Sigit Adi Irianto, S.Kom. - [sigitadi.id](https://sigitadi.id/)
 - **Pendekatan:** Pembelajaran Interaktif & Simulasi Eksploratif (Tanpa Ujian / Tanpa Skor)
 - **Disclaimer Konteks Contoh:** Entitas **PT. Sigit Adi Aman Siber (SaaS)** dan produk *Core Banking System* **SaaSCore** dalam seluruh materi dan studi kasus ini adalah **entitas fiktif (rekaan tidak nyata)**. Keduanya dihadirkan murni sebagai ilustrasi contoh untuk memudahkan pemahaman serta menyelaraskan pengalaman belajar dengan alur kerja operasional peserta sehari-hari.
@@ -1145,4 +1145,4 @@ Pesawat terbang aman bukan hanya karena kecanggihan mesinnya, melainkan karena t
 
 ---
 
-*Training IT Security Awareness and Cybersecurity Protection 2026 - [sigitadi.id](https://sigitadi.id/)*
+*Training IT Security Awareness and Cybersecurity Protection - [sigitadi.id](https://sigitadi.id/)*

@@ -48,7 +48,7 @@ export function PrintableHandout() {
               </p>
             </div>
             <div>
-              <p className="font-mono uppercase tracking-wide text-slate-500">Referensi</p>
+              <p className="font-mono uppercase tracking-wide text-slate-500">Portal Pelatihan</p>
               <p className="mt-0.5 text-sm font-bold text-[#0B1F3A]">
                 <a
                   href="https://trainingwbk.sigitadi.id/"
@@ -111,7 +111,7 @@ export function PrintableHandout() {
 
         <footer className="mt-6 border-t border-slate-300 pt-3 flex items-center justify-between font-mono text-[10px] text-slate-600">
           <div>
-            Training IT Security Awareness -&nbsp;
+            Training IT Security Awareness and Cybersecurity Protection -&nbsp;
             <a
               href="https://sigitadi.id/"
               target="_blank"
@@ -244,7 +244,7 @@ export function PrintableHandout() {
 
             <footer className="mt-4 border-t border-slate-300 pt-2 flex items-center justify-between font-mono text-[10px] text-slate-600">
               <div>
-                Training IT Security Awareness -&nbsp;
+                Training IT Security Awareness and Cybersecurity Protection -&nbsp;
                 <a
                   href="https://sigitadi.id/"
                   target="_blank"
@@ -291,7 +291,7 @@ export function PrintableHandout() {
 
         <footer className="border-t border-slate-300 pt-3 flex items-center justify-between font-mono text-[10px] text-slate-600">
           <div>
-            Narasumber: Sigit Adi Irianto, S.Kom. - PT. Sigit Adi Aman Siber (SaaS) -&nbsp;
+            Training IT Security Awareness and Cybersecurity Protection -&nbsp;
             <a
               href="https://sigitadi.id/"
               target="_blank"
