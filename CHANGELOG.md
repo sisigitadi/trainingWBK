@@ -4,6 +4,20 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.2.6] - 2026-11-18
+
+### Diubah & Diperbaiki
+- **Audit & Revisi Mode Proyektor (`Layout.tsx`, `MaterialView.tsx`):**
+  - Menyembunyikan panel **Panduan Narasumber** secara otomatis ketika Mode Proyektor aktif agar skrip/catatan fasilitator tidak bocor ke layar peserta di ruang kelas.
+  - Meringkas tombol aktivasi Mode Proyektor di header menjadi tombol ikon `Monitor` saja (`min-h-[44px] min-w-[44px]` pada mobile, `aria-pressed`, `aria-label`, dan `sr-only`).
+  - Menyembunyikan baris tanggal/rundown sekunder saat Mode Proyektor aktif serta menyinkronkan `ResizeObserver` header agar ruang baca proyektor lebih lega.
+  - Mengubah label statis di bilah kontrol bawah proyektor menjadi dropdown lompat cepat 21 slide (`01/21` s.d. `21/21`) dan menambahkan tombol toggle layar penuh (`Maximize2` / `Minimize2`) dengan auto-exit saat keluar Mode Proyektor.
+- **Audit & Revisi Waktu Nyata (`src/lib/features.ts`, `Layout.tsx`, `rundown.ts`):**
+  - Menyembunyikan dropdown simulasi `Waktu Nyata` dari UI produksi melalui feature flag `ENABLE_TIME_SIMULATION = false` di `src/lib/features.ts` agar jam kelas tidak berisiko tergeser ke jam simulasi palsu.
+  - Menyelaraskan pesan fallback jam rundown di `src/lib/rundown.ts` dari `08.30 - 16.00` menjadi `08.30 - 16.15` sesuai akhir Sesi Penutup.
+
+---
+
 ## [2.2.5] - 2026-11-18
 
 ### Diubah & Diperbaiki

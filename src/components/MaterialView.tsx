@@ -35,7 +35,7 @@ export function MaterialView({
 }: MaterialViewProps) {
   const [showInstructorGuide, setShowInstructorGuide] = useState(false);
 
-  const isGuideOpen = projectorMode || showInstructorGuide;
+  const isGuideOpen = showInstructorGuide;
   const labCode = `Lab ${String(module.id).padStart(2, '0')}`;
   const ctaLabel = module.lab.title.toLowerCase().startsWith('lab ')
     ? `Lanjut ke ${module.lab.title}`
@@ -43,7 +43,7 @@ export function MaterialView({
 
   return (
     <div className="space-y-6">
-      {instructorMode && (
+      {instructorMode && !projectorMode && (
         <section
           aria-labelledby="instructor-guide-heading"
           className="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
@@ -64,35 +64,28 @@ export function MaterialView({
               <p className="flex items-center gap-1.5 font-mono text-xs text-slate-600 dark:text-slate-400">
                 <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 <span>Estimasi Durasi: {module.instructorGuide.durationMinutes} Menit</span>
-                {projectorMode && (
-                  <span className="ml-1 rounded bg-emerald-100 px-1.5 py-0.5 font-semibold text-[#047857] dark:bg-emerald-950/60 dark:text-emerald-300">
-                    Otomatis Terbuka di Mode Proyektor
-                  </span>
-                )}
               </p>
             </div>
           </div>
 
-          {!projectorMode && (
-            <button
-              type="button"
-              onClick={() => setShowInstructorGuide((prev) => !prev)}
-              aria-expanded={isGuideOpen}
-              aria-controls={`instructor-guide-body-${module.id}`}
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-slate-300 bg-slate-50 px-3.5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              <span>
-                {isGuideOpen
-                  ? 'Sembunyikan Catatan Narasumber'
-                  : 'Tampilkan Catatan Narasumber'}
-              </span>
-              {isGuideOpen ? (
-                <ChevronUp className="h-4 w-4 shrink-0" aria-hidden="true" />
-              ) : (
-                <ChevronDown className="h-4 w-4 shrink-0" aria-hidden="true" />
-              )}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setShowInstructorGuide((prev) => !prev)}
+            aria-expanded={isGuideOpen}
+            aria-controls={`instructor-guide-body-${module.id}`}
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-slate-300 bg-slate-50 px-3.5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+          >
+            <span>
+              {isGuideOpen
+                ? 'Sembunyikan Catatan Narasumber'
+                : 'Tampilkan Catatan Narasumber'}
+            </span>
+            {isGuideOpen ? (
+              <ChevronUp className="h-4 w-4 shrink-0" aria-hidden="true" />
+            ) : (
+              <ChevronDown className="h-4 w-4 shrink-0" aria-hidden="true" />
+            )}
+          </button>
         </div>
 
         {isGuideOpen && (

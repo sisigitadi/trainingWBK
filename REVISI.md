@@ -9,7 +9,8 @@ Dokumen ini memuat catatan audit teknis dan pembaruan fitur pada aplikasi web **
 - Format identitas narasumber diperbarui menjadi **Sigit Adi Irianto, S.Kom. - sigitadi.id** dengan tautan aktif ke `https://sigitadi.id/`.
 - Fitur aktivasi rahasia Mode Narasumber dipindahkan ke logo pelatihan di pojok kiri atas header (9 kali klik berturut-turut dalam jendela 2,5 detik) tanpa tooltip pembocor, dengan target sentuh 44x44px dan dukungan navigasi keyboard.
 - Status aktif dan tombol keluar Mode Narasumber dilebur menjadi satu tombol ikon ringkas tanpa teks (`LockOpen | LogOut`) yang diskret saat layar dibagikan ke proyektor namun tetap aksesibel (`aria-label` dan `sr-only`).
-- Tombol dan kartu CTA **Cetak Handout** disembunyikan dari antarmuka melalui feature flag `ENABLE_PRINT_HANDOUT = false` di `src/lib/features.ts` dengan tetap menjaga komponen `PrintableHandout.tsx` utuh di kode sumber.
+- Tombol dan kartu CTA **Cetak Handout** serta dropdown simulasi **Waktu Nyata** disembunyikan dari antarmuka produksi melalui feature flag `ENABLE_PRINT_HANDOUT = false` dan `ENABLE_TIME_SIMULATION = false` di `src/lib/features.ts`; jam akhir status rundown diselaraskan ke `08.30 - 16.15`.
+- **Penyempurnaan Mode Proyektor:** Tombol header diringkas menjadi ikon `Monitor` saja, baris rundown sekunder disembunyikan saat proyeksi agar area baca lega, panel Panduan Narasumber disembunyikan otomatis saat proyeksi agar catatan fasilitator tidak tampil di layar kelas, dan bilah bawah dilengkapi dropdown lompat cepat antar-slide (`01/21` s.d. `21/21`) serta tombol toggle layar penuh (*Fullscreen*).
 
 ### 2. Header dan Footer Mengambang (Floating & Translucent)
 - Header diposisikan tetap di bagian atas layar (`fixed inset-x-0 top-0 z-30`) dan footer di bagian bawah (`fixed inset-x-0 bottom-0 z-20`).

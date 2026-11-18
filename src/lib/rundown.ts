@@ -175,7 +175,7 @@ export function getRundownStatus(now: Date): RundownStatus {
         isWarningWindow: false,
         warningKey: null,
         warningMessage: null,
-        statusSummary: 'Di luar jam sesi (08.30 - 16.00)',
+        statusSummary: 'Di luar jam sesi (08.30 - 16.15)',
       };
     }
 
@@ -219,7 +219,7 @@ export function getRundownStatus(now: Date): RundownStatus {
     isWarningWindow: false,
     warningKey: null,
     warningMessage: null,
-    statusSummary: 'Di luar jam sesi (08.30 - 16.00)',
+    statusSummary: 'Di luar jam sesi (08.30 - 16.15)',
   };
 }
 

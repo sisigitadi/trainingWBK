@@ -12,7 +12,9 @@ import {
   Info,
   LockOpen,
   LogOut,
+  Maximize2,
   Menu,
+  Minimize2,
   Monitor,
   Moon,
   Printer,
@@ -22,8 +24,15 @@ import {
   X,
 } from 'lucide-react';
 import { getModuleById, modules } from '../data/modulesData';
-import { ENABLE_PRINT_HANDOUT } from '../lib/features';
-import { type AppRoute, getNextRoute, getPrevRoute, navigateTo } from '../lib/router';
+import { ENABLE_PRINT_HANDOUT, ENABLE_TIME_SIMULATION } from '../lib/features';
+import {
+  type AppRoute,
+  getNextRoute,
+  getPrevRoute,
+  getProjectorSequence,
+  navigateTo,
+  parseHash,
+} from '../lib/router';
 import { formatHeaderClock, formatHeaderDate, getRundownStatus } from '../lib/rundown';
 import { useProgress } from '../state/ProgressContext';
 import { PrintableHandout } from './PrintableHandout';
@@ -101,6 +110,7 @@ export function Layout({
   const [now, setNow] = useState<Date>(() => new Date());
   const [simTimePreset, setSimTimePreset] = useState<SimTimePreset>('realtime');
   const [dismissedWarningKey, setDismissedWarningKey] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const closeDrawerButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -115,9 +125,19 @@ export function Layout({
 
   const prevRoute = useMemo(() => getPrevRoute(route.hash), [route.hash]);
   const nextRoute = useMemo(() => getNextRoute(route.hash), [route.hash]);
-  const slideLabel = useMemo(() => getSlideLabel(route), [route]);
+  const projectorSlides = useMemo(() => {
+    const seq = getProjectorSequence();
+    const total = String(seq.length).padStart(2, '0');
+    return seq.map((hash, index) => ({
+      hash,
+      label: `${String(index + 1).padStart(2, '0')}/${total} - ${getSlideLabel(parseHash(hash))}`,
+    }));
+  }, []);
+  const fullscreenSupported =
+    typeof document !== 'undefined' && Boolean(document.fullscreenEnabled);
 
-  const effectivePreset: SimTimePreset = instructorMode ? simTimePreset : 'realtime';
+  const effectivePreset: SimTimePreset =
+    ENABLE_TIME_SIMULATION && instructorMode ? simTimePreset : 'realtime';
   const effectiveNow = useMemo(
     () => getEffectiveDate(now, effectivePreset),
     [now, effectivePreset]
@@ -148,8 +168,30 @@ export function Layout({
   useEffect(() => {
     if (projectorMode) {
       setMobileMenuOpen(false);
+    } else if (typeof document !== 'undefined' && document.fullscreenElement) {
+      void document.exitFullscreen().catch(() => {
+        // Ignore exitFullscreen errors when not triggered by user gesture
+      });
     }
   }, [projectorMode]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const handleToggleFullscreen = useCallback(() => {
+    if (typeof document === 'undefined' || !document.fullscreenEnabled) return;
+    if (document.fullscreenElement) {
+      void document.exitFullscreen().catch(() => {});
+    } else {
+      void document.documentElement.requestFullscreen().catch(() => {});
+    }
+  }, []);
 
   useEffect(() => {
     const clearPrintTarget = () => {
@@ -478,7 +520,7 @@ export function Layout({
       window.addEventListener('resize', updateHeight);
       return () => window.removeEventListener('resize', updateHeight);
     }
-  }, [showRundownWarning, storageError, instructorMode]);
+  }, [showRundownWarning, storageError, instructorMode, projectorMode]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#091322] dark:text-slate-100">
@@ -645,56 +687,64 @@ export function Layout({
                       type="button"
                       onClick={onToggleProjector}
                       aria-pressed={projectorMode}
-                      className={`inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                      aria-label={
+                        projectorMode ? 'Keluar Mode Proyektor' : 'Aktifkan Mode Proyektor'
+                      }
+                      title={projectorMode ? 'Keluar Mode Proyektor' : 'Aktifkan Mode Proyektor'}
+                      className={`inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded-md border p-2 transition-colors active:scale-95 sm:min-h-[38px] sm:min-w-[38px] ${
                         projectorMode
-                          ? 'border-[#047857] bg-[#047857] text-white hover:bg-[#065F46] dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950'
+                          ? 'border-[#047857] bg-[#047857] text-white hover:bg-[#065F46] dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950 dark:hover:bg-emerald-400'
                           : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800'
                       }`}
                     >
-                      <Monitor className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                      <span>Mode Proyektor</span>
+                      <Monitor className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <span className="sr-only">
+                        {projectorMode ? 'Keluar Mode Proyektor' : 'Aktifkan Mode Proyektor'}
+                      </span>
                     </button>
                   )}
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200/60 pt-1 text-[11px] sm:text-xs dark:border-slate-700/60">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-slate-700 dark:text-slate-300">
-                  <span className="inline-flex items-center gap-1 font-semibold">
-                    <CalendarClock
-                      className="h-3.5 w-3.5 shrink-0 text-[#047857] dark:text-[#10B981]"
-                      aria-hidden="true"
-                    />
-                    <span>{formattedDate}</span>
-                  </span>
-                  <span className="rounded bg-slate-100 px-1.5 py-0.5 font-bold tabular-nums text-[#0B1F3A] dark:bg-slate-800 dark:text-emerald-300">
-                    {formattedClock}
-                  </span>
-                  <span className="text-slate-600 dark:text-slate-300">
-                    Rundown: <strong className="font-semibold">{rundownStatus.statusSummary}</strong>
-                  </span>
-                </div>
-
-                {instructorMode && (
-                  <div className="flex items-center gap-1.5">
-                    <select
-                      aria-label="Simulasi waktu rundown"
-                      value={simTimePreset}
-                      onChange={(e) => {
-                        setSimTimePreset(e.target.value as SimTimePreset);
-                        setDismissedWarningKey(null);
-                      }}
-                      className="min-h-[32px] rounded-md border border-slate-300 bg-white px-2 py-1 font-mono text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                    >
-                      <option value="realtime">Waktu Nyata</option>
-                      <option value="09:40">09:40 (Jelang Rehat)</option>
-                      <option value="11:50">11:50 (Jelang ISHOMA)</option>
-                      <option value="13:30">13:30 (Jelang Modul 07)</option>
-                      <option value="15:50">15:50 (Jelang Penutup)</option>
-                    </select>
+              {!projectorMode && (
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200/60 pt-1 text-[11px] sm:text-xs dark:border-slate-700/60">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-slate-700 dark:text-slate-300">
+                    <span className="inline-flex items-center gap-1 font-semibold">
+                      <CalendarClock
+                        className="h-3.5 w-3.5 shrink-0 text-[#047857] dark:text-[#10B981]"
+                        aria-hidden="true"
+                      />
+                      <span>{formattedDate}</span>
+                    </span>
+                    <span className="rounded bg-slate-100 px-1.5 py-0.5 font-bold tabular-nums text-[#0B1F3A] dark:bg-slate-800 dark:text-emerald-300">
+                      {formattedClock}
+                    </span>
+                    <span className="text-slate-600 dark:text-slate-300">
+                      Rundown: <strong className="font-semibold">{rundownStatus.statusSummary}</strong>
+                    </span>
                   </div>
-                )}
-              </div>
+
+                  {ENABLE_TIME_SIMULATION && instructorMode && (
+                    <div className="flex items-center gap-1.5">
+                      <select
+                        aria-label="Simulasi waktu rundown"
+                        value={simTimePreset}
+                        onChange={(e) => {
+                          setSimTimePreset(e.target.value as SimTimePreset);
+                          setDismissedWarningKey(null);
+                        }}
+                        className="min-h-[32px] rounded-md border border-slate-300 bg-white px-2 py-1 font-mono text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                      >
+                        <option value="realtime">Waktu Nyata</option>
+                        <option value="09:40">09:40 (Jelang Rehat)</option>
+                        <option value="11:50">11:50 (Jelang ISHOMA)</option>
+                        <option value="13:30">13:30 (Jelang Modul 07)</option>
+                        <option value="15:50">15:50 (Jelang Penutup)</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </header>
 
@@ -801,7 +851,7 @@ export function Layout({
         <div
           style={{ paddingTop: `${topBarHeight + 16}px` }}
           className={`mx-auto w-full px-4 pb-16 sm:px-6 sm:pb-20 ${
-            projectorMode ? 'max-w-6xl pb-28' : 'max-w-[1440px]'
+            projectorMode ? 'max-w-6xl pb-36 sm:pb-28' : 'max-w-[1440px]'
           }`}
         >
           <div
@@ -889,44 +939,81 @@ export function Layout({
           <div
             role="region"
             aria-label="Kontrol Mode Proyektor"
-            className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-300 bg-white/95 px-4 py-3 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-[#0B1F3A]/95 sm:px-6"
+            className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-300 bg-white/95 px-4 py-2.5 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-[#0B1F3A]/95 sm:px-6"
           >
-            <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
+            <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2.5">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => prevRoute && navigateTo(prevRoute)}
                   disabled={!prevRoute}
-                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-45 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                  aria-label="Slide sebelumnya"
+                  title="Slide sebelumnya (Panah Kiri)"
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-45 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                 >
-                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                  <span>Sebelumnya</span>
+                  <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span className="hidden sm:inline">Sebelumnya</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => nextRoute && navigateTo(nextRoute)}
                   disabled={!nextRoute}
-                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-[#0B1F3A] bg-[#0B1F3A] px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-45 dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950 dark:hover:bg-emerald-400"
+                  aria-label="Slide berikutnya"
+                  title="Slide berikutnya (Panah Kanan)"
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-md border border-[#0B1F3A] bg-[#0B1F3A] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-45 dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950 dark:hover:bg-emerald-400"
                 >
-                  <span>Berikutnya</span>
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">Berikutnya</span>
+                  <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
                 </button>
               </div>
 
-              <div className="min-w-0 flex-1 text-center">
-                <p className="font-mono text-xs font-semibold text-slate-700 dark:text-emerald-300 sm:text-sm">
-                  {slideLabel}
-                </p>
+              <div className="min-w-[180px] flex-1">
+                <select
+                  aria-label="Pilih slide atau modul presentasi"
+                  value={route.hash}
+                  onChange={(e) => navigateTo(e.target.value)}
+                  className="min-h-[44px] w-full truncate rounded-md border border-slate-300 bg-slate-50 px-3 py-2 font-mono text-xs font-semibold text-slate-800 transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-emerald-300 dark:hover:bg-slate-800"
+                >
+                  {projectorSlides.map((slide) => (
+                    <option key={slide.hash} value={slide.hash}>
+                      {slide.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <button
-                type="button"
-                onClick={onExitProjector}
-                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-slate-300 bg-slate-100 px-3.5 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-                <span>Keluar Mode Proyektor (Esc)</span>
-              </button>
+              <div className="flex items-center gap-2">
+                {fullscreenSupported && (
+                  <button
+                    type="button"
+                    onClick={handleToggleFullscreen}
+                    aria-pressed={isFullscreen}
+                    aria-label={isFullscreen ? 'Keluar layar penuh' : 'Tampilkan layar penuh'}
+                    title={isFullscreen ? 'Keluar layar penuh' : 'Tampilkan layar penuh'}
+                    className="inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded-md border border-slate-300 bg-white p-2 text-slate-900 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                  >
+                    {isFullscreen ? (
+                      <Minimize2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    ) : (
+                      <Maximize2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    )}
+                    <span className="sr-only">
+                      {isFullscreen ? 'Keluar layar penuh' : 'Tampilkan layar penuh'}
+                    </span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={onExitProjector}
+                  aria-label="Keluar Mode Proyektor (Esc)"
+                  title="Keluar Mode Proyektor (Esc)"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                >
+                  <X className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span className="hidden md:inline">Keluar (Esc)</span>
+                </button>
+              </div>
             </div>
           </div>
         )}
