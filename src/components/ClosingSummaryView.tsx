@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { GOLDEN_RULES } from '../data/goldenRules';
 import { modules } from '../data/modulesData';
+import { ENABLE_PRINT_HANDOUT } from '../lib/features';
 import { navigateTo } from '../lib/router';
 import { useProgress } from '../state/ProgressContext';
 import { Callout, ExplorationBadge } from './ui';
@@ -59,7 +60,9 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
           Rangkuman Pembelajaran &amp; Kartu Saku 7 Kebiasaan Emas SaaS
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
-          Tinjau modul yang sudah dieksplorasi bersama Narasumber Sigit Adi Irianto, S.Kom. (sigitadi.id), cetak Kartu Saku 7 Kebiasaan Emas PT. Sigit Adi Aman Siber (SaaS), atau cetak Handout Materi Presentasi dalam format A4 yang rapi.
+          {ENABLE_PRINT_HANDOUT
+            ? 'Tinjau modul yang sudah dieksplorasi bersama Narasumber Sigit Adi Irianto, S.Kom. (sigitadi.id), cetak Kartu Saku 7 Kebiasaan Emas PT. Sigit Adi Aman Siber (SaaS), atau cetak Handout Materi Presentasi dalam format A4 yang rapi.'
+            : 'Tinjau modul yang sudah dieksplorasi bersama Narasumber Sigit Adi Irianto, S.Kom. (sigitadi.id), dan cetak Kartu Saku 7 Kebiasaan Emas PT. Sigit Adi Aman Siber (SaaS) sebagai panduan harian.'}
         </p>
 
         <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -341,7 +344,7 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
         </div>
       </section>
 
-      {instructorMode && (
+      {ENABLE_PRINT_HANDOUT && instructorMode && (
         <section
           aria-labelledby="handout-print-cta-heading"
           className="no-print rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 sm:p-6"

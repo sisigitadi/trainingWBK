@@ -10,7 +10,8 @@ import {
   Compass,
   Heart,
   Info,
-  Lock,
+  LockOpen,
+  LogOut,
   Menu,
   Monitor,
   Moon,
@@ -21,6 +22,7 @@ import {
   X,
 } from 'lucide-react';
 import { getModuleById, modules } from '../data/modulesData';
+import { ENABLE_PRINT_HANDOUT } from '../lib/features';
 import { type AppRoute, getNextRoute, getPrevRoute, navigateTo } from '../lib/router';
 import { formatHeaderClock, formatHeaderDate, getRundownStatus } from '../lib/rundown';
 import { useProgress } from '../state/ProgressContext';
@@ -550,19 +552,26 @@ export function Layout({
                       </div>
 
                       {instructorMode && (
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="inline-flex items-center rounded bg-emerald-100 px-2 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wide text-[#047857] dark:bg-emerald-500/20 dark:text-emerald-300">
-                            Mode Narasumber Aktif
+                        <button
+                          type="button"
+                          onClick={onLockInstructor}
+                          aria-label="Mode Narasumber aktif. Klik untuk keluar dan kunci kembali"
+                          title="Mode Narasumber aktif. Klik untuk keluar"
+                          className="group inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center gap-1.5 rounded-md border border-[#047857]/60 bg-emerald-50 px-2.5 py-1 text-[#047857] transition-colors hover:border-[#047857] hover:bg-emerald-100 active:scale-95 dark:border-[#10B981]/60 dark:bg-emerald-500/20 dark:text-emerald-300 dark:hover:border-[#10B981] dark:hover:bg-emerald-500/30 sm:min-h-[30px] sm:px-2"
+                        >
+                          <LockOpen className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                          <span
+                            aria-hidden="true"
+                            className="h-3.5 w-px bg-[#047857]/35 dark:bg-emerald-300/35"
+                          />
+                          <LogOut
+                            className="h-3.5 w-3.5 shrink-0 text-slate-700 transition-colors group-hover:text-red-700 dark:text-slate-200 dark:group-hover:text-red-300"
+                            aria-hidden="true"
+                          />
+                          <span className="sr-only">
+                            Mode Narasumber aktif. Keluar dan kunci kembali
                           </span>
-                          <button
-                            type="button"
-                            onClick={onLockInstructor}
-                            className="inline-flex min-h-[44px] items-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-[32px]"
-                          >
-                            <Lock className="h-3 w-3 shrink-0" aria-hidden="true" />
-                            <span>Kunci Mode</span>
-                          </button>
-                        </div>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -593,7 +602,7 @@ export function Layout({
                     </div>
                   </div>
 
-                  {instructorMode && (
+                  {ENABLE_PRINT_HANDOUT && instructorMode && (
                     <button
                       type="button"
                       onClick={handlePrintHandout}
@@ -923,7 +932,7 @@ export function Layout({
         )}
       </div>
 
-      <PrintableHandout />
+      {ENABLE_PRINT_HANDOUT && <PrintableHandout />}
     </div>
   );
 }

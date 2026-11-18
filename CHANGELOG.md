@@ -4,6 +4,18 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.2.5] - 2026-11-18
+
+### Diubah & Diperbaiki
+- **Penyembunyian UI Cetak Handout (`src/lib/features.ts`, `Layout.tsx`, `ClosingSummaryView.tsx`):**
+  - Menambahkan kendali terpusat `ENABLE_PRINT_HANDOUT = false` di `src/lib/features.ts` untuk menyembunyikan tombol `Cetak Handout` di header, sheet `<PrintableHandout />`, serta kartu CTA cetak handout pada Sesi Penutup tanpa menghapus kode sumber `PrintableHandout.tsx`.
+  - Menyelaraskan teks pengantar Sesi Penutup agar hanya merujuk pada cetak Kartu Saku 7 Kebiasaan Emas selama handout disembunyikan.
+- **Kontrol Ikon Ringkas Mode Narasumber (`Layout.tsx`):**
+  - Menggabungkan badge teks `MODE NARASUMBER AKTIF` dan tombol `Kunci Mode` menjadi satu tombol ikon ringkas tanpa teks (`LockOpen | LogOut`) yang diskret saat presentasi di proyektor dan menghemat ruang header di desktop maupun ponsel.
+  - Memenuhi standar aksesibilitas dengan `aria-label`, `<span className="sr-only">`, target sentuh minimum `44x44px` pada mobile, serta kontras WCAG AA terverifikasi di Mode Terang dan Mode Gelap.
+
+---
+
 ## [2.2.4] - 2026-11-18
 
 ### Diubah & Diperbaiki
