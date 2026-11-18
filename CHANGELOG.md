@@ -4,6 +4,21 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.2.4] - 2026-11-18
+
+### Diubah & Diperbaiki
+- **Pemindahan Pemicu Mode Narasumber ke Logo Header (`Layout.tsx`):**
+  - Memindahkan pintasan aktivasi 9x klik (jeda maksimal 2,5 detik) dari tombol teks nama narasumber ke logo pelatihan di pojok kiri atas header.
+  - Menghapus atribut `title` petunjuk eksplisit agar aktivasi Mode Narasumber tetap diskret bagi peserta.
+  - Mengubah nama narasumber (`Sigit Adi Irianto, S.Kom.`) menjadi teks non-interaktif yang terpisah rapi dari tautan aktif `sigitadi.id`.
+  - Membungkus logo dengan tombol semantik berukuran 44x44px (`h-11 w-11`, `touch-manipulation`, `select-none`, `draggable={false}`, dan `active:scale-95`) demi kenyamanan tap cepat di layar sentuh dan aksesibilitas keyboard (`Tab`, `Enter`/`Space`, focus ring emerald).
+  - Mengeliminasi *dead control* saat Mode Narasumber aktif dengan mengubah wadah logo menjadi elemen non-interaktif berbingkai emerald, disertai reset otomatis hitungan klik ketika mode dikunci kembali.
+  - Menyesuaikan tinggi minimum tombol `Kunci Mode` pada layar ponsel menjadi `44px` (`min-h-[44px] sm:min-h-[32px]`).
+- **Sinkronisasi Dokumentasi (`README.md`, `REVISI.md`):**
+  - Memperbarui panduan aktivasi Mode Narasumber agar merujuk pada 9x klik logo di header.
+
+---
+
 ## [2.2.3] - 2026-11-17
 
 ### Diperbaiki (Fix Cetak PDF Presisi 12 Halaman)

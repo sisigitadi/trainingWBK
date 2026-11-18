@@ -7,7 +7,7 @@ Dokumen ini memuat catatan audit teknis dan pembaruan fitur pada aplikasi web **
 ### 1. Identitas, Logo, dan Favicon
 - Menggunakan logo perisai siber logam berinisial "SA" sebagai ikon aplikasi di `public/logo.jpg`, favicon di `index.html`, header navigasi, lembar cetak handout, serta kartu saku.
 - Format identitas narasumber diperbarui menjadi **Sigit Adi Irianto, S.Kom. - sigitadi.id** dengan tautan aktif ke `https://sigitadi.id/`.
-- Fitur aktivasi rahasia Mode Narasumber tetap aktif melalui 9 kali klik cepat pada tombol nama narasumber.
+- Fitur aktivasi rahasia Mode Narasumber dipindahkan ke logo pelatihan di pojok kiri atas header (9 kali klik berturut-turut dalam jendela 2,5 detik) tanpa tooltip pembocor, dengan target sentuh 44x44px dan dukungan navigasi keyboard.
 
 ### 2. Header dan Footer Mengambang (Floating & Translucent)
 - Header diposisikan tetap di bagian atas layar (`fixed inset-x-0 top-0 z-30`) dan footer di bagian bawah (`fixed inset-x-0 bottom-0 z-20`).

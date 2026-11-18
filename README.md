@@ -49,8 +49,8 @@ Aplikasi web interaktif ini dirancang untuk mendukung pelatihan peningkatan kesa
    - Menggunakan efek kaca transparan (*backdrop-blur-md*) yang tetap menempel di atas dan bawah layar saat digulir, dengan tata letak ringkas agar materi terbaca maksimal.
 5. **Jam Real-time & Peringatan Rundown:**
    - Sinkronisasi waktu dengan 13 sesi rundown kegiatan, menampilkan hitung mundur dan banner otomatis ketika sesi tersisa 15 menit atau kurang.
-6. **Mode Narasumber (Pintasan 9x Klik):**
-   - Mengklik nama narasumber 9 kali berturut-turut membuka kendali instruktur: Cetak Handout A4, Mode Proyektor (+25% font & navigasi keyboard), Panduan Narasumber, dan tombol solusi lab.
+6. **Mode Narasumber (Pintasan 9x Klik Logo):**
+   - Mengklik logo pelatihan di pojok kiri atas header 9 kali berturut-turut membuka kendali instruktur: Cetak Handout A4, Mode Proyektor (+25% font & navigasi keyboard), Panduan Narasumber, dan tombol solusi lab.
 7. **Kartu Saku 7 Kebiasaan Emas & Handout A4:**
    - Tata letak cetak ramah kertas (*print-friendly*) untuk menyimpan materi presentasi atau kartu saku sebagai panduan harian.
 

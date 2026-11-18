@@ -139,6 +139,8 @@ export function Layout({
     if (!instructorMode) {
       setSimTimePreset('realtime');
     }
+    clickCountRef.current = 0;
+    lastClickTimeRef.current = 0;
   }, [instructorMode]);
 
   useEffect(() => {
@@ -211,7 +213,7 @@ export function Layout({
     return () => window.removeEventListener('keydown', handleProjectorKeyDown);
   }, [projectorMode, prevRoute, nextRoute, onExitProjector]);
 
-  const handleNarasumberClick = () => {
+  const handleLogoClick = () => {
     if (instructorMode) return;
     const currentMs = Date.now();
     if (currentMs - lastClickTimeRef.current > 2500) {
@@ -223,6 +225,7 @@ export function Layout({
 
     if (clickCountRef.current >= 9) {
       clickCountRef.current = 0;
+      lastClickTimeRef.current = 0;
       onUnlockInstructor();
     }
   };
@@ -500,26 +503,42 @@ export function Layout({
                     </button>
                   )}
 
-                  <img
-                    src="./logo.jpg"
-                    alt="Logo Training Security Awareness"
-                    className="h-9 w-9 shrink-0 rounded-lg border border-slate-300/60 object-cover shadow-sm dark:border-slate-700/60 sm:h-10 sm:w-10"
-                  />
+                  {instructorMode ? (
+                    <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg p-0.5">
+                      <img
+                        src="./logo.jpg"
+                        alt="Logo Training Security Awareness"
+                        draggable={false}
+                        className="h-10 w-10 select-none rounded-lg border-2 border-[#047857] object-cover shadow-sm dark:border-[#10B981]"
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleLogoClick}
+                      aria-label="Logo Training IT Security Awareness"
+                      className="inline-flex h-11 w-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-lg p-0.5 transition-transform active:scale-95"
+                    >
+                      <img
+                        src="./logo.jpg"
+                        alt=""
+                        aria-hidden="true"
+                        draggable={false}
+                        className="h-10 w-10 rounded-lg border border-slate-300/80 object-cover shadow-sm dark:border-slate-600/80"
+                      />
+                    </button>
+                  )}
 
                   <div className="min-w-0 space-y-0.5">
                     <span className="block text-sm font-bold leading-snug tracking-tight text-[#0B1F3A] dark:text-white sm:text-base lg:text-lg">
                       Training IT Security Awareness and Cybersecurity Protection 2026
                     </span>
                     <div className="flex flex-wrap items-center gap-2">
-                      <div className="inline-flex items-center text-xs font-semibold text-slate-700 dark:text-slate-200 sm:text-sm">
-                        <button
-                          type="button"
-                          onClick={handleNarasumberClick}
-                          className="inline-flex select-none items-center rounded px-1 py-0.5 text-left transition-colors hover:bg-slate-100 dark:hover:bg-white/10"
-                          title="Klik 9x untuk membuka fitur narasumber"
-                        >
-                          <span>Sigit Adi Irianto, S.Kom. -&nbsp;</span>
-                        </button>
+                      <div className="inline-flex flex-wrap items-center gap-x-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 sm:text-sm">
+                        <span>Sigit Adi Irianto, S.Kom.</span>
+                        <span aria-hidden="true" className="text-slate-500 dark:text-slate-400">
+                          -
+                        </span>
                         <a
                           href="https://sigitadi.id/"
                           target="_blank"
@@ -538,7 +557,7 @@ export function Layout({
                           <button
                             type="button"
                             onClick={onLockInstructor}
-                            className="inline-flex min-h-[32px] items-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                            className="inline-flex min-h-[44px] items-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-[32px]"
                           >
                             <Lock className="h-3 w-3 shrink-0" aria-hidden="true" />
                             <span>Kunci Mode</span>
