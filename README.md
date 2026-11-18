@@ -43,29 +43,31 @@ Aplikasi web interaktif ini dirancang untuk mendukung pelatihan peningkatan kesa
    - Pembahasan konsep keamanan siber mulai dari CIA Triad, Social Engineering, Autentikasi MFA, Enkripsi, hingga Respons Insiden.
 2. **10 Lab Simulasi Interaktif:**
    - Simulasi alur audit CIA Triad, visualisasi rantai serangan (*attack path*), inspeksi email phishing, penguji kekuatan *passphrase*, klasifikasi data sensitif, audit keamanan endpoint, deteksi *Evil Twin* & URL palsu, triase insiden, audit Shadow IT, dan review kasus komprehensif.
-3. **Balloon Tooltips Interaktif:**
-   - Menggantikan kamus istilah statis; mengarahkan kursor (*hover*) pada kata teknis bergaris titik-titik menampilkan balon penjelasan praktis serta konteks operasional perbankan (50+ istilah teknis).
-4. **Header & Footer Mengambang (Floating & Translucent):**
-   - Menggunakan efek kaca transparan (*backdrop-blur-md*) yang tetap menempel di atas dan bawah layar saat digulir, dengan tata letak ringkas agar materi terbaca maksimal.
+3. **Balloon Tooltips Interaktif Menyeluruh:**
+   - Menggantikan kamus istilah statis; mengarahkan kursor (*hover*) atau mengetuk kata teknis bergaris titik-titik menampilkan balon penjelasan praktis serta konteks operasional perbankan (termasuk `server`, `database`, `dump`, `failover`, `KMS`, ekstensi berkas berbahaya, dan puluhan istilah keamanan siber lainnya) di seluruh 10 Modul, 10 Lab, dan Sesi Penutup.
+4. **Header Mengambang (Floating & Translucent) & Modal Catatan Kasus:**
+   - Menggunakan efek kaca transparan (*backdrop-blur-md*) yang tetap menempel di bagian atas layar saat digulir, dengan tombol ikon Info di header untuk membuka Modal Dialog Catatan Contoh Studi Kasus (Entitas Rekaan). Footer mengambang telah dihapus total agar ruang baca materi dan simulasi lab tampil maksimal tanpa tertutup elemen bawah.
 5. **Jam Real-time & Peringatan Rundown:**
    - Sinkronisasi waktu dengan 13 sesi rundown kegiatan, menampilkan hitung mundur dan banner otomatis ketika sesi tersisa 15 menit atau kurang.
 6. **Mode Narasumber (Pintasan 9x Klik Logo):**
    - Mengklik logo pelatihan di pojok kiri atas header 9 kali berturut-turut membuka kendali instruktur: tombol ikon Mode Proyektor (`Monitor`, +25% font, header ramping, navigasi keyboard, dropdown lompat cepat 21 slide, dan layar penuh), Panduan Narasumber (tersembunyi otomatis saat Mode Proyektor agar catatan tidak bocor ke layar peserta), tombol solusi lab, dan tombol ikon ringkas (`LockOpen | LogOut`) untuk keluar dari Mode Narasumber. (Dropdown simulasi waktu disembunyikan via `ENABLE_TIME_SIMULATION` di `src/lib/features.ts`).
 7. **Kartu Saku 7 Kebiasaan Emas:**
    - Tata letak cetak ramah kertas (*print-friendly*) untuk menyimpan kartu saku 7 Kebiasaan Emas sebagai panduan harian. (Fitur Cetak Handout A4 disembunyikan dari UI via `ENABLE_PRINT_HANDOUT` di `src/lib/features.ts`).
+8. **Open Graph & Social Share Preview:**
+   - Dilengkapi kartu pratinjau tautan 1200x630 (`public/og-image.jpg`) serta metadata Open Graph dan Twitter Card lengkap untuk tampilan berbagi tautan yang rapi di WhatsApp, Telegram, LinkedIn, X, dan Facebook.
 
 ---
 
 ## Struktur Folder
 
 ```text
-├── public/                 # Aset publik statis (logo, favicon)
+├── public/                 # Aset publik statis (logo, favicon, og-image.jpg)
 ├── src/
 │   ├── components/
 │   │   ├── labs/           # 10 Modul Simulasi Lab
 │   │   ├── ui/             # Komponen UI (TermTooltip, RichTermText, Callout)
 │   │   ├── ClosingSummaryView.tsx
-│   │   ├── Layout.tsx      # Floating header & footer
+│   │   ├── Layout.tsx      # Floating header, modal catatan kasus & navigasi
 │   │   ├── MaterialView.tsx
 │   │   ├── ModulePage.tsx
 │   │   └── PrintableHandout.tsx

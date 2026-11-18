@@ -13,7 +13,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { FeedbackBox, LabShell } from '../ui';
+import { FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type ChannelType = 'webmail' | 'whatsapp';
 type ActionKind = 'process' | 'report';
@@ -362,9 +362,13 @@ export function Lab03PhishingSim({
               aria-hidden="true"
             />
             <span>
-              {instructorMode
-                ? 'Uji bebas skenario "Jika Diproses" maupun "Jika Dilaporkan ke Tim IT" pada setiap pesan, atau buka seluruh analisis pesan untuk perbandingan kelas.'
-                : 'Uji bebas skenario "Jika Diproses" maupun "Jika Dilaporkan ke Tim IT" pada setiap pesan untuk membandingkan ciri pesan sah dan jebakan.'}
+              <RichTermText
+                text={
+                  instructorMode
+                    ? 'Uji bebas skenario "Jika Diproses" maupun "Jika Dilaporkan ke Tim IT" pada setiap pesan, atau buka seluruh analisis pesan untuk perbandingan kelas.'
+                    : 'Uji bebas skenario "Jika Diproses" maupun "Jika Dilaporkan ke Tim IT" pada setiap pesan untuk membandingkan ciri pesan sah dan jebakan.'
+                }
+              />
             </span>
           </div>
           {instructorMode && (
@@ -504,7 +508,7 @@ export function Lab03PhishingSim({
                 </div>
 
                 <h3 className="mt-2.5 text-base font-bold text-slate-900 dark:text-slate-100">
-                  {activeMessage.subject}
+                  <RichTermText text={activeMessage.subject} />
                 </h3>
 
                 <div className="mt-2 space-y-0.5 text-xs text-slate-600 dark:text-slate-300">
@@ -526,7 +530,9 @@ export function Lab03PhishingSim({
                 }`}
               >
                 {activeMessage.bodyParagraphs.map((para, idx) => (
-                  <p key={idx}>{para}</p>
+                  <p key={idx}>
+                    <RichTermText text={para} />
+                  </p>
                 ))}
               </div>
 
@@ -652,11 +658,12 @@ export function Lab03PhishingSim({
                   }
                 >
                   <p>
-                    <strong>Dampak Situasi di Lapangan:</strong> {activeOutcome.impact}
+                    <strong>Dampak Situasi di Lapangan:</strong>{' '}
+                    <RichTermText text={activeOutcome.impact} />
                   </p>
                   <p className="mt-1.5">
                     <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                    {activeOutcome.rationale}
+                    <RichTermText text={activeOutcome.rationale} />
                   </p>
                 </FeedbackBox>
               )}
@@ -668,11 +675,12 @@ export function Lab03PhishingSim({
                     label="JIKA DIPROSES / DIANGGAP AMAN"
                   >
                     <p>
-                      <strong>Dampak:</strong> {activeMessage.outcomes.process.impact}
+                      <strong>Dampak:</strong>{' '}
+                      <RichTermText text={activeMessage.outcomes.process.impact} />
                     </p>
                     <p className="mt-1">
                       <strong>Penjelasan:</strong>{' '}
-                      {activeMessage.outcomes.process.rationale}
+                      <RichTermText text={activeMessage.outcomes.process.rationale} />
                     </p>
                   </FeedbackBox>
 
@@ -681,11 +689,12 @@ export function Lab03PhishingSim({
                     label="JIKA DILAPORKAN KE TIM IT"
                   >
                     <p>
-                      <strong>Dampak:</strong> {activeMessage.outcomes.report.impact}
+                      <strong>Dampak:</strong>{' '}
+                      <RichTermText text={activeMessage.outcomes.report.impact} />
                     </p>
                     <p className="mt-1">
                       <strong>Penjelasan:</strong>{' '}
-                      {activeMessage.outcomes.report.rationale}
+                      <RichTermText text={activeMessage.outcomes.report.rationale} />
                     </p>
                   </FeedbackBox>
                 </div>
@@ -720,10 +729,10 @@ export function Lab03PhishingSim({
                     </span>
                   </div>
                   <p className="font-semibold text-slate-800 dark:text-slate-200">
-                    {msg.subject}
+                    <RichTermText text={msg.subject} />
                   </p>
                   <p className="mt-1 text-slate-600 dark:text-slate-300">
-                    {msg.outcomes.process.rationale}
+                    <RichTermText text={msg.outcomes.process.rationale} />
                   </p>
                 </div>
               ))}

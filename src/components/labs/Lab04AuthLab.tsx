@@ -12,7 +12,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type StrengthTier = 'Lemah' | 'Sedang' | 'Kuat' | 'Sangat Kuat';
 type MfaActionId = 'approve' | 'ignore' | 'reject-report';
@@ -267,9 +267,13 @@ export function Lab04AuthLab({
               aria-hidden="true"
             />
             <span>
-              {instructorMode
-                ? 'Coba seluruh tombol respons MFA Fatigue secara bebas untuk membandingkan dampaknya, atau buka semua penjelasan sekaligus di layar proyektor.'
-                : 'Uji kekuatan passphrase secara lokal dan coba seluruh pilihan respons MFA Fatigue untuk mengamati konsekuensinya masing-masing.'}
+              <RichTermText
+                text={
+                  instructorMode
+                    ? 'Coba seluruh tombol respons MFA Fatigue secara bebas untuk membandingkan dampaknya, atau buka semua penjelasan sekaligus di layar proyektor.'
+                    : 'Uji kekuatan passphrase secara lokal dan coba seluruh pilihan respons MFA Fatigue untuk mengamati konsekuensinya masing-masing.'
+                }
+              />
             </span>
           </div>
           {instructorMode && (
@@ -322,10 +326,7 @@ export function Lab04AuthLab({
               />
             }
           >
-            Input passphrase pada simulasi ini hanya dihitung secara lokal di memori
-            React sesi browser Anda. Teks tidak pernah disimpan ke localStorage dan
-            tidak dikirim ke server mana pun. Gunakan contoh frasa latihan, bukan kata
-            sandi kerja asli Anda.
+            <RichTermText text="Input passphrase pada simulasi ini hanya dihitung secara lokal di memori React sesi browser Anda. Teks tidak pernah disimpan ke localStorage dan tidak dikirim ke server mana pun. Gunakan contoh frasa latihan, bukan kata sandi kerja asli Anda." />
           </Callout>
 
           <form
@@ -424,11 +425,15 @@ export function Lab04AuthLab({
               </div>
 
               <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                Estimasi ketahanan brute-force:{' '}
+                <RichTermText text="Estimasi ketahanan brute-force:" />{' '}
                 <strong className="text-slate-900 dark:text-slate-100">
-                  {passphrase.length === 0
-                    ? 'Masukkan karakter atau pilih contoh di atas untuk mulai mengukur'
-                    : analysis.crackEstimate}
+                  <RichTermText
+                    text={
+                      passphrase.length === 0
+                        ? 'Masukkan karakter atau pilih contoh di atas untuk mulai mengukur'
+                        : analysis.crackEstimate
+                    }
+                  />
                 </strong>
               </p>
 
@@ -477,9 +482,9 @@ export function Lab04AuthLab({
                   {REFERENCE_PASSWORD} ({referenceAnalysis.length} karakter)
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                  Meskipun memakai 4 jenis karakter ({referenceAnalysis.entropyBits} bit
-                  mentah), pola singkat nama perusahaan + tahun seperti ini rentan
-                  terhadap serangan kamus berbasis aturan (rule-based cracking).
+                  <RichTermText
+                    text={`Meskipun memakai 4 jenis karakter (${referenceAnalysis.entropyBits} bit mentah), pola singkat nama perusahaan + tahun seperti ini rentan terhadap serangan kamus berbasis aturan (rule-based cracking).`}
+                  />
                 </p>
               </div>
 
@@ -492,18 +497,20 @@ export function Lab04AuthLab({
                   {analysis.entropyBits} bit)
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                  Passphrase panjang (minimal 14 karakter) dengan kata tidak terduga
-                  jauh lebih mudah diingat manusia namun sangat mahal untuk ditembus
-                  mesin penebak kata sandi.
+                  <RichTermText text="Passphrase panjang (minimal 14 karakter) dengan kata tidak terduga jauh lebih mudah diingat manusia namun sangat mahal untuk ditembus mesin penebak kata sandi." />
                 </p>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-xs text-slate-600 dark:text-slate-400">
-                {meetsThreshold
-                  ? 'Passphrase latihan sudah memenuhi standar ketahanan (>= 50 bit atau >= 14 karakter).'
-                  : 'Coba panjangkan frasa hingga mencapai minimal 50 bit entropi atau 14+ karakter.'}
+                <RichTermText
+                  text={
+                    meetsThreshold
+                      ? 'Passphrase latihan sudah memenuhi standar ketahanan (>= 50 bit atau >= 14 karakter).'
+                      : 'Coba panjangkan frasa hingga mencapai minimal 50 bit entropi atau 14+ karakter.'
+                  }
+                />
               </p>
               <button
                 type="submit"
@@ -525,14 +532,17 @@ export function Lab04AuthLab({
               >
                 <p>
                   <strong>Dampak Situasi di Lapangan:</strong>{' '}
-                  {meetsThreshold
-                    ? 'Serangan brute-force dan credential stuffing akan membutuhkan waktu sangat lama sehingga akun portal maupun VPN terlindungi kuat.'
-                    : 'Kata sandi pendek atau berpola mudah ditembus perangkat lunak penebak otomatis dalam hitungan menit hingga hari.'}
+                  <RichTermText
+                    text={
+                      meetsThreshold
+                        ? 'Serangan brute-force dan credential stuffing akan membutuhkan waktu sangat lama sehingga akun portal maupun VPN terlindungi kuat.'
+                        : 'Kata sandi pendek atau berpola mudah ditembus perangkat lunak penebak otomatis dalam hitungan menit hingga hari.'
+                    }
+                  />
                 </p>
                 <p className="mt-1.5">
-                  <strong>Mengapa &amp; Langkah Tepatnya:</strong> Gunakan kombinasi
-                  minimal 3 hingga 4 kata acak (14+ karakter) yang unik untuk setiap
-                  layanan dan simpan di Password Manager resmi.
+                  <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
+                  <RichTermText text="Gunakan kombinasi minimal 3 hingga 4 kata acak (14+ karakter) yang unik untuk setiap layanan dan simpan di Password Manager resmi." />
                 </p>
               </FeedbackBox>
             )}
@@ -565,7 +575,10 @@ export function Lab04AuthLab({
 
             <div className="mt-3 space-y-2 text-sm">
               <p className="font-bold text-white">
-                Permintaan Persetujuan Login Portal VPN Admin SaaSCore
+                <RichTermText
+                  text="Permintaan Persetujuan Login Portal VPN Admin SaaSCore"
+                  variant="inverse"
+                />
               </p>
               <div className="grid grid-cols-1 gap-1.5 rounded bg-slate-800/80 p-3 font-mono text-xs text-slate-200 sm:grid-cols-2">
                 <div>Akun: staf.support@sigitadi.id</div>
@@ -574,9 +587,10 @@ export function Lab04AuthLab({
                 <div>Perangkat: Linux CLI / Proxy Luar Negeri</div>
               </div>
               <p className="text-xs leading-relaxed text-slate-300">
-                Ponsel Anda bergetar terus-menerus dengan permintaan persetujuan login
-                yang sama selama 4 menit terakhir padahal Anda tidak sedang mengakses
-                VPN maupun portal kerja.
+                <RichTermText
+                  text="Ponsel Anda bergetar terus-menerus dengan permintaan persetujuan login yang sama selama 4 menit terakhir padahal Anda tidak sedang mengakses VPN maupun portal kerja."
+                  variant="inverse"
+                />
               </p>
             </div>
           </div>
@@ -634,11 +648,12 @@ export function Lab04AuthLab({
                       }
                     >
                       <p>
-                        <strong>Dampak Situasi di Lapangan:</strong> {action.impact}
+                        <strong>Dampak Situasi di Lapangan:</strong>{' '}
+                        <RichTermText text={action.impact} />
                       </p>
                       <p className="mt-1">
                         <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                        {action.rationale}
+                        <RichTermText text={action.rationale} />
                       </p>
                     </FeedbackBox>
                   )}
@@ -656,11 +671,12 @@ export function Lab04AuthLab({
                 }
               >
                 <p>
-                  <strong>Dampak Situasi di Lapangan:</strong> {selectedMfaObj.impact}
+                  <strong>Dampak Situasi di Lapangan:</strong>{' '}
+                  <RichTermText text={selectedMfaObj.impact} />
                 </p>
                 <p className="mt-1.5">
                   <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                  {selectedMfaObj.rationale}
+                  <RichTermText text={selectedMfaObj.rationale} />
                 </p>
               </FeedbackBox>
             </div>

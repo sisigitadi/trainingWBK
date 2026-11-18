@@ -11,7 +11,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface StageOption {
   id: string;
@@ -294,12 +294,13 @@ export function Lab08IncidentSim({
           icon={<ShieldAlert className="h-5 w-5 text-amber-700 dark:text-amber-400" aria-hidden="true" />}
         >
           <p>
-            Saat bersiap melakukan pengecekan harian SaaSCore untuk{' '}
-            <strong>BPR Mitra Sejahtera (Ilustrasi)</strong>, staf tidak sengaja membuka lampiran{' '}
+            <RichTermText text="Saat bersiap melakukan pengecekan harian SaaSCore untuk" />{' '}
+            <strong>BPR Mitra Sejahtera (Ilustrasi)</strong>
+            <RichTermText text=", staf tidak sengaja membuka lampiran" />{' '}
             <code className="rounded bg-amber-100 px-1.5 py-0.5 font-mono text-xs dark:bg-amber-900/60">
               Rekap_Selisih_GL.xlsm
             </code>
-            . Seketika terlihat jendela PowerShell berkedip singkat dan kipas laptop berputar kencang.
+            <RichTermText text=". Seketika terlihat jendela PowerShell berkedip singkat dan kipas laptop berputar kencang." />
           </p>
         </Callout>
 
@@ -359,7 +360,7 @@ export function Lab08IncidentSim({
                   {currentStage.phaseCode}
                 </span>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                  {currentStage.phaseName}
+                  <RichTermText text={currentStage.phaseName} />
                 </h3>
               </div>
 
@@ -385,7 +386,7 @@ export function Lab08IncidentSim({
             </div>
 
             <p className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-              {currentStage.prompt}
+              <RichTermText text={currentStage.prompt} />
             </p>
 
             <div className="mt-5 space-y-3">
@@ -431,10 +432,12 @@ export function Lab08IncidentSim({
                         label={option.status === 'safe' ? 'KONDISI AMAN / TEPAT' : 'KONDISI BERISIKO'}
                       >
                         <p>
-                          <strong>Dampak di Lapangan:</strong> {option.fieldImpact}
+                          <strong>Dampak di Lapangan:</strong>{' '}
+                          <RichTermText text={option.fieldImpact} />
                         </p>
                         <p className="mt-1.5">
-                          <strong>Mengapa & Langkah Tepat:</strong> {option.whyAndAction}
+                          <strong>Mengapa & Langkah Tepat:</strong>{' '}
+                          <RichTermText text={option.whyAndAction} />
                         </p>
                       </FeedbackBox>
                     )}

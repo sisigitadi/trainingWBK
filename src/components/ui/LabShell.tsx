@@ -2,6 +2,7 @@ import React from 'react';
 import { CheckCircle2, RotateCcw, Terminal } from 'lucide-react';
 import type { Session } from '../../types/training';
 import { ExplorationBadge } from './ExplorationBadge';
+import { RichTermText } from './RichTermText';
 
 export interface LabShellProps {
   moduleId: number;
@@ -63,10 +64,10 @@ export function LabShell({
         </div>
 
         <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-          {title}
+          <RichTermText text={title} />
         </h2>
         <p className="mt-1.5 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-          {instructions}
+          <RichTermText text={instructions} />
         </p>
 
         {hasProgress && (

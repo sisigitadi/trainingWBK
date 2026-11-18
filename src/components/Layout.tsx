@@ -8,7 +8,6 @@ import {
   ChevronRight,
   Coffee,
   Compass,
-  Heart,
   Info,
   LockOpen,
   LogOut,
@@ -106,7 +105,7 @@ export function Layout({
   } = useProgress();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const [now, setNow] = useState<Date>(() => new Date());
   const [simTimePreset, setSimTimePreset] = useState<SimTimePreset>('realtime');
   const [dismissedWarningKey, setDismissedWarningKey] = useState<string | null>(null);
@@ -114,9 +113,12 @@ export function Layout({
 
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const closeDrawerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const disclaimerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const closeDisclaimerButtonRef = useRef<HTMLButtonElement | null>(null);
   const topBarRef = useRef<HTMLDivElement | null>(null);
   const [topBarHeight, setTopBarHeight] = useState<number>(100);
   const wasDrawerOpenRef = useRef(false);
+  const wasDisclaimerOpenRef = useRef(false);
   const clickCountRef = useRef(0);
   const lastClickTimeRef = useRef(0);
 
@@ -233,9 +235,39 @@ export function Layout({
   }, [mobileMenuOpen]);
 
   useEffect(() => {
+    if (!disclaimerOpen) {
+      if (wasDisclaimerOpenRef.current) {
+        wasDisclaimerOpenRef.current = false;
+        disclaimerButtonRef.current?.focus();
+      }
+      return;
+    }
+
+    wasDisclaimerOpenRef.current = true;
+    const focusTimer = window.setTimeout(() => {
+      closeDisclaimerButtonRef.current?.focus();
+    }, 10);
+
+    const handleDisclaimerKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setDisclaimerOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleDisclaimerKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener('keydown', handleDisclaimerKeyDown);
+    };
+  }, [disclaimerOpen]);
+
+  useEffect(() => {
     if (!projectorMode) return;
 
     const handleProjectorKeyDown = (event: KeyboardEvent) => {
+      if (disclaimerOpen) return;
+
       if (event.key === 'Escape') {
         event.preventDefault();
         onExitProjector();
@@ -255,7 +287,7 @@ export function Layout({
 
     window.addEventListener('keydown', handleProjectorKeyDown);
     return () => window.removeEventListener('keydown', handleProjectorKeyDown);
-  }, [projectorMode, prevRoute, nextRoute, onExitProjector]);
+  }, [projectorMode, disclaimerOpen, prevRoute, nextRoute, onExitProjector]);
 
   const handleLogoClick = () => {
     if (instructorMode) return;
@@ -659,6 +691,23 @@ export function Layout({
                   )}
 
                   <button
+                    ref={disclaimerButtonRef}
+                    type="button"
+                    onClick={() => setDisclaimerOpen((prev) => !prev)}
+                    aria-label="Catatan Contoh Studi Kasus (Entitas Rekaan)"
+                    aria-haspopup="dialog"
+                    aria-expanded={disclaimerOpen}
+                    title="Catatan Contoh Studi Kasus"
+                    className="inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded-md border border-slate-300 bg-white p-2 text-slate-800 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-[38px] sm:min-w-[38px]"
+                  >
+                    <Info
+                      className="h-4 w-4 shrink-0 text-[#0B1F3A] dark:text-sky-400"
+                      aria-hidden="true"
+                    />
+                    <span className="sr-only">Catatan Contoh Studi Kasus (Entitas Rekaan)</span>
+                  </button>
+
+                  <button
                     type="button"
                     onClick={toggleTheme}
                     aria-label={
@@ -848,10 +897,64 @@ export function Layout({
           </div>
         )}
 
+        {disclaimerOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="disclaimer-modal-title"
+          >
+            <div
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm"
+              onClick={() => setDisclaimerOpen(false)}
+              aria-hidden="true"
+            />
+            <div className="relative z-10 w-full max-w-lg rounded-lg border border-sky-200 border-l-4 border-l-[#0B1F3A] bg-white p-5 text-slate-900 shadow-2xl dark:border-slate-700 dark:border-l-sky-400 dark:bg-slate-900 dark:text-slate-100 sm:p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-2.5">
+                  <Info
+                    className="mt-0.5 h-5 w-5 shrink-0 text-[#0B1F3A] dark:text-sky-400"
+                    aria-hidden="true"
+                  />
+                  <h2
+                    id="disclaimer-modal-title"
+                    className="text-base font-bold leading-snug text-[#0B1F3A] dark:text-slate-100"
+                  >
+                    Catatan Contoh Studi Kasus (Entitas Rekaan)
+                  </h2>
+                </div>
+                <button
+                  ref={closeDisclaimerButtonRef}
+                  type="button"
+                  onClick={() => setDisclaimerOpen(false)}
+                  aria-label="Tutup catatan contoh studi kasus"
+                  className="inline-flex min-h-[44px] min-w-[44px] shrink-0 touch-manipulation items-center justify-center rounded-md border border-slate-300 bg-white text-slate-800 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+
+              <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                PT. Sigit Adi Aman Siber (SaaS) dan sistem SaaSCore adalah nama perusahaan dan platform rekaan (tidak nyata) yang digunakan semata-mata sebagai contoh agar memudahkan pemahaman serta memberikan pengalaman belajar (user experience) yang selaras dengan pekerjaan nyata.
+              </p>
+
+              <div className="mt-5 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setDisclaimerOpen(false)}
+                  className="inline-flex min-h-[44px] touch-manipulation items-center justify-center rounded-md bg-[#0B1F3A] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 active:scale-95 dark:bg-[#10B981] dark:text-slate-950 dark:hover:bg-emerald-400"
+                >
+                  Saya Mengerti
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div
           style={{ paddingTop: `${topBarHeight + 16}px` }}
-          className={`mx-auto w-full px-4 pb-16 sm:px-6 sm:pb-20 ${
-            projectorMode ? 'max-w-6xl pb-36 sm:pb-28' : 'max-w-[1440px]'
+          className={`mx-auto w-full px-4 sm:px-6 ${
+            projectorMode ? 'max-w-6xl pb-36 sm:pb-28' : 'max-w-[1440px] pb-8 sm:pb-12'
           }`}
         >
           <div
@@ -865,7 +968,7 @@ export function Layout({
               <aside
                 style={{
                   top: `${topBarHeight + 16}px`,
-                  maxHeight: `calc(100vh - ${topBarHeight + 48}px)`,
+                  maxHeight: `calc(100vh - ${topBarHeight + 32}px)`,
                 }}
                 className="hidden lg:sticky lg:block lg:overflow-y-auto lg:pr-1"
               >
@@ -874,66 +977,10 @@ export function Layout({
             )}
 
             <div className="min-w-0 flex-1">
-              {showDisclaimer && (
-                <aside
-                  aria-label="Catatan Contoh Studi Kasus"
-                  className="mb-5 rounded-lg border border-sky-200 border-l-4 border-l-[#0B1F3A] bg-white p-4 text-slate-900 dark:border-slate-700 dark:border-l-sky-400 dark:bg-slate-900 dark:text-slate-100"
-                >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-start gap-2.5">
-                      <Info
-                        className="mt-0.5 h-5 w-5 shrink-0 text-[#0B1F3A] dark:text-sky-400"
-                        aria-hidden="true"
-                      />
-                      <div className="space-y-1 text-sm">
-                        <h2 className="font-bold text-[#0B1F3A] dark:text-slate-100">
-                          Catatan Contoh Studi Kasus (Entitas Rekaan)
-                        </h2>
-                        <p className="leading-relaxed text-slate-700 dark:text-slate-300">
-                          PT. Sigit Adi Aman Siber (SaaS) dan sistem SaaSCore adalah nama perusahaan dan platform rekaan (tidak nyata) yang digunakan semata-mata sebagai contoh agar memudahkan pemahaman serta memberikan pengalaman belajar (user experience) yang selaras dengan pekerjaan nyata.
-                        </p>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setShowDisclaimer(false)}
-                      className="inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-md border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-                    >
-                      Saya Mengerti
-                    </button>
-                  </div>
-                </aside>
-              )}
-
               <main>{children}</main>
             </div>
           </div>
         </div>
-
-        {!projectorMode && (
-          <footer className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200/70 bg-white/80 py-2 text-center text-xs text-slate-600 shadow-sm backdrop-blur-md dark:border-slate-800/70 dark:bg-[#0B1F3A]/85 dark:text-slate-300">
-            <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-1.5 px-4 sm:px-6">
-              <span>Develop with</span>
-              <Heart
-                className="inline-block h-3.5 w-3.5 animate-pulse fill-red-600 text-red-600 dark:fill-red-500 dark:text-red-500"
-                aria-hidden="true"
-              />
-              <span className="sr-only">love</span>
-              <span>-</span>
-              <a
-                href="https://sigitadi.id/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-slate-800 underline underline-offset-2 hover:text-[#047857] dark:text-slate-100 dark:hover:text-emerald-400"
-              >
-                sigitadi.id
-                <sup className="ml-0.5 text-[10px] no-underline">©</sup>
-              </a>
-              <span>- 2026</span>
-            </div>
-          </footer>
-        )}
 
         {projectorMode && (
           <div

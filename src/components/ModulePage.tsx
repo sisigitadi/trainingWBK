@@ -13,7 +13,7 @@ import { navigateTo } from '../lib/router';
 import { useProgress } from '../state/ProgressContext';
 import type { LabProps } from '../types/training';
 import { MaterialView } from './MaterialView';
-import { ExplorationBadge } from './ui';
+import { ExplorationBadge, RichTermText } from './ui';
 
 const Lab01CIA = lazy(() => import('./labs/Lab01CIA'));
 const Lab02AttackPath = lazy(() => import('./labs/Lab02AttackPath'));
@@ -179,10 +179,10 @@ export function ModulePage({
         </div>
 
         <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 sm:text-2xl">
-          {mod.title}
+          <RichTermText text={mod.title} />
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
-          {mod.tagline}
+          <RichTermText text={mod.tagline} />
         </p>
 
         <div
@@ -200,11 +200,10 @@ export function ModulePage({
             tabIndex={tab === 'materi' ? 0 : -1}
             onClick={() => navigateTo(`#/modul/${mod.id}`)}
             onKeyDown={handleTabKeyDown}
-            className={`inline-flex min-h-[44px] items-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${
-              tab === 'materi'
+            className={`inline-flex min-h-[44px] items-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${tab === 'materi'
                 ? 'border-[#0B1F3A] bg-[#0B1F3A] text-white dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950'
                 : 'border-slate-300 bg-slate-50 text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
-            }`}
+              }`}
           >
             <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span>Materi &amp; Studi Kasus</span>
@@ -220,11 +219,10 @@ export function ModulePage({
             tabIndex={tab === 'lab' ? 0 : -1}
             onClick={() => navigateTo(`#/modul/${mod.id}/lab`)}
             onKeyDown={handleTabKeyDown}
-            className={`inline-flex min-h-[44px] items-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${
-              tab === 'lab'
+            className={`inline-flex min-h-[44px] items-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${tab === 'lab'
                 ? 'border-[#047857] bg-[#047857] text-white dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950'
                 : 'border-slate-300 bg-slate-50 text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
-            }`}
+              }`}
           >
             <FlaskConical className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span>Simulasi &amp; Eksplorasi Interaktif</span>

@@ -9,7 +9,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type UrlClassification = 'safe' | 'risk';
 
@@ -500,20 +500,21 @@ export function Lab07UrlInspector({
           icon={<Globe className="h-5 w-5 text-[#0B1F3A] dark:text-sky-400" aria-hidden="true" />}
         >
           <p>
-            Baca host tepat sebelum tanda garis miring tunggal{' '}
+            <RichTermText text="Baca host tepat sebelum tanda garis miring tunggal" />{' '}
             <code className="rounded bg-slate-200 px-1.5 py-0.5 font-mono text-xs font-semibold dark:bg-slate-800">
               /
             </code>{' '}
-            atau tanda titik dua port{' '}
+            <RichTermText text="atau tanda titik dua port" />{' '}
             <code className="rounded bg-slate-200 px-1.5 py-0.5 font-mono text-xs font-semibold dark:bg-slate-800">
               :
             </code>{' '}
-            pertama. Domain pemilik sebenarnya berada paling kanan sebelum path (contoh: pada{' '}
+            <RichTermText text="pertama. Domain pemilik sebenarnya berada paling kanan sebelum path (contoh: pada" />{' '}
             <code className="break-all rounded bg-slate-200 px-1.5 py-0.5 font-mono text-xs font-semibold dark:bg-slate-800">
               portal.sigitadi.id.auth-check.net/login
             </code>
-            , domain pemilik aslinya adalah{' '}
-            <strong className="font-mono">auth-check.net</strong>). Pastikan juga protokolnya{' '}
+            <RichTermText text=", domain pemilik aslinya adalah" />{' '}
+            <strong className="font-mono">auth-check.net</strong>).{' '}
+            <RichTermText text="Pastikan juga protokolnya" />{' '}
             <strong className="font-mono">https://</strong>.
           </p>
         </Callout>
@@ -530,13 +531,12 @@ export function Lab07UrlInspector({
                   role="tab"
                   aria-selected={isCurrent}
                   onClick={() => setCurrentIdx(idx)}
-                  className={`min-h-[44px] rounded-md border px-3 py-1.5 font-mono text-xs font-semibold transition-colors ${
-                    isCurrent
+                  className={`min-h-[44px] rounded-md border px-3 py-1.5 font-mono text-xs font-semibold transition-colors ${isCurrent
                       ? 'border-[#0B1F3A] bg-[#0B1F3A] text-white dark:border-emerald-400 dark:bg-emerald-500 dark:text-slate-950'
                       : isDone
                         ? 'border-emerald-600/40 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-950/40 dark:text-emerald-200'
                         : 'border-slate-300 bg-slate-50 text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200'
-                  }`}
+                    }`}
                 >
                   URL {idx + 1}
                 </button>
@@ -549,11 +549,10 @@ export function Lab07UrlInspector({
               type="button"
               onClick={() => setShowAllConditions((prev) => !prev)}
               aria-pressed={showAllConditions}
-              className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${
-                showAllConditions
+              className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${showAllConditions
                   ? 'border-[#0B1F3A] bg-[#0B1F3A] text-white dark:border-emerald-400 dark:bg-emerald-500 dark:text-slate-950'
                   : 'border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
-              }`}
+                }`}
             >
               {showAllConditions ? (
                 <EyeOff className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -582,7 +581,7 @@ export function Lab07UrlInspector({
 
             <p className="text-sm text-slate-600 dark:text-slate-300">
               <strong className="text-slate-900 dark:text-slate-100">Konteks pesan:</strong>{' '}
-              {currentChallenge.context}
+              <RichTermText text={currentChallenge.context} />
             </p>
 
             <div className="mt-3 rounded-md border border-slate-300 bg-slate-950 p-4 dark:border-slate-700">
@@ -597,7 +596,7 @@ export function Lab07UrlInspector({
             <div className="mt-5 space-y-5">
               <div>
                 <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  a) Klik segmen URL di bawah untuk memeriksa perannya dan menemukan domain utama:
+                  <RichTermText text="a) Klik segmen URL di bawah untuk memeriksa perannya dan menemukan domain utama:" />
                 </div>
                 <div
                   className="mt-2.5 flex flex-wrap gap-2.5"
@@ -612,13 +611,12 @@ export function Lab07UrlInspector({
                         type="button"
                         aria-pressed={isSelected}
                         onClick={() => handleSelectToken(currentChallenge.id, item.token)}
-                        className={`min-h-[44px] rounded-md border px-3.5 py-2 font-mono text-sm font-semibold transition-colors ${
-                          isSelected
+                        className={`min-h-[44px] rounded-md border px-3.5 py-2 font-mono text-sm font-semibold transition-colors ${isSelected
                             ? item.isRegistrableDomain
                               ? 'border-emerald-700 bg-emerald-700 text-white dark:border-emerald-400 dark:bg-emerald-500 dark:text-slate-950'
                               : 'border-[#0B1F3A] bg-[#0B1F3A] text-white dark:border-sky-400 dark:bg-sky-400 dark:text-slate-950'
                             : 'border-slate-300 bg-slate-50 text-slate-900 hover:border-[#0B1F3A] hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-emerald-400'
-                        }`}
+                          }`}
                       >
                         {item.token}
                       </button>
@@ -633,7 +631,9 @@ export function Lab07UrlInspector({
                       label={activeTokenInfo.roleLabel}
                       title={activeTokenInfo.token}
                     >
-                      <p>{activeTokenInfo.explanation}</p>
+                      <p>
+                        <RichTermText text={activeTokenInfo.explanation} />
+                      </p>
                     </FeedbackBox>
                   </div>
                 )}
@@ -641,7 +641,7 @@ export function Lab07UrlInspector({
 
               <div>
                 <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  b) Uji klasifikasi URL ini untuk membandingkan kondisi aman dan berisiko:
+                  <RichTermText text="b) Uji klasifikasi URL ini untuk membandingkan kondisi aman dan berisiko:" />
                 </div>
                 <div
                   className="mt-2.5 grid grid-cols-1 gap-3 sm:grid-cols-2"
@@ -652,11 +652,10 @@ export function Lab07UrlInspector({
                     type="button"
                     aria-pressed={activeClassification === 'safe'}
                     onClick={() => handleSelectClassification(currentChallenge.id, 'safe')}
-                    className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-semibold transition-colors ${
-                      activeClassification === 'safe'
+                    className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-semibold transition-colors ${activeClassification === 'safe'
                         ? 'border-[#047857] bg-[#047857] text-white dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950'
                         : 'border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
-                    }`}
+                      }`}
                   >
                     <ShieldCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span>Resmi &amp; Aman</span>
@@ -666,11 +665,10 @@ export function Lab07UrlInspector({
                     type="button"
                     aria-pressed={activeClassification === 'risk'}
                     onClick={() => handleSelectClassification(currentChallenge.id, 'risk')}
-                    className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-semibold transition-colors ${
-                      activeClassification === 'risk'
+                    className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-semibold transition-colors ${activeClassification === 'risk'
                         ? 'border-rose-700 bg-rose-700 text-white dark:border-rose-500 dark:bg-rose-500 dark:text-slate-950'
                         : 'border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
-                    }`}
+                      }`}
                   >
                     <ShieldAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span>Palsu / Berisiko</span>
@@ -684,7 +682,7 @@ export function Lab07UrlInspector({
                         currentChallenge.actualStatus === 'safe' && activeClassification === 'safe'
                           ? 'safe'
                           : currentChallenge.actualStatus === 'risk' &&
-                              activeClassification === 'risk'
+                            activeClassification === 'risk'
                             ? 'safe'
                             : 'risk'
                       }
@@ -718,11 +716,12 @@ export function Lab07UrlInspector({
                         </div>
                       </dl>
                       <p className="mt-2.5">
-                        <strong>Dampak di Lapangan:</strong> {activeClassFeedback.fieldImpact}
+                        <strong>Dampak di Lapangan:</strong>{' '}
+                        <RichTermText text={activeClassFeedback.fieldImpact} />
                       </p>
                       <p className="mt-1.5">
                         <strong>Mengapa &amp; Langkah Tepat:</strong>{' '}
-                        {activeClassFeedback.whyAndNextStep}
+                        <RichTermText text={activeClassFeedback.whyAndNextStep} />
                       </p>
                     </FeedbackBox>
                   </div>
@@ -766,11 +765,10 @@ export function Lab07UrlInspector({
                     URL {idx + 1} / {totalUrls}
                   </span>
                   <span
-                    className={`rounded px-2.5 py-1 font-mono text-xs font-semibold ${
-                      challenge.actualStatus === 'safe'
+                    className={`rounded px-2.5 py-1 font-mono text-xs font-semibold ${challenge.actualStatus === 'safe'
                         ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300'
                         : 'bg-rose-100 text-rose-900 dark:bg-rose-950/60 dark:text-rose-300'
-                    }`}
+                      }`}
                   >
                     {challenge.actualStatus === 'safe' ? 'Resmi & Aman' : 'Palsu / Berisiko'}
                   </span>
@@ -806,11 +804,11 @@ export function Lab07UrlInspector({
                   >
                     <p>
                       <strong>Dampak di Lapangan:</strong>{' '}
-                      {challenge.classifications.safe.fieldImpact}
+                      <RichTermText text={challenge.classifications.safe.fieldImpact} />
                     </p>
                     <p className="mt-1">
                       <strong>Mengapa &amp; Langkah Tepat:</strong>{' '}
-                      {challenge.classifications.safe.whyAndNextStep}
+                      <RichTermText text={challenge.classifications.safe.whyAndNextStep} />
                     </p>
                   </FeedbackBox>
 
@@ -820,11 +818,11 @@ export function Lab07UrlInspector({
                   >
                     <p>
                       <strong>Dampak di Lapangan:</strong>{' '}
-                      {challenge.classifications.risk.fieldImpact}
+                      <RichTermText text={challenge.classifications.risk.fieldImpact} />
                     </p>
                     <p className="mt-1">
                       <strong>Mengapa &amp; Langkah Tepat:</strong>{' '}
-                      {challenge.classifications.risk.whyAndNextStep}
+                      <RichTermText text={challenge.classifications.risk.whyAndNextStep} />
                     </p>
                   </FeedbackBox>
                 </div>

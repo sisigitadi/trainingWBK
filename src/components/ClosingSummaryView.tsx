@@ -14,7 +14,7 @@ import { modules } from '../data/modulesData';
 import { ENABLE_PRINT_HANDOUT } from '../lib/features';
 import { navigateTo } from '../lib/router';
 import { useProgress } from '../state/ProgressContext';
-import { Callout, ExplorationBadge } from './ui';
+import { Callout, ExplorationBadge, RichTermText } from './ui';
 
 const LAPTOP_FOLLOWUP_CHECKLIST = [
   'Sistem operasi (Windows/macOS/Linux) dan browser kerja menggunakan versi terbaru dan patch keamanan rutin aktif.',
@@ -329,9 +329,11 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
                 </span>
                 <div className="min-w-0 flex-1">
                   <h3 className="text-xs font-bold uppercase tracking-wide text-[#0B1F3A]">
-                    {rule.title}
+                    <RichTermText text={rule.title} />
                   </h3>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-800">{rule.rule}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-800">
+                    <RichTermText text={rule.rule} />
+                  </p>
                 </div>
               </div>
             </li>
@@ -339,7 +341,9 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
         </ol>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 pt-3 font-mono text-[11px] text-slate-600">
-          <span>Protokol Insiden 5 Menit Pertama: Isolate - Preserve - Report</span>
+          <span>
+            <RichTermText text="Protokol Insiden 5 Menit Pertama: Isolate - Preserve - Report" />
+          </span>
           <span className="font-semibold text-[#047857]">sigitadi.id (2026)</span>
         </div>
       </section>
@@ -408,7 +412,9 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
               <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded bg-[#0B1F3A] font-mono text-xs font-bold tabular-nums text-emerald-300 dark:bg-slate-800">
                 {idx + 1}
               </span>
-              <span>{item}</span>
+              <span>
+                <RichTermText text={item} />
+              </span>
             </li>
           ))}
         </ol>

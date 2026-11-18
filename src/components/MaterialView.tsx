@@ -48,83 +48,83 @@ export function MaterialView({
           aria-labelledby="instructor-guide-heading"
           className="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
         >
-        <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:px-6">
-          <div className="flex items-center gap-2.5">
-            <Presentation
-              className="h-5 w-5 shrink-0 text-[#047857] dark:text-[#10B981]"
-              aria-hidden="true"
-            />
-            <div>
-              <h2
-                id="instructor-guide-heading"
-                className="text-base font-bold text-slate-900 dark:text-slate-100"
-              >
-                Panduan Narasumber (Sigit Adi Irianto, S.Kom.)
-              </h2>
-              <p className="flex items-center gap-1.5 font-mono text-xs text-slate-600 dark:text-slate-400">
-                <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                <span>Estimasi Durasi: {module.instructorGuide.durationMinutes} Menit</span>
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setShowInstructorGuide((prev) => !prev)}
-            aria-expanded={isGuideOpen}
-            aria-controls={`instructor-guide-body-${module.id}`}
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-slate-300 bg-slate-50 px-3.5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-          >
-            <span>
-              {isGuideOpen
-                ? 'Sembunyikan Catatan Narasumber'
-                : 'Tampilkan Catatan Narasumber'}
-            </span>
-            {isGuideOpen ? (
-              <ChevronUp className="h-4 w-4 shrink-0" aria-hidden="true" />
-            ) : (
-              <ChevronDown className="h-4 w-4 shrink-0" aria-hidden="true" />
-            )}
-          </button>
-        </div>
-
-        {isGuideOpen && (
-          <div
-            id={`instructor-guide-body-${module.id}`}
-            className="space-y-4 border-t border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-950/40 sm:p-6"
-          >
-            <div>
-              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#0B1F3A] dark:text-emerald-300">
-                Poin Penyampaian Utama
-              </h3>
-              <ul className="mt-2 space-y-2">
-                {module.instructorGuide.talkingPoints.map((point, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-800 dark:text-slate-200"
-                  >
-                    <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded bg-[#0B1F3A] font-mono text-xs font-bold tabular-nums text-emerald-300 dark:bg-slate-800">
-                      {idx + 1}
-                    </span>
-                    <span>
-                <RichTermText text={point} />
-              </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-md border border-emerald-700/30 bg-emerald-50/80 p-3.5 dark:border-emerald-500/40 dark:bg-emerald-950/30">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wide text-[#047857] dark:text-[#10B981]">
-                <MessageSquare className="h-4 w-4 shrink-0" aria-hidden="true" />
-                <span>Pemantik Diskusi Kelas</span>
+          <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:px-6">
+            <div className="flex items-center gap-2.5">
+              <Presentation
+                className="h-5 w-5 shrink-0 text-[#047857] dark:text-[#10B981]"
+                aria-hidden="true"
+              />
+              <div>
+                <h2
+                  id="instructor-guide-heading"
+                  className="text-base font-bold text-slate-900 dark:text-slate-100"
+                >
+                  Panduan Narasumber (Sigit Adi Irianto, S.Kom.)
+                </h2>
+                <p className="flex items-center gap-1.5 font-mono text-xs text-slate-600 dark:text-slate-400">
+                  <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <span>Estimasi Durasi: {module.instructorGuide.durationMinutes} Menit</span>
+                </p>
               </div>
-              <p className="mt-1.5 text-sm leading-relaxed text-slate-800 dark:text-slate-200">
-                <RichTermText text={module.instructorGuide.discussionPrompt} />
-              </p>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setShowInstructorGuide((prev) => !prev)}
+              aria-expanded={isGuideOpen}
+              aria-controls={`instructor-guide-body-${module.id}`}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-slate-300 bg-slate-50 px-3.5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              <span>
+                {isGuideOpen
+                  ? 'Sembunyikan Catatan Narasumber'
+                  : 'Tampilkan Catatan Narasumber'}
+              </span>
+              {isGuideOpen ? (
+                <ChevronUp className="h-4 w-4 shrink-0" aria-hidden="true" />
+              ) : (
+                <ChevronDown className="h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+            </button>
           </div>
-        )}
+
+          {isGuideOpen && (
+            <div
+              id={`instructor-guide-body-${module.id}`}
+              className="space-y-4 border-t border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-950/40 sm:p-6"
+            >
+              <div>
+                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#0B1F3A] dark:text-emerald-300">
+                  Poin Penyampaian Utama
+                </h3>
+                <ul className="mt-2 space-y-2">
+                  {module.instructorGuide.talkingPoints.map((point, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-800 dark:text-slate-200"
+                    >
+                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded bg-[#0B1F3A] font-mono text-xs font-bold tabular-nums text-emerald-300 dark:bg-slate-800">
+                        {idx + 1}
+                      </span>
+                      <span>
+                        <RichTermText text={point} />
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-md border border-emerald-700/30 bg-emerald-50/80 p-3.5 dark:border-emerald-500/40 dark:bg-emerald-950/30">
+                <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wide text-[#047857] dark:text-[#10B981]">
+                  <MessageSquare className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span>Pemantik Diskusi Kelas</span>
+                </div>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-800 dark:text-slate-200">
+                  <RichTermText text={module.instructorGuide.discussionPrompt} />
+                </p>
+              </div>
+            </div>
+          )}
         </section>
       )}
 
@@ -184,7 +184,7 @@ export function MaterialView({
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <h3 className="text-base font-bold leading-snug text-slate-900 dark:text-slate-100 sm:text-lg">
-                  {sec.heading}
+                  <RichTermText text={sec.heading} />
                 </h3>
               </div>
 
@@ -261,7 +261,7 @@ export function MaterialView({
                     KASUS {String(idx + 1).padStart(2, '0')}
                   </span>
                   <h3 className="text-base font-bold leading-snug text-slate-900 dark:text-slate-100">
-                    {item.title}
+                    <RichTermText text={item.title} />
                   </h3>
                 </div>
 
@@ -423,7 +423,7 @@ export function MaterialView({
                   </span>
                   <div className="min-w-0 flex-1 space-y-1">
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
-                      {rule.title}
+                      <RichTermText text={rule.title} />
                     </h3>
                     <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-200">
                       <RichTermText text={rule.rule} />
@@ -478,10 +478,10 @@ export function MaterialView({
               <span>SIMULASI EKSPLORATIF INTERAKTIF</span>
             </div>
             <h2 id="lab-cta-heading" className="text-lg font-bold text-white">
-              {module.lab.title}
+              <RichTermText text={module.lab.title} variant="inverse" />
             </h2>
             <p className="text-sm leading-relaxed text-slate-200 dark:text-slate-300">
-              {module.lab.summary}
+              <RichTermText text={module.lab.summary} variant="inverse" />
             </p>
           </div>
 

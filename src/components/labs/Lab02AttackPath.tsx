@@ -13,7 +13,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface DefensiveOption {
   id: string;
@@ -322,9 +322,13 @@ export function Lab02AttackPath({
               aria-hidden="true"
             />
             <span>
-              {instructorMode
-                ? 'Klik bebas seluruh pilihan pada tiap tahap, atau buka semua penjelasan untuk membandingkan 4 tahap sekaligus di layar proyektor.'
-                : 'Klik titik hotspot pada tiap tahap dan uji seluruh pilihan respons secara bebas untuk melihat jalur yang memutus atau meloloskan serangan.'}
+              <RichTermText
+                text={
+                  instructorMode
+                    ? 'Klik bebas seluruh pilihan pada tiap tahap, atau buka semua penjelasan untuk membandingkan 4 tahap sekaligus di layar proyektor.'
+                    : 'Klik titik hotspot pada tiap tahap dan uji seluruh pilihan respons secara bebas untuk melihat jalur yang memutus atau meloloskan serangan.'
+                }
+              />
             </span>
           </div>
           {instructorMode && (
@@ -440,7 +444,7 @@ export function Lab02AttackPath({
                     {stage.stepLabel}: {stage.title.toUpperCase()}
                   </span>
                   <span className="text-xs text-slate-500 dark:text-slate-400">
-                    {stage.normalFlow}
+                    <RichTermText text={stage.normalFlow} />
                   </span>
                 </div>
 
@@ -455,12 +459,14 @@ export function Lab02AttackPath({
                     />
                   }
                 >
-                  <p>{stage.attackVector}</p>
+                  <p>
+                    <RichTermText text={stage.attackVector} />
+                  </p>
                 </Callout>
 
                 <div className="mt-5 space-y-3">
                   <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                    {stage.question}
+                    <RichTermText text={stage.question} />
                   </p>
 
                   <div className="space-y-2.5">
@@ -515,11 +521,12 @@ export function Lab02AttackPath({
                               }
                             >
                               <p>
-                                <strong>Dampak Situasi di Lapangan:</strong> {opt.impact}
+                                <strong>Dampak Situasi di Lapangan:</strong>{' '}
+                                <RichTermText text={opt.impact} />
                               </p>
                               <p className="mt-1">
                                 <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                                {opt.rationale}
+                                <RichTermText text={opt.rationale} />
                               </p>
                             </FeedbackBox>
                           )}
@@ -540,11 +547,12 @@ export function Lab02AttackPath({
                       }
                     >
                       <p>
-                        <strong>Dampak Situasi di Lapangan:</strong> {activeOpt.impact}
+                        <strong>Dampak Situasi di Lapangan:</strong>{' '}
+                        <RichTermText text={activeOpt.impact} />
                       </p>
                       <p className="mt-1.5">
                         <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                        {activeOpt.rationale}
+                        <RichTermText text={activeOpt.rationale} />
                       </p>
                     </FeedbackBox>
                   </div>

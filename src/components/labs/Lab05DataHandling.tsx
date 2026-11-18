@@ -8,7 +8,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface DecisionOption {
   id: string;
@@ -316,12 +316,11 @@ export function Lab05DataHandling({
           icon={<FileCode2 className="h-5 w-5 text-[#0B1F3A] dark:text-sky-400" aria-hidden="true" />}
         >
           <p>
-            Anda sedang menangani troubleshooting darurat layanan aplikasi BPR. Rekan engineer SaaS
-            membutuhkan file ekspor konfigurasi{' '}
+            <RichTermText text="Anda sedang menangani troubleshooting darurat layanan aplikasi BPR. Rekan engineer SaaS membutuhkan file ekspor konfigurasi" />{' '}
             <code className="break-all rounded bg-slate-200 px-1.5 py-0.5 font-mono text-xs font-semibold text-slate-900 dark:bg-slate-800 dark:text-emerald-300">
               saascore_prod_db_bpr.json
             </code>{' '}
-            yang berisi detail koneksi database produksi berikut:
+            <RichTermText text="yang berisi detail koneksi database produksi berikut:" />
           </p>
           <pre className="mt-3 overflow-x-auto rounded-md border border-slate-300 bg-slate-900 p-3 font-mono text-xs leading-relaxed text-emerald-300 dark:border-slate-700">
 {`{
@@ -397,10 +396,10 @@ export function Lab05DataHandling({
                 </div>
 
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                  {step.title}
+                  <RichTermText text={step.title} />
                 </h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                  {step.prompt}
+                  <RichTermText text={step.prompt} />
                 </p>
 
                 <div className="mt-4 grid gap-3" role="group" aria-label={step.title}>
@@ -456,10 +455,12 @@ export function Lab05DataHandling({
                             title={option.label}
                           >
                             <p>
-                              <strong>Dampak di Lapangan:</strong> {option.fieldImpact}
+                              <strong>Dampak di Lapangan:</strong>{' '}
+                              <RichTermText text={option.fieldImpact} />
                             </p>
                             <p className="mt-1.5">
-                              <strong>Mengapa &amp; Langkah Tepat:</strong> {option.whyAndNextStep}
+                              <strong>Mengapa &amp; Langkah Tepat:</strong>{' '}
+                              <RichTermText text={option.whyAndNextStep} />
                             </p>
                           </FeedbackBox>
                         )}
@@ -476,10 +477,12 @@ export function Lab05DataHandling({
                       title={activeOption.label}
                     >
                       <p>
-                        <strong>Dampak di Lapangan:</strong> {activeOption.fieldImpact}
+                        <strong>Dampak di Lapangan:</strong>{' '}
+                        <RichTermText text={activeOption.fieldImpact} />
                       </p>
                       <p className="mt-1.5">
-                        <strong>Mengapa &amp; Langkah Tepat:</strong> {activeOption.whyAndNextStep}
+                        <strong>Mengapa &amp; Langkah Tepat:</strong>{' '}
+                        <RichTermText text={activeOption.whyAndNextStep} />
                       </p>
                     </FeedbackBox>
                   </div>

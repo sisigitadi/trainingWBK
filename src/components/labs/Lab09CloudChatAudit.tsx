@@ -9,7 +9,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface CloudOption {
   id: string;
@@ -350,7 +350,7 @@ export function Lab09CloudChatAudit({
         {instructorMode && (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <p className="text-sm text-slate-700 dark:text-slate-300">
-              Gunakan mode perbandingan terbuka untuk membahas seluruh pengaturan cloud dan pesan chat sekaligus di layar proyektor.
+              <RichTermText text="Gunakan mode perbandingan terbuka untuk membahas seluruh pengaturan cloud dan pesan chat sekaligus di layar proyektor." />
             </p>
             <button
               type="button"
@@ -380,10 +380,10 @@ export function Lab09CloudChatAudit({
               <span>BAGIAN 1: PENGATURAN HAK AKSES CLOUD (3 ITEM)</span>
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
-              Bandingkan Izin Berbagi Dokumen Proyek SaaSCore & BPR
+              <RichTermText text="Bandingkan Izin Berbagi Dokumen Proyek SaaSCore & BPR" />
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300">
-              Klik setiap pilihan konfigurasi di bawah untuk melihat perbedaan dampak antara tautan terbuka dan izin berbasis prinsip least privilege.
+              <RichTermText text="Klik setiap pilihan konfigurasi di bawah untuk melihat perbedaan dampak antara tautan terbuka dan izin berbasis prinsip least privilege." />
             </p>
           </div>
 
@@ -406,11 +406,13 @@ export function Lab09CloudChatAudit({
                     </div>
                     <span className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-rose-300 bg-rose-50 px-2.5 py-1 font-mono text-xs font-semibold text-rose-800 dark:border-rose-700/60 dark:bg-rose-950/50 dark:text-rose-200">
                       <FileWarning className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                      <span>Kondisi awal: {item.currentRiskSetting}</span>
+                      <span>
+                        Kondisi awal: <RichTermText text={item.currentRiskSetting} />
+                      </span>
                     </span>
                   </div>
                   <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                    {item.context}
+                    <RichTermText text={item.context} />
                   </p>
 
                   <div className="mt-3 space-y-2.5">
@@ -451,10 +453,12 @@ export function Lab09CloudChatAudit({
                               }
                             >
                               <p>
-                                <strong>Dampak di Lapangan:</strong> {opt.fieldImpact}
+                                <strong>Dampak di Lapangan:</strong>{' '}
+                                <RichTermText text={opt.fieldImpact} />
                               </p>
                               <p className="mt-1">
-                                <strong>Mengapa & Langkah Tepat:</strong> {opt.whyAndAction}
+                                <strong>Mengapa & Langkah Tepat:</strong>{' '}
+                                <RichTermText text={opt.whyAndAction} />
                               </p>
                             </FeedbackBox>
                           )}
@@ -479,13 +483,13 @@ export function Lab09CloudChatAudit({
               Grup Koordinasi Implementasi SaaSCore - BPR Mitra (Simulasi WhatsApp/Telegram)
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300">
-              Klik baris pesan atau tombol &ldquo;Lihat Analisis Kondisi&rdquo; untuk memeriksa apakah pesan tersebut aman atau melanggar UU PDP dan keamanan perbankan.
+              <RichTermText text='Klik baris pesan atau tombol "Lihat Analisis Kondisi" untuk memeriksa apakah pesan tersebut aman atau melanggar UU PDP dan keamanan perbankan.' />
             </p>
           </div>
 
           <Callout title="Panduan Diskusi Grup Chat" variant="navy">
             <p>
-              Perhatikan perbedaan antara koordinasi tiket yang aman dengan kebocoran alamat IP server, kredensial plaintext, file .ovpn beserta sandinya, dan data pribadi nasabah tanpa penyamaran (redaction).
+              <RichTermText text="Perhatikan perbedaan antara koordinasi tiket yang aman dengan kebocoran alamat IP server, kredensial plaintext, file .ovpn beserta sandinya, dan data pribadi nasabah tanpa penyamaran (redaction)." />
             </p>
           </Callout>
 
@@ -548,10 +552,12 @@ export function Lab09CloudChatAudit({
                         }
                       >
                         <p>
-                          <strong>Dampak di Lapangan:</strong> {msg.fieldImpact}
+                          <strong>Dampak di Lapangan:</strong>{' '}
+                          <RichTermText text={msg.fieldImpact} />
                         </p>
                         <p className="mt-1">
-                          <strong>Mengapa & Langkah Tepat:</strong> {msg.whyAndAction}
+                          <strong>Mengapa & Langkah Tepat:</strong>{' '}
+                          <RichTermText text={msg.whyAndAction} />
                         </p>
                       </FeedbackBox>
                     </div>

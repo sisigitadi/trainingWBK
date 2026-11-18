@@ -4,6 +4,28 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.3.0] - 2026-11-18
+
+### Ditambahkan
+- **Open Graph & Social Share Preview (`public/og-image.jpg`, `index.html`):**
+  - Menambahkan kartu pratinjau berbagi tautan `public/og-image.jpg` beresolusi tepat 1200x630 px (baseline JPEG, ~92 KB, aman di bawah batas 300 KB WhatsApp) menampilkan logo perisai siber "SA", judul pelatihan, deskripsi ringkas, identitas narasumber, dan domain portal pada latar Navy `#0B1F3A` dengan aksen Emerald `#10B981`.
+  - Menambahkan metadata SEO (`description`, `canonical`, `theme-color`), Open Graph (`og:type`, `og:locale`, `og:site_name`, `og:url`, `og:title`, `og:description`, `og:image`, `og:image:secure_url`, `og:image:type`, `og:image:width`, `og:image:height`, `og:image:alt`), serta Twitter Card (`summary_large_image`) menggunakan URL HTTPS absolut (`https://trainingwbk.sigitadi.id/`) untuk pratinjau optimal di WhatsApp, Telegram, LinkedIn, X, dan Facebook.
+
+### Diubah & Diperbaiki
+- **Modal Dialog Catatan Contoh Studi Kasus (`Layout.tsx`):**
+  - Mengubah blok catatan inline **Catatan Contoh Studi Kasus (Entitas Rekaan)** menjadi tombol ikon Info di header yang membuka Modal Dialog aksesibel, sehingga area konten awal lebih bersih di layar desktop, ponsel, maupun Mode Proyektor dan tetap dapat dibuka kembali kapan saja.
+- **Ekspansi Kamus Istilah Teknis & Perbaikan Balloon Tooltips (`glossary.ts`, `RichTermText.tsx`, `TermTooltip.tsx`, 10 Modul, 10 Lab, & Sesi Penutup):**
+  - Memperluas kamus istilah teknis dan penerapan balloon tooltips secara menyeluruh (termasuk `server`, `database`, `dump`, `failover`, dan istilah teknis lainnya) ke seluruh 10 Modul materi, 10 Lab simulasi, dan Sesi Penutup.
+  - Memperbaiki bug pencocokan teks pada istilah `KMS`, ekstensi berkas `.xlsm`/`.pdf.exe`, serta perlindungan URL agar tidak terpecah oleh tooltip, disertai penyempurnaan `TermTooltip`.
+- **Sinkronisasi Dokumentasi (`README.md`, `REVISI.md`, `CHANGELOG.md`):**
+  - Memperbarui deskripsi tata letak di `README.md` dan `REVISI.md` dari "Header & Footer Mengambang" menjadi "Header Mengambang" serta mencatat seluruh perubahan v2.3.0.
+
+### Dihapus
+- **Penghapusan Total Footer Mengambang (`Layout.tsx`):**
+  - Menghapus seluruh komponen footer mengambang di bagian bawah layar agar tidak menutupi konten materi maupun simulasi lab saat digulir, disertai penyesuaian ruang padding bawah non-proyektor.
+
+---
+
 ## [2.2.6] - 2026-11-18
 
 ### Diubah & Diperbaiki

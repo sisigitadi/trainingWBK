@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type CiaPillar = 'Confidentiality' | 'Integrity' | 'Availability';
 
@@ -491,9 +491,13 @@ export function Lab01CIA({
               aria-hidden="true"
             />
             <span>
-              {instructorMode
-                ? 'Mode Belajar Terbuka: Klik setiap pilihan untuk membandingkan kondisi aman dan risiko di lapangan, atau buka seluruh penjelasan untuk diskusi kelas.'
-                : 'Mode Belajar Terbuka: Klik setiap pilihan pilar CIA dan mitigasi untuk mengamati kondisi aman maupun berisiko di lapangan secara langsung.'}
+              <RichTermText
+                text={
+                  instructorMode
+                    ? 'Mode Belajar Terbuka: Klik setiap pilihan untuk membandingkan kondisi aman dan risiko di lapangan, atau buka seluruh penjelasan untuk diskusi kelas.'
+                    : 'Mode Belajar Terbuka: Klik setiap pilihan pilar CIA dan mitigasi untuk mengamati kondisi aman maupun berisiko di lapangan secara langsung.'
+                }
+              />
             </span>
           </div>
           {instructorMode && (
@@ -522,9 +526,7 @@ export function Lab01CIA({
           badge="EKSPLORASI AKTIF"
           variant="navy"
         >
-          Tidak ada skor atau batas salah di latihan ini. Cobalah mengklik opsi yang
-          terlihat keliru terlebih dahulu agar Anda memahami konsekuensi nyatanya bagi
-          layanan BPR sebelum membandingkannya dengan langkah mitigasi yang aman.
+          <RichTermText text="Tidak ada skor atau batas salah di latihan ini. Cobalah mengklik opsi yang terlihat keliru terlebih dahulu agar Anda memahami konsekuensi nyatanya bagi layanan BPR sebelum membandingkannya dengan langkah mitigasi yang aman." />
         </Callout>
 
         {INCIDENTS.map((incident) => {
@@ -556,16 +558,16 @@ export function Lab01CIA({
               </div>
 
               <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
-                {incident.title}
+                <RichTermText text={incident.title} />
               </h3>
               <p className="mt-2 rounded-md border border-slate-200 bg-slate-50 p-3.5 text-sm leading-relaxed text-slate-700 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-300">
-                {incident.scenario}
+                <RichTermText text={incident.scenario} />
               </p>
 
               <div className="mt-5 space-y-5">
                 <div className="space-y-2.5">
                   <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                    A. Uji Dampak Pilar CIA (Klik setiap pilar untuk melihat analisisnya)
+                    <RichTermText text="A. Uji Dampak Pilar CIA (Klik setiap pilar untuk melihat analisisnya)" />
                   </p>
                   <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                     {PILLAR_OPTIONS.map((opt) => {
@@ -619,11 +621,11 @@ export function Lab01CIA({
                     >
                       <p>
                         <strong>Dampak Situasi di Lapangan:</strong>{' '}
-                        {activePillarFb.impact}
+                        <RichTermText text={activePillarFb.impact} />
                       </p>
                       <p className="mt-1.5">
                         <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                        {activePillarFb.rationale}
+                        <RichTermText text={activePillarFb.rationale} />
                       </p>
                     </FeedbackBox>
                   )}
@@ -639,10 +641,10 @@ export function Lab01CIA({
                             label={fb.isSafe ? `TEPAT: ${opt.id}` : `PEMBANDING: ${opt.id}`}
                           >
                             <p>
-                              <strong>Dampak:</strong> {fb.impact}
+                              <strong>Dampak:</strong> <RichTermText text={fb.impact} />
                             </p>
                             <p className="mt-1">
-                              <strong>Penjelasan:</strong> {fb.rationale}
+                              <strong>Penjelasan:</strong> <RichTermText text={fb.rationale} />
                             </p>
                           </FeedbackBox>
                         );
@@ -653,8 +655,7 @@ export function Lab01CIA({
 
                 <div className="space-y-2.5">
                   <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                    B. Uji Skenario Langkah Mitigasi (Klik opsi mana saja untuk melihat
-                    dampaknya)
+                    <RichTermText text="B. Uji Skenario Langkah Mitigasi (Klik opsi mana saja untuk melihat dampaknya)" />
                   </p>
                   <div className="space-y-2.5">
                     {incident.mitigations.map((mit) => {
@@ -710,11 +711,12 @@ export function Lab01CIA({
                               }
                             >
                               <p>
-                                <strong>Dampak Situasi di Lapangan:</strong> {mit.impact}
+                                <strong>Dampak Situasi di Lapangan:</strong>{' '}
+                                <RichTermText text={mit.impact} />
                               </p>
                               <p className="mt-1">
                                 <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                                {mit.rationale}
+                                <RichTermText text={mit.rationale} />
                               </p>
                             </FeedbackBox>
                           )}
@@ -734,11 +736,11 @@ export function Lab01CIA({
                     >
                       <p>
                         <strong>Dampak Situasi di Lapangan:</strong>{' '}
-                        {activeMitigation.impact}
+                        <RichTermText text={activeMitigation.impact} />
                       </p>
                       <p className="mt-1.5">
                         <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                        {activeMitigation.rationale}
+                        <RichTermText text={activeMitigation.rationale} />
                       </p>
                     </FeedbackBox>
                   )}

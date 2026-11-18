@@ -8,7 +8,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type AuditStatus = 'aman' | 'perbaikan' | 'belum_yakin';
 
@@ -449,17 +449,17 @@ export function Lab06EndpointAudit({
                       POIN {String(item.number).padStart(2, '0')}
                     </span>
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
-                      {item.title}
+                      <RichTermText text={item.title} />
                     </h3>
                   </div>
                 </div>
 
                 <p className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                  {item.description}
+                  <RichTermText text={item.description} />
                 </p>
                 <p className="mt-1.5 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
                   <strong className="text-slate-800 dark:text-slate-200">Cara cek cepat:</strong>{' '}
-                  {item.howToVerify}
+                  <RichTermText text={item.howToVerify} />
                 </p>
 
                 <div
@@ -515,11 +515,12 @@ export function Lab06EndpointAudit({
                       title={item.title}
                     >
                       <p>
-                        <strong>Dampak di Lapangan:</strong> {activeExplanation.fieldImpact}
+                        <strong>Dampak di Lapangan:</strong>{' '}
+                        <RichTermText text={activeExplanation.fieldImpact} />
                       </p>
                       <p className="mt-1.5">
                         <strong>Mengapa &amp; Langkah Tepat:</strong>{' '}
-                        {activeExplanation.whyAndNextStep}
+                        <RichTermText text={activeExplanation.whyAndNextStep} />
                       </p>
                     </FeedbackBox>
                   </div>
@@ -536,10 +537,12 @@ export function Lab06EndpointAudit({
                           label={`${opt.label} - ${cond.statusLabel}`}
                         >
                           <p>
-                            <strong>Dampak di Lapangan:</strong> {cond.fieldImpact}
+                            <strong>Dampak di Lapangan:</strong>{' '}
+                            <RichTermText text={cond.fieldImpact} />
                           </p>
                           <p className="mt-1.5">
-                            <strong>Mengapa &amp; Langkah Tepat:</strong> {cond.whyAndNextStep}
+                            <strong>Mengapa &amp; Langkah Tepat:</strong>{' '}
+                            <RichTermText text={cond.whyAndNextStep} />
                           </p>
                         </FeedbackBox>
                       );
@@ -574,7 +577,9 @@ export function Lab06EndpointAudit({
                     label={`POIN ${String(item.number).padStart(2, '0')} - ${detail.statusLabel}`}
                     title={item.title}
                   >
-                    <p>{detail.whyAndNextStep}</p>
+                    <p>
+                      <RichTermText text={detail.whyAndNextStep} />
+                    </p>
                   </FeedbackBox>
                 );
               })}

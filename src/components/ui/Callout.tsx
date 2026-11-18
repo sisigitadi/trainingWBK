@@ -1,7 +1,8 @@
 import React from 'react';
+import { RichTermText } from './RichTermText';
 
 export interface CalloutProps {
-  title: string;
+  title: string | React.ReactNode;
   variant?: 'navy' | 'emerald' | 'amber' | 'slate';
   badge?: string;
   icon?: React.ReactNode;
@@ -38,7 +39,9 @@ export function Callout({
             {badge}
           </span>
         )}
-        <h3 className="text-base font-bold leading-snug">{title}</h3>
+        <h3 className="text-base font-bold leading-snug">
+          {typeof title === 'string' ? <RichTermText text={title} /> : title}
+        </h3>
       </div>
       <div className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
         {children}

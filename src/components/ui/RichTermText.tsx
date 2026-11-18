@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { TOOLTIP_TERMS, type TooltipTerm } from '../../data/tooltipTerms';
-import { TermTooltip } from './TermTooltip';
+import { TermTooltip, type TermTooltipVariant } from './TermTooltip';
 
 interface CompiledMatcher {
   regex: RegExp;
@@ -13,38 +13,61 @@ function escapeRegExp(value: string): string {
 
 const COMPILED: CompiledMatcher = (() => {
   const patternToTerm = new Map<string, TooltipTerm>();
-  const allPatterns: string[] = [];
+  const extensionPatterns: string[] = [];
+  const wordPatterns: string[] = [];
 
   for (const entry of TOOLTIP_TERMS) {
     for (const pat of entry.patterns) {
       const key = pat.toLowerCase();
       if (!patternToTerm.has(key)) {
         patternToTerm.set(key, entry);
-        allPatterns.push(pat);
+        if (pat.startsWith('.')) {
+          extensionPatterns.push(pat);
+        } else {
+          wordPatterns.push(pat);
+        }
       }
     }
   }
 
-  // Longest-match-first so multi-word phrases win over nested short acronyms
-  allPatterns.sort((a, b) => b.length - a.length);
-  const alternation = allPatterns.map(escapeRegExp).join('|');
+  // Longest-match-first so multi-word phrases and multi-dot extensions win over shorter terms
+  extensionPatterns.sort((a, b) => b.length - a.length);
+  wordPatterns.sort((a, b) => b.length - a.length);
+
+  const branches: string[] = [];
+  if (extensionPatterns.length > 0) {
+    const extAlt = extensionPatterns.map(escapeRegExp).join('|');
+    branches.push(`(?:${extAlt})(?![A-Za-z0-9_])`);
+  }
+  if (wordPatterns.length > 0) {
+    const wordAlt = wordPatterns.map(escapeRegExp).join('|');
+    branches.push(
+      `(?<![A-Za-z0-9_.@])(?:${wordAlt})(?![A-Za-z0-9_])(?!://)(?!\\.[A-Za-z0-9])`
+    );
+  }
 
   return {
-    regex: new RegExp(`(?<![A-Za-z0-9_])(?:${alternation})(?![A-Za-z0-9_])`, 'gi'),
+    regex: new RegExp(branches.join('|'), 'gi'),
     patternToTerm,
   };
 })();
 
 export interface RichTermTextProps {
   text: string;
+  className?: string;
+  variant?: TermTooltipVariant;
 }
 
-export function RichTermText({ text }: RichTermTextProps) {
+export function RichTermText({
+  text,
+  className,
+  variant = 'default',
+}: RichTermTextProps) {
   const nodes = useMemo(() => {
     if (!text) return [text];
 
     const parts: React.ReactNode[] = [];
-    const seenIds = new Set<string>();
+    const seenLabels = new Set<string>();
     const regex = new RegExp(COMPILED.regex.source, 'gi');
 
     let lastIndex = 0;
@@ -53,16 +76,22 @@ export function RichTermText({ text }: RichTermTextProps) {
 
     while (match !== null) {
       const matchedText = match[0];
+      const normalized = matchedText.toLowerCase();
       const start = match.index;
-      const entry = COMPILED.patternToTerm.get(matchedText.toLowerCase());
+      const entry = COMPILED.patternToTerm.get(normalized);
 
-      if (entry && !seenIds.has(entry.id)) {
-        seenIds.add(entry.id);
+      if (entry && !seenLabels.has(normalized)) {
+        seenLabels.add(normalized);
         if (start > lastIndex) {
           parts.push(text.slice(lastIndex, start));
         }
         parts.push(
-          <TermTooltip key={`${entry.id}-${keyIdx++}`} label={matchedText} entry={entry} />
+          <TermTooltip
+            key={`${entry.id}-${keyIdx++}`}
+            label={matchedText}
+            entry={entry}
+            variant={variant}
+          />
         );
         lastIndex = start + matchedText.length;
       }
@@ -75,7 +104,11 @@ export function RichTermText({ text }: RichTermTextProps) {
     }
 
     return parts.length > 0 ? parts : [text];
-  }, [text]);
+  }, [text, variant]);
+
+  if (className) {
+    return <span className={className}>{nodes}</span>;
+  }
 
   return <>{nodes}</>;
 }

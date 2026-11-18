@@ -8,7 +8,7 @@ import {
   MessageSquareText,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
-import { Callout, FeedbackBox, LabShell } from '../ui';
+import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface CaseOption {
   id: string;
@@ -656,10 +656,10 @@ export function Lab10CaseReview({
             </div>
 
             <h3 className="text-base font-bold text-slate-900 sm:text-lg dark:text-slate-100">
-              {currentCase.topic}
+              <RichTermText text={currentCase.topic} />
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-slate-700 sm:text-base dark:text-slate-200">
-              {currentCase.scenario}
+              <RichTermText text={currentCase.scenario} />
             </p>
 
             <div className="mt-4">
@@ -668,7 +668,9 @@ export function Lab10CaseReview({
                 variant="navy"
                 icon={<MessageSquareText className="h-4 w-4 text-[#0B1F3A] dark:text-sky-400" aria-hidden="true" />}
               >
-                <p>{currentCase.discussionTip}</p>
+                <p>
+                  <RichTermText text={currentCase.discussionTip} />
+                </p>
               </Callout>
             </div>
 
@@ -712,10 +714,12 @@ export function Lab10CaseReview({
                         label={opt.status === 'safe' ? 'KONDISI AMAN / TEPAT' : 'KONDISI BERISIKO'}
                       >
                         <p>
-                          <strong>Dampak di Lapangan:</strong> {opt.fieldImpact}
+                          <strong>Dampak di Lapangan:</strong>{' '}
+                          <RichTermText text={opt.fieldImpact} />
                         </p>
                         <p className="mt-1">
-                          <strong>Mengapa & Langkah Tepat:</strong> {opt.whyAndAction}
+                          <strong>Mengapa & Langkah Tepat:</strong>{' '}
+                          <RichTermText text={opt.whyAndAction} />
                         </p>
                       </FeedbackBox>
                     )}
