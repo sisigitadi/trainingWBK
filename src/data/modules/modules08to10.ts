@@ -79,7 +79,7 @@ export const modules08to10: ModuleContent[] = [
       {
         heading: 'Mengapa Tidak Langsung Restart atau Hapus Jejak?',
         paragraphs: [
-          'Mematikan paksa laptop atau menjalankan aplikasi pembersih disk saat panik justru menghancurkan bukti di memori sementara (RAM). Tim keamanan membutuhkan data volatile tersebut untuk melakukan forensic triage, menentukan apakah kredensial SaaSCore bocor, dan melakukan rotasi kredensial secara tepat sasaran.'
+          'Mematikan paksa laptop atau menjalankan aplikasi pembersih disk saat panik justru menghancurkan bukti di memori sementara (RAM). Tim keamanan membutuhkan data di memori RAM tersebut untuk melakukan forensic triage, menentukan apakah kredensial SaaSCore bocor, dan melakukan rotasi kredensial secara tepat sasaran.'
         ],
         bullets: [
           'Isi memori RAM (proses malware dan koneksi IP penyerang) hilang seketika saat laptop di-restart.',
@@ -132,7 +132,7 @@ export const modules08to10: ModuleContent[] = [
       {
         doIt: 'Biarkan laptop menyala secara offline dan foto layar untuk dokumentasi awal.',
         dontIt: 'Langsung melakukan restart paksa, shutdown, atau membersihkan riwayat browser.',
-        why: 'Restart menghapus bukti volatile di RAM yang dibutuhkan untuk forensic triage.'
+        why: 'Restart menghapus bukti di memori RAM (volatile) yang dibutuhkan untuk forensic triage.'
       },
       {
         doIt: 'Laporkan salah klik atau anomali dalam 5 menit pertama lewat jalur darurat resmi SaaS.',

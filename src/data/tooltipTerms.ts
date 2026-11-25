@@ -345,11 +345,10 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   },
   {
     id: 'root-domain',
-    term: 'Domain Akar (Registrable Domain)',
+    term: 'Domain Utama (Registrable Domain)',
     patterns: [
-      'Domain Akar (Root Domain)',
+      'Domain Utama',
       'Registrable Domain',
-      'Domain Akar',
       'Root Domain',
       'domain utama',
     ],
@@ -559,7 +558,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   },
   {
     id: 'plaintext',
-    term: 'Plaintext (Teks Terbuka Tanpa Sandi)',
+    term: 'Plaintext (Teks Tanpa Enkripsi)',
     patterns: ['plaintext'],
     meaning:
       'Data atau kata sandi yang tersimpan apa adanya dalam bentuk teks biasa yang langsung dapat dibaca oleh siapa pun tanpa enkripsi.',
@@ -743,7 +742,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
     term: 'VPN (Virtual Private Network) & Split Tunneling',
     patterns: ['VPN Klien BPR', 'split tunneling', 'SSL VPN', 'VPN'],
     meaning:
-      'Terowongan jaringan terenkripsi untuk mengakses jaringan internal secara aman; split tunneling memisahkan jalur internet umum dan jalur VPN.',
+      'Jalur koneksi jaringan terenkripsi (tunnel) untuk mengakses jaringan internal secara aman; split tunneling memisahkan jalur internet umum dan jalur VPN.',
     context:
       'VPN klien BPR hanya diaktifkan saat menangani tiket resmi dan segera diputus ketika pekerjaan selesai.',
   },
@@ -826,7 +825,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
     meaning:
       'Protokol kendali server jarak jauh berbasis teks/terminal (SSH) dan berbasis tampilan layar desktop (RDP).',
     context:
-      'Akses SSH dan RDP ke server SaaSCore hanya boleh dibuka melalui terowongan VPN yang sah.',
+      'Akses SSH dan RDP ke server SaaSCore hanya boleh dibuka melalui jalur tunnel VPN yang sah.',
   },
 
   // Modul 08: Incident Response
@@ -1261,7 +1260,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   },
   {
     id: 'endpoint',
-    term: 'Endpoint (Perangkat Ujung)',
+    term: 'Endpoint (Perangkat Kerja Pengguna)',
     patterns: ['endpoint security', 'endpoint'],
     meaning:
       'Perangkat komputasi milik pengguna akhir seperti laptop kerja, PC desktop, atau ponsel yang terhubung ke jaringan perusahaan.',
@@ -1314,8 +1313,8 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   },
   {
     id: 'tunnel',
-    term: 'Tunnel (Terowongan Jaringan)',
-    patterns: ['tunnel VPN', 'tunnel', 'terowongan'],
+    term: 'Tunnel VPN',
+    patterns: ['tunnel VPN', 'tunnel'],
     meaning:
       'Jalur koneksi pribadi terenkripsi yang membungkus lalu lintas data agar aman melintasi jaringan publik menuju jaringan internal.',
     context:
@@ -1359,7 +1358,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   },
   {
     id: 'mirror',
-    term: 'Mirror (Situs Cermin Unduhan)',
+    term: 'Mirror Server (Situs Unduhan Alternatif)',
     patterns: ['mirror'],
     meaning:
       'Server salinan alternatif yang menyediakan file unduhan serupa dengan server utama.',

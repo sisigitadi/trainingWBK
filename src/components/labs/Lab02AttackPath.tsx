@@ -147,7 +147,7 @@ const STAGES: AttackStage[] = [
           'Biarkan koneksi VPN tetap tersambung sepanjang hari kerja agar tidak perlu autentikasi ulang saat ada tiket baru.',
         isSafe: false,
         impact:
-          'Jika laptop terkena malware atau ditinggal terbuka sesaat, penyerang memiliki jalur terowongan aktif langsung ke jaringan internal BPR.',
+          'Jika laptop terkena malware atau ditinggal terbuka sesaat, penyerang memiliki jalur tunnel VPN aktif langsung ke jaringan internal BPR.',
         rationale:
           'Kondisi berisiko! Koneksi VPN yang selalu aktif memperpanjang jendela serangan dan memperbesar dampak kompromi endpoint.',
       },
@@ -181,7 +181,7 @@ const STAGES: AttackStage[] = [
       'Staf menyampaikan hasil analisis dan langkah tindak lanjut kepada tim IT BPR.',
     attackTitle: 'Spoofing Balasan & Kebocoran Kredensial di Lampiran Log',
     attackVector:
-      'Balasan dikirim memakai akun email pribadi atau menyertakan file log mentah berisi string koneksi database, alamat IP internal, dan data CIF nasabah dalam teks polos.',
+      'Balasan dikirim memakai akun email pribadi atau menyertakan file log mentah berisi string koneksi database, alamat IP internal, dan data CIF nasabah dalam plaintext (tanpa enkripsi).',
     question:
       'Bandingkan cara pengiriman hasil analisis kembali ke tim BPR:',
     Icon: Send,
@@ -403,11 +403,10 @@ export function Lab02AttackPath({
                     type="button"
                     onClick={() => handleSelectStage(stage.id)}
                     aria-current={isActive ? 'step' : undefined}
-                    className={`flex min-h-[44px] w-full flex-col justify-between gap-2 rounded-lg border p-3.5 text-left transition-colors ${
-                      isActive
+                    className={`flex min-h-[44px] w-full flex-col justify-between gap-2 rounded-lg border p-3.5 text-left transition-colors ${isActive
                         ? 'border-[#047857] bg-emerald-50/80 ring-2 ring-[#047857]/40 dark:border-emerald-400 dark:bg-emerald-950/40 dark:ring-emerald-400/40'
                         : 'border-slate-200 bg-slate-50 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/70 dark:hover:bg-slate-800'
-                    }`}
+                      }`}
                   >
                     <div className="flex w-full items-center justify-between gap-2">
                       <span className="rounded bg-[#0B1F3A] px-2 py-0.5 font-mono text-[11px] font-semibold text-emerald-300 dark:bg-slate-950">
@@ -505,13 +504,12 @@ export function Lab02AttackPath({
                             type="button"
                             onClick={() => handleExploreOption(stage.id, opt.id)}
                             aria-pressed={isSelected}
-                            className={`flex min-h-[44px] w-full items-start gap-3 rounded-md border px-4 py-3 text-left text-sm leading-relaxed transition-colors ${
-                              isSelected
+                            className={`flex min-h-[44px] w-full items-start gap-3 rounded-md border px-4 py-3 text-left text-sm leading-relaxed transition-colors ${isSelected
                                 ? opt.isSafe
                                   ? 'border-emerald-600 bg-emerald-50 text-emerald-950 ring-1 ring-emerald-600 dark:border-emerald-400 dark:bg-emerald-950/50 dark:text-emerald-100 dark:ring-emerald-400'
                                   : 'border-rose-600 bg-rose-50 text-rose-950 ring-1 ring-rose-600 dark:border-rose-400 dark:bg-rose-950/50 dark:text-rose-100 dark:ring-rose-400'
                                 : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'
-                            }`}
+                              }`}
                           >
                             <span className="mt-0.5 shrink-0">
                               {isInspected ? (

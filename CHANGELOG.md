@@ -4,6 +4,15 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.4.2] - 2026-11-25
+
+### Diubah & Diperbaiki
+- **Audit & Normalisasi Terjemahan Istilah Teknis (`tooltipTerms.ts`, `Lab01` s.d. `Lab03`, `Lab08`, `Lab10`, Modul 03 s.d. 08, `HANDOUT_PRESENTASI.md`, `REVISI.md`):**
+  - Mengganti istilah terjemahan harfiah/rancu pada kamus tooltip dan seluruh modul/lab: `"Domain Akar"` menjadi `"Domain Utama"` / `"Domain Utama (Registrable Domain)"` (serta menghapus pola pencocokan `Domain Akar` dan `domain registrasi utama`), `"terowongan"` menjadi `"tunnel VPN"` / `"Tunnel VPN"`, `"Situs Cermin"` menjadi `"Mirror Server (Situs Unduhan Alternatif)"`, `"Perangkat Ujung"` menjadi `"Endpoint (Perangkat Kerja Pengguna)"`, dan `"Teks Polos"` / `"teks polos"` menjadi `"Plaintext (Teks Tanpa Enkripsi)"` / `"plaintext"`.
+  - Menyeragamkan istilah operasional: `"pengelola kata sandi"` menjadi `"Password Manager"`, `"peramban web"` menjadi `"browser web"`, `"Kebersihan Sesi"` menjadi `"Keamanan Sesi Login"`, `"Kebersihan Endpoint"` / `"Alur Kebersihan Endpoint"` menjadi `"keamanan endpoint"` / `"Alur Pengamanan Endpoint"`, `"Hujan Notifikasi MFA"` / `"Hujan Notifikasi Persetujuan MFA"` menjadi `"Spam Notifikasi MFA Berulang"`, serta `"data/bukti volatil di RAM"` menjadi `"data/bukti di memori RAM (volatile)"`.
+
+---
+
 ## [2.4.1] - 2026-11-25
 
 ### Diubah & Diperbaiki

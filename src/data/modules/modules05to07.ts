@@ -96,7 +96,7 @@ export const modules05to07: ModuleContent[] = [
         ],
         bullets: [
           'Sensor atau potong baris payload yang mengandung identitas nasabah (PII) dan rahasia sesi sebelum log dibagikan.',
-          'Simpan kredensial akses BPR hanya di pengelola kata sandi resmi perusahaan, bukan di file teks polos pada Desktop.',
+          'Simpan kredensial akses BPR hanya di Password Manager resmi perusahaan, bukan di file plaintext pada Desktop.',
           'Lakukan pemeriksaan folder Downloads setiap kali menutup tiket harian agar tidak ada sisa file klien yang tertinggal.'
         ]
       }
@@ -189,7 +189,7 @@ export const modules05to07: ModuleContent[] = [
       'Membiasakan penguncian layar (Win + L) dan penolakan perangkat USB tak dikenal guna mencegah akses fisik maupun serangan BadUSB.'
     ],
     workflowDiagram: {
-      title: 'Alur Kebersihan Endpoint & Perangkat Kerja',
+      title: 'Alur Pengamanan Endpoint & Perangkat Kerja',
       subtitle:
         'Menjaga laptop kerja sebagai gerbang menuju server BPR dari infostealer, celah OS, dan akses fisik.',
       steps: [
@@ -406,7 +406,7 @@ export const modules05to07: ModuleContent[] = [
         bullets: [
           'Untuk akses sistem SaaS atau server BPR di luar kantor, prioritaskan tethering hotspot ponsel pribadi dengan sandi WPA2/WPA3.',
           'Matikan opsi Auto-Connect pada Wi-Fi publik agar laptop tidak tersambung diam-diam ke SSID tiruan.',
-          'Jika terpaksa memakai Wi-Fi publik untuk riset umum, hindari login akun sensitif tanpa terowongan VPN yang sah.'
+          'Jika terpaksa memakai Wi-Fi publik untuk riset umum, hindari login akun sensitif tanpa tunnel VPN yang sah.'
         ]
       },
       {
@@ -465,7 +465,7 @@ export const modules05to07: ModuleContent[] = [
         whatHappened:
           'Sekilas terlihat nama sigitadi.id di bagian depan URL sehingga tampak meyakinkan. Sebelum mengisi kredensial, ia memeriksa bagian paling kanan sebelum garis miring pertama dan menyadari domain aslinya adalah portal-validasi-akses.com, lalu segera melaporkannya ke tim keamanan.',
         lesson:
-          'Kebiasaan membaca domain registrasi utama dari kanan ke kiri sebelum garis miring pertama merupakan pertahanan cepat terhadap subdomain spoofing.'
+          'Kebiasaan membaca domain utama dari kanan ke kiri sebelum garis miring pertama merupakan pertahanan cepat terhadap subdomain spoofing.'
       }
     ],
     doDont: [
@@ -498,7 +498,7 @@ export const modules05to07: ModuleContent[] = [
     keyTakeaways: [
       'Prioritaskan hotspot seluler pribadi dibanding Wi-Fi publik dan matikan auto-connect untuk mencegah Evil Twin Attack.',
       'VPN klien BPR bersifat sementara sesuai tiket; nyalakan saat perlu dan langsung matikan saat pekerjaan selesai.',
-      'HTTPS mengenkripsi jalur, tetapi pemeriksaan domain registrasi utama adalah penentu keaslian situs.',
+      'HTTPS mengenkripsi jalur, tetapi pemeriksaan domain utama adalah penentu keaslian situs.',
       'Batasi ekstensi browser dan pisahkan profil kerja guna menjaga keamanan sesi web.'
     ],
     instructorGuide: {

@@ -62,7 +62,7 @@ const CRISIS_STAGES: CrisisStage[] = [
         fieldImpact:
           'Restart melenyapkan isi memori RAM yang berisi jejak perintah PowerShell dan alamat IP penyerang. Selain itu, skrip persistence yang sudah terpasang dapat menyala kembali saat sistem hidup.',
         whyAndAction:
-          'Mengapa berisiko: bukti volatil di RAM langsung hilang sebelum sempat diperiksa tim forensic triage. Langkah tepat: putus Wi-Fi/LAN/VPN terlebih dahulu, jangan di-restart.',
+          'Mengapa berisiko: bukti di memori RAM (volatile) langsung hilang sebelum sempat diperiksa tim forensic triage. Langkah tepat: putus Wi-Fi/LAN/VPN terlebih dahulu, jangan di-restart.',
       },
       {
         id: '1c',

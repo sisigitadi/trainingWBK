@@ -80,7 +80,7 @@ const MESSAGES: SimMessage[] = [
         impact:
           'Domain palsu segera diblokir di gateway email dan rekan tim lain diperingatkan agar tidak ikut tertipu.',
         rationale:
-          'Langkah tepat! Memeriksa alamat domain akar sebelum mengeklik mencegah kebocoran akses VPN ke infrastruktur BPR mitra.',
+          'Langkah tepat! Memeriksa alamat domain utama sebelum mengeklik mencegah kebocoran akses VPN ke infrastruktur BPR mitra.',
       },
     },
   },
@@ -119,7 +119,7 @@ const MESSAGES: SimMessage[] = [
         impact:
           'Tim IT mengonfirmasi pesan ini sah; sikap waspada tetap positif meski pengumuman internal seperti ini aman ditindaklanjuti setelah verifikasi domain.',
         rationale:
-          'Melaporkan saat ragu tidak pernah salah, namun Anda bisa mengenali keasliannya secara mandiri dari domain akar sigitadi.id dan tidak adanya unsur desakan maupun permintaan OTP.',
+          'Melaporkan saat ragu tidak pernah salah, namun Anda bisa mengenali keasliannya secara mandiri dari domain utama sigitadi.id dan tidak adanya unsur desakan maupun permintaan OTP.',
       },
     },
   },

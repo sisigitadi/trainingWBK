@@ -292,7 +292,7 @@ const INCIDENTS: IncidentScenario[] = [
     code: 'INSIDEN 04',
     title: 'Kredensial Admin VPN BPR Tercatat di File Teks Biasa pada Folder Bersama',
     scenario:
-      'Dalam peninjauan rutin jaringan kantor, ditemukan berkas bernama daftar_vpn_klien.txt berisi username dan kata sandi akun administrator VPN beberapa BPR mitra tersimpan dalam teks polos di folder jaringan bersama yang dapat dibuka semua divisi.',
+      'Dalam peninjauan rutin jaringan kantor, ditemukan berkas bernama daftar_vpn_klien.txt berisi username dan kata sandi akun administrator VPN beberapa BPR mitra tersimpan dalam format plaintext di folder jaringan bersama yang dapat dibuka semua divisi.',
     correctPillar: 'Confidentiality',
     pillarFeedback: {
       Confidentiality: {

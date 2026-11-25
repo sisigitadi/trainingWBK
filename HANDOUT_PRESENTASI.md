@@ -251,7 +251,7 @@ Jika kantor BPR adalah rumah dengan pagar tinggi dan gembok kokoh, maka PT. Sigi
 - Mengenali tiga pemicu psikologis utama dalam Social Engineering yaitu Urgency, Fear, dan Authority.
 - Mengidentifikasi pola Spear Phishing B2B yang memanfaatkan konteks proyek SaaSCore dan mitra BPR.
 - Memeriksa indikator Email Spoofing dan penyamaran akun WhatsApp di balik nama tampilan pengirim.
-- Mendeteksi jebakan Typosquatting yang meniru domain resmi sigitadi.id melalui pemeriksaan Domain Akar.
+- Mendeteksi jebakan Typosquatting yang meniru domain resmi sigitadi.id melalui pemeriksaan Domain Utama.
 
 ### Materi Inti
 
@@ -283,7 +283,7 @@ Pada sistem email, kolom Display Name dapat ditulis sesuka hati menjadi nama pim
 
 Typosquatting memanfaatkan kemiripan huruf dan kebiasaan membaca cepat untuk menipu korban agar membuka halaman login palsu, misalnya mengganti `sigitadi.id` menjadi `sigitadi-support.id`, `s1gitadi.id`, atau memakai subdomain mengecoh seperti `sigitadi.id.login-verify.net`. Begitu kredensial dan kode OTP dimasukkan, data langsung jatuh ke tangan penyerang.
 
-- Cara aman membaca URL adalah menemukan Domain Akar tepat di sebelah kiri garis miring pertama (`/`).
+- Cara aman membaca URL adalah menemukan Domain Utama tepat di sebelah kiri garis miring pertama (`/`).
 - Waspadai karakter mirip (homoglyph) seperti `rn` menggantikan `m`, angka `0` menggantikan `o`, atau huruf `l` kecil dan `I` besar.
 - Akses portal kritikal seperti webmail, VPN, dan sistem tiket selalu melalui bookmark resmi, bukan tautan dari pesan masuk.
 
@@ -303,13 +303,13 @@ Seseorang mengetuk pintu rumah mengenakan rompi mirip petugas listrik dan berter
 
 - **Konteks:** Beberapa pegawai SaaS menerima email bertajuk pemberitahuan penutupan akses VPN pada sore hari dengan logo perusahaan yang rapi.
 - **Kejadian:** Pesan mengancam akses ke seluruh server BPR akan terputus otomatis bila pengguna tidak melakukan validasi ulang lewat tombol di email. Pemeriksaan alamat pengirim dan tujuan tombol menunjukkan domain `portal-sigitadi.co-id.site` bukan `sigitadi.id`, sehingga tim segera melaporkan email tersebut agar seluruh pegawai waspada.
-- **Pembelajaran:** Kerapian logo dan tata bahasa tidak menjamin keaslian pesan; validasi Domain Akar dan kebiasaan menggunakan bookmark resmi adalah kunci pencegahan.
+- **Pembelajaran:** Kerapian logo dan tata bahasa tidak menjamin keaslian pesan; validasi Domain Utama dan kebiasaan menggunakan bookmark resmi adalah kunci pencegahan.
 
 ### Lakukan (Do) vs Hindari (Don't)
 
 | Lakukan (Do) | Hindari (Don't) | Mengapa |
 | :--- | :--- | :--- |
-| Periksa Domain Akar URL tepat sebelum garis miring pertama dari kanan ke kiri sebelum memasukkan kredensial. | Mengklik tombol login dari email atau pesan chat lalu langsung mengetik username dan kata sandi. | Menghindari jebakan Typosquatting dan subdomain palsu yang meniru tampilan portal `sigitadi.id`. |
+| Periksa Domain Utama URL tepat sebelum garis miring pertama dari kanan ke kiri sebelum memasukkan kredensial. | Mengklik tombol login dari email atau pesan chat lalu langsung mengetik username dan kata sandi. | Menghindari jebakan Typosquatting dan subdomain palsu yang meniru tampilan portal `sigitadi.id`. |
 | Terapkan Verifikasi Out-of-Band melalui telepon atau kanal internal resmi untuk permintaan akses, OTP, atau perubahan data sensitif. | Menyetujui permintaan mendesak hanya karena pengirim memakai foto profil atau nama tampilan pimpinan. | Nama tampilan email dan nomor WhatsApp baru sangat mudah dipalsukan oleh pelaku Social Engineering. |
 | Gunakan bookmark browser resmi untuk membuka webmail, portal tiket, Git, dan gateway VPN setiap hari. | Membuka portal kritikal lewat tautan hasil pencarian mesin pencari atau tautan terusan di grup chat. | Bookmark memastikan Anda selalu mengakses domain asli perusahaan tanpa risiko salah ketik. |
 | Berhenti sejenak untuk memeriksa fakta setiap kali pesan memancing emosi panik, takut, atau tergesa-gesa. | Menuruti tenggat waktu buatan yang mendesak tanpa mengonfirmasi keabsahan permintaan. | Menghilangkan pengaruh taktik Urgency dan Fear yang dirancang untuk melumpuhkan kehati-hatian. |
@@ -323,7 +323,7 @@ Seseorang mengetuk pintu rumah mengenakan rompi mirip petugas listrik dan berter
 | **Spear Phishing B2B** | Serangan phishing yang ditargetkan khusus kepada karyawan perusahaan tertentu dengan konteks bisnis yang realistis. | Menggunakan istilah proyek SaaSCore, UAT, atau nama BPR mitra sebagai umpan. |
 | **Email Spoofing** | Pemalsuan identitas pengirim email sehingga nama tampilan atau alamat terlihat seolah berasal dari pihak tepercaya. | Meniru nama pimpinan SaaS atau direksi bank untuk mengelabui tim support. |
 | **Typosquatting** | Pendaftaran domain internet yang ejaannya hampir identik dengan domain resmi untuk menipu pengguna yang kurang teliti. | Contoh tiruan seperti `s1gitadi.id` atau `sigitadi-auth.com` yang menyamar sebagai domain resmi `sigitadi.id`. |
-| **Domain Akar (Root Domain)** | Nama domain utama yang terletak tepat sebelum garis miring pertama dan menjadi penentu pemilik situs sebenarnya. | Pada `portal.sigitadi.id.cek-akses.net`, pemilik aslinya adalah `cek-akses.net`, bukan `sigitadi.id`. |
+| **Domain Utama (Registrable Domain)** | Nama domain utama yang terletak tepat sebelum garis miring pertama dan menjadi penentu pemilik situs sebenarnya. | Pada `portal.sigitadi.id.cek-akses.net`, pemilik aslinya adalah `cek-akses.net`, bukan `sigitadi.id`. |
 | **Verifikasi Out-of-Band** | Konfirmasi keaslian permintaan melalui saluran komunikasi lain yang terpisah dan sudah diketahui valid. | Menelepon langsung nomor resmi pimpinan atau staf BPR sebelum memproses permintaan reset akses dari WhatsApp. |
 
 ### Panduan Narasumber (Sigit Adi Irianto, S.Kom.)
@@ -341,7 +341,7 @@ Seseorang mengetuk pintu rumah mengenakan rompi mirip petugas listrik dan berter
 
 - Social Engineering membidik emosi manusia lewat Urgency, Fear, dan Authority agar korban melewatkan langkah verifikasi.
 - Spear Phishing B2B memakai konteks asli pekerjaan SaaSCore dan nama BPR mitra agar tampak meyakinkan.
-- Pengecekan alamat email aktual dan Domain Akar URL menangkal Email Spoofing serta Typosquatting domain `sigitadi.id`.
+- Pengecekan alamat email aktual dan Domain Utama URL menangkal Email Spoofing serta Typosquatting domain `sigitadi.id`.
 - Permintaan kode OTP, kredensial, atau data sensitif wajib selalu dikonfirmasi melalui Verifikasi Out-of-Band.
 
 **Simulasi Terkait:** Lab 03: Simulator Kotak Masuk & WhatsApp Jebakan - Eksplorasi simulasi email kotak masuk dan pesan WhatsApp operasional BPR untuk membedakan komunikasi sah dari jebakan Email Spoofing, Typosquatting domain sigitadi.id, dan Social Engineering.
@@ -387,7 +387,7 @@ Multi-Factor Authentication (MFA) menambahkan lapisan bukti kepemilikan di luar 
 - Security key berbasis FIDO2 melakukan pencocokan kriptografis domain sehingga kebal terhadap situs login phishing tiruan.
 - Nonaktifkan pratinjau isi pesan sensitif pada layar kunci ponsel agar kode verifikasi tidak terbaca orang di sekitar.
 
-#### Waspada Serangan MFA Fatigue dan Kebersihan Sesi
+#### Waspada Serangan MFA Fatigue dan Keamanan Sesi Login
 
 Jika penyerang sudah mengantongi kata sandi pegawai, mereka kerap mengirim puluhan notifikasi persetujuan MFA berturut-turut (MFA Fatigue) pada tengah malam agar korban merasa kesal lalu menekan tombol setuju. Menekan setuju pada notifikasi login yang tidak dipicu sendiri berarti membuka pintu sistem secara langsung bagi pelaku.
 
@@ -407,7 +407,7 @@ Memakai satu kata sandi untuk semua sistem ibarat membawa satu kunci induk yang 
 - **Kejadian:** Beberapa bulan kemudian ditemukan perubahan parameter biaya administrasi yang tidak terjelaskan. Log audit hanya menampilkan satu nama akun bersama, dan belakangan diketahui dua mantan personel proyek luar masih menyimpan kata sandinya.
 - **Pembelajaran:** Tanpa kepemilikan akun individual dan penerapan Least Privilege berbasis durasi tugas, organisasi kehilangan jejak audit sekaligus menyisakan akses bagi pihak tak berwenang.
 
-#### [Ilustrasi Skenario] Hujan Notifikasi MFA pada Pukul 02.15 Dini Hari
+#### [Ilustrasi Skenario] Spam Notifikasi MFA Berulang pada Pukul 02.15 Dini Hari
 
 - **Konteks:** Seorang sysadmin SaaS yang memegang akses panel infrastruktur cloud menerima belasan permintaan persetujuan login berturut-turut di ponselnya pada dini hari.
 - **Kejadian:** Meski hampir menekan setuju karena mengantuk dan terganggu getaran ponsel, ia ingat pola MFA Fatigue lalu menekan tombol Tolak, memutus semua sesi aktif, mengganti passphrase melalui Password Manager, dan melapor ke tim keamanan.
@@ -503,7 +503,7 @@ Mengirimkan alamat IP server, username, dan password di dalam satu email atau sa
 Sebuah file log error SaaSCore bisa berawal sebagai catatan teknis Internal, tetapi statusnya langsung naik menjadi Sangat Rahasia apabila memuat query SQL berisi NIK, nomor rekening, atau token otentikasi. Selalu periksa isi lampiran sebelum mengunggahnya ke papan tiket atau grup koordinasi.
 
 - Sensor atau potong baris payload yang mengandung identitas nasabah (PII) dan rahasia sesi sebelum log dibagikan.
-- Simpan kredensial akses BPR hanya di pengelola kata sandi resmi perusahaan, bukan di file teks polos pada Desktop.
+- Simpan kredensial akses BPR hanya di Password Manager resmi perusahaan, bukan di file plaintext pada Desktop.
 - Lakukan pemeriksaan folder Downloads setiap kali menutup tiket harian agar tidak ada sisa file klien yang tertinggal.
 
 ### Analogi Sehari-hari: Brankas Terkunci dan Kode Kombinasi yang Dikirim Terpisah
@@ -650,7 +650,7 @@ Laptop kerja Anda ibarat rumah penyimpan berkas nasabah. Memasang software bajak
 | :--- | :--- | :--- |
 | **Infostealer** | Malware yang menyelinap diam-diam untuk menyalin password tersimpan, cookie sesi browser, dan file kunci akses. | Sering bersembunyi di dalam crack atau aktivator bajakan dan mengincar profil VPN serta akses SaaSCore. |
 | **BitLocker / FileVault** | Fitur enkripsi disk penuh bawaan Windows (BitLocker) dan macOS (FileVault) yang mengacak seluruh isi penyimpanan. | Wajib aktif di laptop tim SaaS agar data BPR tidak bisa dibaca jika perangkat hilang saat dinas luar kota. |
-| **Patching OS & Browser** | Pemasangan pembaruan keamanan resmi untuk menambal celah pada sistem operasi maupun peramban web. | Menjaga browser yang dipakai membuka dasbor SaaSCore dan portal tiket tetap kebal terhadap eksploitasi web terbaru. |
+| **Patching OS & Browser** | Pemasangan pembaruan keamanan resmi untuk menambal celah pada sistem operasi maupun browser web. | Menjaga browser yang dipakai membuka dasbor SaaSCore dan portal tiket tetap kebal terhadap eksploitasi web terbaru. |
 | **UAC / Least Privilege** | Mekanisme konfirmasi dan pembatasan hak akun harian agar tidak sembarang program bisa memodifikasi sistem secara otomatis. | Mencegah skrip berbahaya menanamkan layanan latar belakang tanpa sepengetahuan staf IT SaaS. |
 | **Screen Lock (Win + L)** | Pintasan cepat mengunci tampilan layar laptop sehingga membutuhkan otentikasi ulang untuk membukanya. | Harus menjadi refleks setiap pegawai SaaS ketika meninggalkan meja kerja maupun ruang operasional BPR. |
 | **BadUSB** | Perangkat USB yang dimodifikasi agar dikenali komputer sebagai keyboard dan mengetikkan perintah serangan dalam hitungan detik. | Menjadi alasan utama pelarangan mencolokkan flashdisk temuan atau suvenir tak tepercaya ke laptop kerja SaaS. |
@@ -697,7 +697,7 @@ Saat melakukan pendampingan SaaSCore ke BPR luar kota, staf sering bekerja dari 
 
 - Untuk akses sistem SaaS atau server BPR di luar kantor, prioritaskan tethering hotspot ponsel pribadi dengan sandi WPA2/WPA3.
 - Matikan opsi Auto-Connect pada Wi-Fi publik agar laptop tidak tersambung diam-diam ke SSID tiruan.
-- Jika terpaksa memakai Wi-Fi publik untuk riset umum, hindari login akun sensitif tanpa terowongan VPN yang sah.
+- Jika terpaksa memakai Wi-Fi publik untuk riset umum, hindari login akun sensitif tanpa tunnel VPN yang sah.
 
 #### Aturan Disiplin Penggunaan VPN Klien BPR
 
@@ -740,7 +740,7 @@ Membuka situs hanya karena melihat gembok HTTPS tanpa membaca domain utamanya ib
 
 - **Konteks:** Seorang staf QA menerima tautan verifikasi akun menuju alamat https://login.sigitadi.id.portal-validasi-akses.com/session.
 - **Kejadian:** Sekilas terlihat nama sigitadi.id di bagian depan URL sehingga tampak meyakinkan. Sebelum mengisi kredensial, ia memeriksa bagian paling kanan sebelum garis miring pertama dan menyadari domain aslinya adalah portal-validasi-akses.com, lalu segera melaporkannya ke tim keamanan.
-- **Pembelajaran:** Kebiasaan membaca domain registrasi utama dari kanan ke kiri sebelum garis miring pertama merupakan pertahanan cepat terhadap subdomain spoofing.
+- **Pembelajaran:** Kebiasaan membaca domain utama dari kanan ke kiri sebelum garis miring pertama merupakan pertahanan cepat terhadap subdomain spoofing.
 
 ### Lakukan (Do) vs Hindari (Don't)
 
@@ -758,7 +758,7 @@ Membuka situs hanya karena melihat gembok HTTPS tanpa membaca domain utamanya ib
 | :--- | :--- | :--- |
 | **Evil Twin Attack** | Pembuatan titik akses Wi-Fi palsu dengan nama jaringan yang meniru Wi-Fi resmi untuk menjebak pengguna. | Sangat berisiko saat tim SaaS bekerja dari hotel atau kafe dalam perjalanan dinas pendampingan BPR. |
 | **Captive Portal** | Halaman web pembuka yang otomatis muncul saat terhubung ke Wi-Fi publik untuk meminta login atau persetujuan akses. | Captive portal palsu pada Evil Twin sering menyamar menjadi halaman login email kantor @sigitadi.id. |
-| **VPN Klien BPR** | Terowongan jaringan terenkripsi untuk menghubungkan laptop tim SaaS ke server BPR secara terkontrol. | Hanya boleh aktif selama pengerjaan tiket SaaSCore terotorisasi dan wajib diputus segera setelah selesai. |
+| **VPN Klien BPR** | Jalur koneksi jaringan terenkripsi (tunnel) untuk menghubungkan laptop tim SaaS ke server BPR secara terkontrol. | Hanya boleh aktif selama pengerjaan tiket SaaSCore terotorisasi dan wajib diputus segera setelah selesai. |
 | **SSL/TLS & HTTPS** | Protokol penyandian komunikasi antara browser dan server web agar lalu lintas data tidak terbaca di tengah jalan. | Wajib ada saat mengakses portal sigitadi.id, namun tetap harus disertai pemeriksaan nama domain yang benar. |
 | **Subdomain Spoofing** | Teknik menyisipkan nama domain resmi sebagai awalan subdomain dari domain palsu milik penyerang. | Contohnya login.sigitadi.id.domain-palsu.com di mana domain pengendali sebenarnya adalah domain-palsu.com. |
 | **Typosquatting** | Pendaftaran domain yang ejaannya dibuat sangat mirip dengan domain asli untuk mengecoh mata pengguna. | Misalnya mengganti huruf i dengan angka 1 atau menambah tanda hubung yang menyerupai sigitadi.id. |
@@ -778,7 +778,7 @@ Membuka situs hanya karena melihat gembok HTTPS tanpa membaca domain utamanya ib
 
 - Prioritaskan hotspot seluler pribadi dibanding Wi-Fi publik dan matikan auto-connect untuk mencegah Evil Twin Attack.
 - VPN klien BPR bersifat sementara sesuai tiket; nyalakan saat perlu dan langsung matikan saat pekerjaan selesai.
-- HTTPS mengenkripsi jalur, tetapi pemeriksaan domain registrasi utama adalah penentu keaslian situs.
+- HTTPS mengenkripsi jalur, tetapi pemeriksaan domain utama adalah penentu keaslian situs.
 - Batasi ekstensi browser dan pisahkan profil kerja guna menjaga keamanan sesi web.
 
 **Simulasi Terkait:** Lab 07: Inspeksi URL & Struktur Domain - Eksplorasi berbagai contoh URL nyata dan pengecoh, membedakan subdomain sah dari subdomain spoofing, mengevaluasi status HTTPS serta izin ekstensi browser, dan memilih langkah jaringan lapangan yang aman.
@@ -856,7 +856,7 @@ Saat mencium bau gas bocor di dapur, Anda langsung menutup katup regulator (Isol
 | Lakukan (Do) | Hindari (Don't) | Mengapa |
 | :--- | :--- | :--- |
 | Putuskan Wi-Fi, kabel LAN, dan VPN klien BPR dalam hitungan detik saat gejala kompromi muncul. | Membiarkan laptop tetap online sambil mencari tahu sendiri penyebab anomali. | Jaringan yang masih terhubung memberi jalan bagi malware mengirim data keluar atau menjalar ke server BPR. |
-| Biarkan laptop menyala secara offline dan foto layar untuk dokumentasi awal. | Langsung melakukan restart paksa, shutdown, atau membersihkan riwayat browser. | Restart menghapus bukti volatile di RAM yang dibutuhkan untuk forensic triage. |
+| Biarkan laptop menyala secara offline dan foto layar untuk dokumentasi awal. | Langsung melakukan restart paksa, shutdown, atau membersihkan riwayat browser. | Restart menghapus bukti di memori RAM (volatile) yang dibutuhkan untuk forensic triage. |
 | Laporkan salah klik atau anomali dalam 5 menit pertama lewat jalur darurat resmi SaaS. | Menyembunyikan insiden hingga keesokan hari karena takut disalahkan atasan. | Penundaan memperbesar dampak ke klien; budaya no-blame melindungi pelapor yang jujur dan cepat. |
 | Gunakan perangkat lain yang bersih untuk melaporkan insiden dan mengganti password. | Mengetikkan password baru email sigitadi.id atau VPN dari laptop yang dicurigai terinfeksi. | Keylogger atau pencuri sesi di perangkat terkompromi akan langsung merekam kata sandi baru tersebut. |
 | Laporkan setiap notifikasi MFA tak dikenal meski sudah Anda tekan Tolak (Deny). | Mengabaikan prompt MFA misterius karena mengira penolakan saja sudah cukup aman. | Prompt MFA tak diminta menandakan password utama sudah diketahui pihak lain dan perlu rotasi kredensial. |

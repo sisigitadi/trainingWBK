@@ -102,7 +102,7 @@ const CROSS_MODULE_CASES: CrossModuleCase[] = [
         fieldImpact:
           'Perangkat kerja tetap bersih dari backdoor dan bebas risiko pencurian sesi browser maupun profil VPN klien.',
         whyAndAction:
-          'Menjaga kebersihan endpoint sejak hari pertama serta mematuhi standar keamanan perangkat SaaS.',
+          'Menjaga keamanan endpoint sejak hari pertama serta mematuhi standar keamanan perangkat SaaS.',
       },
       {
         id: 'c2-c',
@@ -131,7 +131,7 @@ const CROSS_MODULE_CASES: CrossModuleCase[] = [
     scenario:
       'Pukul 16.45 WIB masuk email berjudul "[MENDESAK] Sesi VPN SaaS Akan Diblokir dalam 30 Menit" dari support@sigitadi-auth-portal.com yang mengarahkan ke halaman login mirip portal kantor. Eksplorasi cara staf merespons situasi ini:',
     discussionTip:
-      'Ajak kelas membaca alamat domain akar dari kanan ke kiri (membedakan sigitadi.id dengan sigitadi-auth-portal.com).',
+      'Ajak kelas membaca alamat domain utama dari kanan ke kiri (membedakan sigitadi.id dengan sigitadi-auth-portal.com).',
     options: [
       {
         id: 'c3-a',
@@ -140,7 +140,7 @@ const CROSS_MODULE_CASES: CrossModuleCase[] = [
         fieldImpact:
           'Username, password, dan kode OTP yang diketik langsung masuk ke server penyerang untuk membajak akun kerja Anda.',
         whyAndAction:
-          'Mengapa berisiko: logo mudah disalin dan urgensi palsu adalah ciri klasik rekayasa sosial. Selalu periksa domain akar resmi sigitadi.id.',
+          'Mengapa berisiko: logo mudah disalin dan urgensi palsu adalah ciri klasik rekayasa sosial. Selalu periksa domain utama resmi sigitadi.id.',
       },
       {
         id: 'c3-b',
@@ -174,7 +174,7 @@ const CROSS_MODULE_CASES: CrossModuleCase[] = [
   {
     id: 4,
     moduleRef: 'MODUL 04: PASSWORD & ACCESS MANAGEMENT',
-    topic: 'Hujan Notifikasi Persetujuan MFA Pukul 02.15 WIB',
+    topic: 'Spam Notifikasi MFA Berulang pada Pukul 02.15 WIB',
     scenario:
       'Saat Anda sedang tidur dan laptop kerja mati, ponsel bergetar menerima lima permintaan persetujuan MFA berturut-turut untuk akun portal SaaS. Bagaimana konsekuensi dari masing-masing respons?',
     discussionTip:
@@ -355,7 +355,7 @@ const CROSS_MODULE_CASES: CrossModuleCase[] = [
         fieldImpact:
           'Ekstensi browser pihak ketiga gratis sering membaca seluruh lalu lintas browser dan berisiko mencuri cookie sesi portal kerja.',
         whyAndAction:
-          'Mengapa berisiko: gunakan hanya klien VPN resmi perusahaan dan periksa kebersihan ekstensi browser secara berkala.',
+          'Mengapa berisiko: gunakan hanya klien VPN resmi perusahaan dan audit izin ekstensi browser secara berkala.',
       },
     ],
   },

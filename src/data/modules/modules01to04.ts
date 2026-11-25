@@ -355,7 +355,7 @@ export const modules01to04: ModuleContent[] = [
       'Mengenali tiga pemicu psikologis utama dalam Social Engineering yaitu Urgency, Fear, dan Authority.',
       'Mengidentifikasi pola Spear Phishing B2B yang memanfaatkan konteks proyek SaaSCore dan mitra BPR.',
       'Memeriksa indikator Email Spoofing dan penyamaran akun WhatsApp di balik nama tampilan pengirim.',
-      'Mendeteksi jebakan Typosquatting yang meniru domain resmi sigitadi.id melalui pemeriksaan Domain Akar.',
+      'Mendeteksi jebakan Typosquatting yang meniru domain resmi sigitadi.id melalui pemeriksaan Domain Utama.',
     ],
     workflowDiagram: {
       title: 'Alur Verifikasi Pesan & Tautan Masuk',
@@ -376,7 +376,7 @@ export const modules01to04: ModuleContent[] = [
         },
         {
           step: 3,
-          title: 'Baca Domain Akar',
+          title: 'Baca Domain Utama',
           action: 'Arahkan kursor ke tautan dan baca domain tepat di kiri garis miring pertama untuk deteksi Typosquatting.',
           tag: 'Peran: Semua Staf',
         },
@@ -434,7 +434,7 @@ export const modules01to04: ModuleContent[] = [
           'Typosquatting memanfaatkan kemiripan huruf dan kebiasaan membaca cepat untuk menipu korban agar membuka halaman login palsu, misalnya mengganti sigitadi.id menjadi sigitadi-support.id, s1gitadi.id, atau memakai subdomain mengecoh seperti sigitadi.id.login-verify.net. Begitu kredensial dan kode OTP dimasukkan, data langsung jatuh ke tangan penyerang.',
         ],
         bullets: [
-          'Cara aman membaca URL adalah menemukan Domain Akar tepat di sebelah kiri garis miring pertama (/).',
+          'Cara aman membaca URL adalah menemukan Domain Utama tepat di sebelah kiri garis miring pertama (/).',
           'Waspadai karakter mirip (homoglyph) seperti rn menggantikan m, angka 0 menggantikan o, atau huruf l kecil dan I besar.',
           'Akses portal kritikal seperti webmail, VPN, dan sistem tiket selalu melalui bookmark resmi, bukan tautan dari pesan masuk.',
         ],
@@ -461,12 +461,12 @@ export const modules01to04: ModuleContent[] = [
         whatHappened:
           'Pesan mengancam akses ke seluruh server BPR akan terputus otomatis bila pengguna tidak melakukan validasi ulang lewat tombol di email. Pemeriksaan alamat pengirim dan tujuan tombol menunjukkan domain portal-sigitadi.co-id.site bukan sigitadi.id, sehingga tim segera melaporkan email tersebut agar seluruh pegawai waspada.',
         lesson:
-          'Kerapian logo dan tata bahasa tidak menjamin keaslian pesan; validasi Domain Akar dan kebiasaan menggunakan bookmark resmi adalah kunci pencegahan.',
+          'Kerapian logo dan tata bahasa tidak menjamin keaslian pesan; validasi Domain Utama dan kebiasaan menggunakan bookmark resmi adalah kunci pencegahan.',
       },
     ],
     doDont: [
       {
-        doIt: 'Periksa Domain Akar URL tepat sebelum garis miring pertama dari kanan ke kiri sebelum memasukkan kredensial.',
+        doIt: 'Periksa Domain Utama URL tepat sebelum garis miring pertama dari kanan ke kiri sebelum memasukkan kredensial.',
         dontIt: 'Mengklik tombol login dari email atau pesan chat lalu langsung mengetik username dan kata sandi.',
         why: 'Menghindari jebakan Typosquatting dan subdomain palsu yang meniru tampilan portal sigitadi.id.',
       },
@@ -494,7 +494,7 @@ export const modules01to04: ModuleContent[] = [
     keyTakeaways: [
       'Social Engineering membidik emosi manusia lewat Urgency, Fear, dan Authority agar korban melewatkan langkah verifikasi.',
       'Spear Phishing B2B memakai konteks asli pekerjaan SaaSCore dan nama BPR mitra agar tampak meyakinkan.',
-      'Pengecekan alamat email aktual dan Domain Akar URL menangkal Email Spoofing serta Typosquatting domain sigitadi.id.',
+      'Pengecekan alamat email aktual dan Domain Utama URL menangkal Email Spoofing serta Typosquatting domain sigitadi.id.',
       'Permintaan kode OTP, kredensial, atau data sensitif wajib selalu dikonfirmasi melalui Verifikasi Out-of-Band.',
     ],
     instructorGuide: {
@@ -600,7 +600,7 @@ export const modules01to04: ModuleContent[] = [
         ],
       },
       {
-        heading: 'Waspada Serangan MFA Fatigue dan Kebersihan Sesi',
+        heading: 'Waspada Serangan MFA Fatigue dan Keamanan Sesi Login',
         paragraphs: [
           'Jika penyerang sudah mengantongi kata sandi pegawai, mereka kerap mengirim puluhan notifikasi persetujuan MFA berturut-turut (MFA Fatigue) pada tengah malam agar korban merasa kesal lalu menekan tombol setuju. Menekan setuju pada notifikasi login yang tidak dipicu sendiri berarti membuka pintu sistem secara langsung bagi pelaku.',
         ],
@@ -626,7 +626,7 @@ export const modules01to04: ModuleContent[] = [
           'Tanpa kepemilikan akun individual dan penerapan Least Privilege berbasis durasi tugas, organisasi kehilangan jejak audit sekaligus menyisakan akses bagi pihak tak berwenang.',
       },
       {
-        title: '[Ilustrasi Skenario] Hujan Notifikasi MFA pada Pukul 02.15 Dini Hari',
+        title: '[Ilustrasi Skenario] Spam Notifikasi MFA Berulang pada Pukul 02.15 Dini Hari',
         context:
           'Seorang sysadmin SaaS yang memegang akses panel infrastruktur cloud menerima belasan permintaan persetujuan login berturut-turut di ponselnya pada dini hari.',
         whatHappened:
