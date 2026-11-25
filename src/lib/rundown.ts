@@ -130,26 +130,7 @@ export const RUNDOWN_SEGMENTS: RundownSegment[] = [
 
 export interface RundownStatus {
   activeSegment: RundownSegment | null;
-  nextSegment: RundownSegment | null;
-  minutesRemaining: number | null;
-  isWarningWindow: boolean;
-  warningKey: string | null;
-  warningMessage: string | null;
   statusSummary: string;
-}
-
-function buildWarningMessage(nextSegment: RundownSegment, remaining: number): string {
-  switch (nextSegment.type) {
-    case 'break':
-      return `Sisa ${remaining} menit sebelum ${nextSegment.label} (${nextSegment.timeRange}).`;
-    case 'ishoma':
-      return `Sisa ${remaining} menit sebelum waktu ${nextSegment.label} (${nextSegment.timeRange}).`;
-    case 'closing':
-      return `Sisa ${remaining} menit menuju ${nextSegment.label} (${nextSegment.timeRange}).`;
-    case 'module':
-    default:
-      return `Sisa ${remaining} menit sebelum berpindah ke ${nextSegment.label} (${nextSegment.timeRange}).`;
-  }
 }
 
 export function getRundownStatus(now: Date): RundownStatus {
@@ -166,35 +147,15 @@ export function getRundownStatus(now: Date): RundownStatus {
 
   if (activeIndex >= 0) {
     const activeSegment = RUNDOWN_SEGMENTS[activeIndex] ?? null;
-    const nextSegment = RUNDOWN_SEGMENTS[activeIndex + 1] ?? null;
     if (!activeSegment) {
       return {
         activeSegment: null,
-        nextSegment: null,
-        minutesRemaining: null,
-        isWarningWindow: false,
-        warningKey: null,
-        warningMessage: null,
         statusSummary: 'Di luar jam sesi (08.30 - 16.15)',
       };
     }
 
-    const minutesRemaining = Math.max(1, Math.ceil(activeSegment.endMinutes - exactMinutes));
-    const isWarningWindow = Boolean(
-      nextSegment && minutesRemaining >= 1 && minutesRemaining <= 15
-    );
-    const warningKey =
-      isWarningWindow && nextSegment ? `${activeSegment.id}->${nextSegment.id}` : null;
-    const warningMessage =
-      isWarningWindow && nextSegment ? buildWarningMessage(nextSegment, minutesRemaining) : null;
-
     return {
       activeSegment,
-      nextSegment,
-      minutesRemaining,
-      isWarningWindow,
-      warningKey,
-      warningMessage,
       statusSummary: `${activeSegment.label} (${activeSegment.timeRange})`,
     };
   }
@@ -203,22 +164,12 @@ export function getRundownStatus(now: Date): RundownStatus {
   if (firstSegment && exactMinutes < firstSegment.startMinutes) {
     return {
       activeSegment: null,
-      nextSegment: firstSegment,
-      minutesRemaining: null,
-      isWarningWindow: false,
-      warningKey: null,
-      warningMessage: null,
       statusSummary: 'Menuju Sesi Pagi (08.30)',
     };
   }
 
   return {
     activeSegment: null,
-    nextSegment: null,
-    minutesRemaining: null,
-    isWarningWindow: false,
-    warningKey: null,
-    warningMessage: null,
     statusSummary: 'Di luar jam sesi (08.30 - 16.15)',
   };
 }

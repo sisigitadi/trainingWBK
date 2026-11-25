@@ -12,6 +12,8 @@ import {
   Smartphone,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type StrengthTier = 'Lemah' | 'Sedang' | 'Kuat' | 'Sangat Kuat';
@@ -26,13 +28,56 @@ interface EntropyAnalysis {
   classCount: number;
   uniqueChars: number;
   isRepetitive: boolean;
+  hasWeakPattern: boolean;
+  matchedPatterns: string[];
+  rawEntropyBits: number;
   entropyBits: number;
   tier: StrengthTier;
   crackEstimate: string;
 }
 
+interface TestedSample {
+  value: string;
+  tier: StrengthTier;
+  entropyBits: number;
+  meetsThreshold: boolean;
+}
+
 const REFERENCE_PASSWORD = 'Saas@2026!';
+const STRONG_SAMPLE_PASSPHRASE = 'kopi-pagi-lampu-hijau-48!';
 const TOTAL_EXPLORATION_ITEMS = 4;
+
+const WEAK_PATTERN_TOKENS = [
+  'saascore',
+  'sigitadi',
+  'password',
+  'rahasia',
+  'qwerty',
+  'admin',
+  'login',
+  'saas',
+  'sigit',
+  'bpr',
+  '2024',
+  '2025',
+  '2026',
+  '2027',
+  '1234',
+  '123',
+  '0000',
+  '1111',
+];
+
+function detectWeakPatterns(value: string): string[] {
+  const lower = value.toLowerCase();
+  const found: string[] = [];
+  for (const token of WEAK_PATTERN_TOKENS) {
+    if (lower.includes(token) && !found.some((item) => item.includes(token))) {
+      found.push(token);
+    }
+  }
+  return found;
+}
 
 function analyzePassphrase(value: string): EntropyAnalysis {
   const length = value.length;
@@ -51,14 +96,30 @@ function analyzePassphrase(value: string): EntropyAnalysis {
   if (hasSymbol) poolSize += 32;
 
   const isRepetitive = length >= 6 && uniqueChars <= 4;
-  const rawEntropy =
+  const matchedPatterns = length > 0 ? detectWeakPatterns(value) : [];
+  const hasWeakPattern = matchedPatterns.length > 0;
+  const rawEntropyBits =
     length > 0 && poolSize > 0 ? Math.round(length * Math.log2(poolSize)) : 0;
-  const entropyBits = isRepetitive ? Math.min(rawEntropy, 24) : rawEntropy;
+
+  let entropyBits = rawEntropyBits;
+  if (isRepetitive) {
+    entropyBits = Math.min(entropyBits, 24);
+  }
+  if (hasWeakPattern) {
+    const penalized = Math.max(
+      Math.min(rawEntropyBits, 12),
+      rawEntropyBits - matchedPatterns.length * 24
+    );
+    entropyBits = length < 16 ? Math.min(penalized, 28) : penalized;
+  }
 
   let tier: StrengthTier = 'Lemah';
   let crackEstimate = 'Hitungan detik hingga menit';
 
-  if (entropyBits >= 72) {
+  if (hasWeakPattern && length < 16) {
+    tier = 'Lemah';
+    crackEstimate = 'Hitungan detik hingga menit (terdeteksi pola kamus atau tahun)';
+  } else if (entropyBits >= 72) {
     tier = 'Sangat Kuat';
     crackEstimate = 'Ribuan tahun terhadap brute-force modern';
   } else if (entropyBits >= 50) {
@@ -78,6 +139,9 @@ function analyzePassphrase(value: string): EntropyAnalysis {
     classCount,
     uniqueChars,
     isRepetitive,
+    hasWeakPattern,
+    matchedPatterns,
+    rawEntropyBits,
     entropyBits,
     tier,
     crackEstimate,
@@ -144,21 +208,35 @@ const TIER_STYLES: Record<StrengthTier, { bar: string; badge: string; pct: numbe
   },
 };
 
+interface Lab04SessionState {
+  part1Explored: boolean;
+  activeMfaAction: MfaActionId | null;
+  inspectedMfaActions: MfaActionId[];
+  manualDone: boolean;
+}
+
+const INITIAL_LAB04_STATE: Lab04SessionState = {
+  part1Explored: false,
+  activeMfaAction: null,
+  inspectedMfaActions: [],
+  manualDone: false,
+};
+
 export function Lab04AuthLab({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
+  const { resetModuleExploration } = useProgress();
   // Passphrase lives strictly in ephemeral React state and is never persisted or transmitted.
   const [passphrase, setPassphrase] = useState('');
   const [showPassphrase, setShowPassphrase] = useState(false);
-  const [part1Explored, setPart1Explored] = useState(false);
-
-  const [activeMfaAction, setActiveMfaAction] = useState<MfaActionId | null>(null);
-  const [inspectedMfaActions, setInspectedMfaActions] = useState<MfaActionId[]>([]);
+  const [testedSamples, setTestedSamples] = useState<TestedSample[]>([]);
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab04SessionState>(moduleId, INITIAL_LAB04_STATE);
+  const { part1Explored, activeMfaAction, inspectedMfaActions, manualDone } = sessionState;
 
   const [showAllExplanations, setShowAllExplanations] = useState(false);
-  const [manualDone, setManualDone] = useState(false);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -171,22 +249,31 @@ export function Lab04AuthLab({
 
   const meetsThreshold =
     !analysis.isRepetitive &&
+    !analysis.hasWeakPattern &&
     analysis.uniqueChars >= 5 &&
     (analysis.entropyBits >= 50 ||
-      (analysis.length >= 14 && analysis.classCount >= 3));
+      (analysis.length >= 16 && analysis.classCount >= 3));
 
-  const exploredCount = (part1Explored ? 1 : 0) + inspectedMfaActions.length;
-  const isExplored = manualDone || exploredCount === TOTAL_EXPLORATION_ITEMS;
+  const rawExploredCount = (part1Explored ? 1 : 0) + inspectedMfaActions.length;
+  const { exploredCount, isExplored } = computeLabProgress(
+    rawExploredCount,
+    TOTAL_EXPLORATION_ITEMS,
+    manualDone,
+  );
 
-  const notifyProgress = (nextPart1: boolean, nextMfaList: MfaActionId[]) => {
+  const notifyProgress = (
+    nextPart1: boolean,
+    nextMfaList: MfaActionId[],
+    isDone = manualDone,
+  ) => {
     const count = (nextPart1 ? 1 : 0) + nextMfaList.length;
-    onMarkExplored(count, TOTAL_EXPLORATION_ITEMS);
+    onMarkExplored(isDone ? TOTAL_EXPLORATION_ITEMS : count, TOTAL_EXPLORATION_ITEMS);
   };
 
   const handlePassphraseChange = (nextValue: string) => {
     setPassphrase(nextValue);
     if (!part1Explored && nextValue.length >= 4) {
-      setPart1Explored(true);
+      setSessionState((prev) => ({ ...prev, part1Explored: true }));
       notifyProgress(true, inspectedMfaActions);
     }
   };
@@ -194,26 +281,41 @@ export function Lab04AuthLab({
   const handleSubmitPassphrase = () => {
     if (passphrase.length === 0) return;
     if (!part1Explored) {
-      setPart1Explored(true);
+      setSessionState((prev) => ({ ...prev, part1Explored: true }));
       notifyProgress(true, inspectedMfaActions);
     }
+    setTestedSamples((prev) => {
+      const filtered = prev.filter((item) => item.value !== passphrase);
+      return [
+        {
+          value: passphrase,
+          tier: analysis.tier,
+          entropyBits: analysis.entropyBits,
+          meetsThreshold,
+        },
+        ...filtered,
+      ].slice(0, 5);
+    });
   };
 
   const handleApplyPreset = (preset: string) => {
     setPassphrase(preset);
     setShowPassphrase(true);
     if (!part1Explored) {
-      setPart1Explored(true);
+      setSessionState((prev) => ({ ...prev, part1Explored: true }));
       notifyProgress(true, inspectedMfaActions);
     }
   };
 
   const handleExploreMfa = (actionId: MfaActionId) => {
-    setActiveMfaAction(actionId);
     const nextList = inspectedMfaActions.includes(actionId)
       ? inspectedMfaActions
       : [...inspectedMfaActions, actionId];
-    setInspectedMfaActions(nextList);
+    setSessionState((prev) => ({
+      ...prev,
+      activeMfaAction: actionId,
+      inspectedMfaActions: nextList,
+    }));
     notifyProgress(part1Explored, nextList);
   };
 
@@ -222,26 +324,27 @@ export function Lab04AuthLab({
     setShowAllExplanations(nextShow);
     if (nextShow) {
       const allMfa: MfaActionId[] = ['approve', 'ignore', 'reject-report'];
-      setPart1Explored(true);
-      setInspectedMfaActions(allMfa);
+      setSessionState((prev) => ({
+        ...prev,
+        part1Explored: true,
+        inspectedMfaActions: allMfa,
+      }));
       onMarkExplored(TOTAL_EXPLORATION_ITEMS, TOTAL_EXPLORATION_ITEMS);
     }
   };
 
   const handleMarkDone = () => {
-    setManualDone(true);
+    setSessionState((prev) => ({ ...prev, manualDone: true }));
     onMarkExplored(TOTAL_EXPLORATION_ITEMS, TOTAL_EXPLORATION_ITEMS);
   };
 
   const handleReset = () => {
     setPassphrase('');
     setShowPassphrase(false);
-    setPart1Explored(false);
-    setActiveMfaAction(null);
-    setInspectedMfaActions([]);
+    setTestedSamples([]);
+    resetSessionState();
     setShowAllExplanations(false);
-    setManualDone(false);
-    onMarkExplored(0, TOTAL_EXPLORATION_ITEMS);
+    resetModuleExploration(moduleId);
   };
 
   const tierStyle = TIER_STYLES[analysis.tier];
@@ -310,7 +413,7 @@ export function Lab04AuthLab({
               </span>
             ) : (
               <span className="rounded border border-slate-300 bg-slate-50 px-2.5 py-1 font-mono text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                Target aman: minimal 50 bit atau 14 karakter dengan 3 kelas
+                Target aman: minimal 50 bit atau 16 karakter dengan 3 kelas
               </span>
             )}
           </div>
@@ -351,8 +454,8 @@ export function Lab04AuthLab({
                   onChange={(e) => handlePassphraseChange(e.target.value)}
                   autoComplete="off"
                   spellCheck={false}
-                  placeholder="Contoh frasa latihan: kopi-pagi-saascore-48!"
-                  className="min-h-[44px] w-full rounded-md border border-slate-300 bg-white px-3.5 py-2 font-mono text-sm text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
+                  placeholder={`Contoh frasa latihan: ${STRONG_SAMPLE_PASSPHRASE}`}
+                  className="min-h-[44px] w-full rounded-md border border-slate-300 bg-white px-3.5 py-2 font-mono text-sm text-slate-900 placeholder:text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-400"
                 />
                 <button
                   type="button"
@@ -377,8 +480,8 @@ export function Lab04AuthLab({
                   { label: 'Lemah: admin123', val: 'admin123' },
                   { label: 'Berpola: Saas@2026!', val: 'Saas@2026!' },
                   {
-                    label: 'Passphrase Kuat: kopi-pagi-saascore-48!',
-                    val: 'kopi-pagi-saascore-48!',
+                    label: `Passphrase Kuat: ${STRONG_SAMPLE_PASSPHRASE}`,
+                    val: STRONG_SAMPLE_PASSPHRASE,
                   },
                 ].map((preset) => (
                   <button
@@ -444,6 +547,14 @@ export function Lab04AuthLab({
                 </p>
               )}
 
+              {analysis.hasWeakPattern && (
+                <p className="mt-2 rounded border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-900 dark:border-rose-700 dark:bg-rose-950/50 dark:text-rose-200">
+                  Terdeteksi kata kamus atau pola tahun mudah ditebak (
+                  {analysis.matchedPatterns.join(', ')}). Penyerang menguji pola ini pada
+                  detik pertama serangan berbasis aturan.
+                </p>
+              )}
+
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {[
                   { label: 'Huruf Kecil (a-z)', active: analysis.hasLower },
@@ -456,7 +567,7 @@ export function Lab04AuthLab({
                     className={`flex items-center gap-1.5 rounded border px-2.5 py-2 text-xs font-medium ${
                       cls.active
                         ? 'border-emerald-600/50 bg-emerald-50 text-emerald-950 dark:border-emerald-500/50 dark:bg-emerald-950/50 dark:text-emerald-200'
-                        : 'border-slate-200 bg-white text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400'
+                        : 'border-slate-200 bg-white text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400'
                     }`}
                   >
                     <CheckCircle2
@@ -483,7 +594,7 @@ export function Lab04AuthLab({
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
                   <RichTermText
-                    text={`Meskipun memakai 4 jenis karakter (${referenceAnalysis.entropyBits} bit mentah), pola singkat nama perusahaan + tahun seperti ini rentan terhadap serangan kamus berbasis aturan (rule-based cracking).`}
+                    text={`Meskipun memakai 4 jenis karakter (${referenceAnalysis.rawEntropyBits} bit mentah), nilai ketahanannya turun menjadi ${referenceAnalysis.entropyBits} bit efektif karena pola singkat nama perusahaan + tahun rentan terhadap serangan kamus berbasis aturan (rule-based cracking).`}
                   />
                 </p>
               </div>
@@ -497,7 +608,7 @@ export function Lab04AuthLab({
                   {analysis.entropyBits} bit)
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                  <RichTermText text="Passphrase panjang (minimal 14 karakter) dengan kata tidak terduga jauh lebih mudah diingat manusia namun sangat mahal untuk ditembus mesin penebak kata sandi." />
+                  <RichTermText text="Passphrase panjang (minimal 16 karakter) dengan kata tidak terduga jauh lebih mudah diingat manusia namun sangat mahal untuk ditembus mesin penebak kata sandi." />
                 </p>
               </div>
             </div>
@@ -507,8 +618,8 @@ export function Lab04AuthLab({
                 <RichTermText
                   text={
                     meetsThreshold
-                      ? 'Passphrase latihan sudah memenuhi standar ketahanan (>= 50 bit atau >= 14 karakter).'
-                      : 'Coba panjangkan frasa hingga mencapai minimal 50 bit entropi atau 14+ karakter.'
+                      ? 'Passphrase latihan sudah memenuhi standar ketahanan (>= 50 bit efektif atau >= 16 karakter tanpa pola lemah).'
+                      : 'Coba panjangkan frasa hingga minimal 16 karakter tanpa kata kamus atau pola tahun.'
                   }
                 />
               </p>
@@ -517,9 +628,40 @@ export function Lab04AuthLab({
                 disabled={passphrase.length === 0}
                 className="inline-flex min-h-[44px] items-center justify-center rounded-md bg-[#047857] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#065F46] disabled:cursor-not-allowed disabled:opacity-45 dark:bg-[#10B981] dark:text-slate-950 dark:hover:bg-emerald-400"
               >
-                Catat Pengujian Passphrase
+                Simpan ke Daftar Perbandingan
               </button>
             </div>
+
+            {testedSamples.length > 0 && (
+              <div className="rounded-md border border-slate-200 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-950/60">
+                <div className="mb-2 font-mono text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
+                  Perbandingan Uji Lokal Sementara ({testedSamples.length} sampel)
+                </div>
+                <div className="space-y-1.5">
+                  {testedSamples.map((sample) => (
+                    <div
+                      key={sample.value}
+                      className="flex flex-wrap items-center justify-between gap-2 rounded border border-slate-200 bg-white px-3 py-2 font-mono text-xs dark:border-slate-800 dark:bg-slate-900"
+                    >
+                      <span className="break-all font-semibold text-slate-900 dark:text-slate-100">
+                        {showPassphrase
+                          ? sample.value
+                          : `${sample.value.slice(0, 2)}${'*'.repeat(Math.max(2, sample.value.length - 2))}`}
+                      </span>
+                      <span
+                        className={`rounded px-2 py-0.5 font-semibold ${
+                          sample.meetsThreshold
+                            ? 'bg-emerald-700 text-white dark:bg-emerald-500 dark:text-slate-950'
+                            : 'bg-rose-700 text-white dark:bg-rose-500 dark:text-slate-950'
+                        }`}
+                      >
+                        {sample.tier} ({sample.entropyBits} bit)
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {(part1Explored || showAllExplanations) && passphrase.length > 0 && (
               <FeedbackBox
@@ -542,7 +684,7 @@ export function Lab04AuthLab({
                 </p>
                 <p className="mt-1.5">
                   <strong>Mengapa &amp; Langkah Tepatnya:</strong>{' '}
-                  <RichTermText text="Gunakan kombinasi minimal 3 hingga 4 kata acak (14+ karakter) yang unik untuk setiap layanan dan simpan di Password Manager resmi." />
+                  <RichTermText text="Gunakan kombinasi minimal 4 kata acak (16+ karakter) yang unik untuk setiap layanan tanpa nama perusahaan/tahun, lalu simpan di Password Manager resmi." />
                 </p>
               </FeedbackBox>
             )}

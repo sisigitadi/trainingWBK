@@ -39,16 +39,16 @@ Aplikasi web interaktif ini dirancang untuk mendukung pelatihan peningkatan kesa
 
 ## Fitur Utama
 
-1. **10 Modul Materi & Analogi Sehari-hari:**
-   - Pembahasan konsep keamanan siber mulai dari CIA Triad, Social Engineering, Autentikasi MFA, Enkripsi, hingga Respons Insiden.
+1. **10 Modul Materi, Diagram Alur Kerja, & Analogi Sehari-hari:**
+   - Pembahasan konsep keamanan siber mulai dari CIA Triad, Social Engineering, Autentikasi MFA, Enkripsi, hingga Respons Insiden, dilengkapi diagram alur kerja operasional SaaSCore (4-5 langkah per modul) dan navigasi sidebar desktop yang dapat dibuka/tutup (tersimpan di `localStorage`).
 2. **10 Lab Simulasi Interaktif:**
-   - Simulasi alur audit CIA Triad, visualisasi rantai serangan (*attack path*), inspeksi email phishing, penguji kekuatan *passphrase*, klasifikasi data sensitif, audit keamanan endpoint, deteksi *Evil Twin* & URL palsu, triase insiden, audit Shadow IT, dan review kasus komprehensif.
+   - Simulasi alur audit CIA Triad, visualisasi rantai serangan (*attack path*), inspeksi email phishing, penguji kekuatan *passphrase*, klasifikasi data sensitif & pratinjau masking, audit keamanan endpoint, deteksi *Evil Twin* & URL palsu, triase insiden, audit hak akses cloud & percakapan grup, serta simulasi diskusi kasus lintas modul.
 3. **Balloon Tooltips Interaktif Menyeluruh:**
    - Menggantikan kamus istilah statis; mengarahkan kursor (*hover*) atau mengetuk kata teknis bergaris titik-titik menampilkan balon penjelasan praktis serta konteks operasional perbankan (termasuk `server`, `database`, `dump`, `failover`, `KMS`, ekstensi berkas berbahaya, dan puluhan istilah keamanan siber lainnya) di seluruh 10 Modul, 10 Lab, dan Sesi Penutup.
 4. **Header Mengambang (Floating & Translucent) & Modal Catatan Kasus:**
-   - Menggunakan efek kaca transparan (*backdrop-blur-md*) yang tetap menempel di bagian atas layar saat digulir, dengan tombol ikon Info di header untuk membuka Modal Dialog Catatan Contoh Studi Kasus (Entitas Rekaan). Footer mengambang telah dihapus total agar ruang baca materi dan simulasi lab tampil maksimal tanpa tertutup elemen bawah.
-5. **Jam Real-time & Peringatan Rundown:**
-   - Sinkronisasi waktu dengan 13 sesi rundown kegiatan, menampilkan hitung mundur dan banner otomatis ketika sesi tersisa 15 menit atau kurang.
+   - Menggunakan efek kaca transparan (*backdrop-blur-md*) pada header atas dengan tombol buka/tutup sidebar desktop (`Alt+B` atau `[`), tombol ikon Info untuk membuka Modal Dialog Catatan Contoh Studi Kasus (Entitas Rekaan), serta bebas footer mengambang agar ruang baca tetap lega.
+5. **Jam Real-time & Status Rundown:**
+   - Sinkronisasi tanggal, jam berjalan, dan status sesi aktif dari 13 segmen rundown kegiatan (08.30 - 16.15) langsung di header.
 6. **Mode Narasumber (Pintasan 9x Klik Logo):**
    - Mengklik logo pelatihan di pojok kiri atas header 9 kali berturut-turut membuka kendali instruktur: tombol ikon Mode Proyektor (`Monitor`, +25% font, header ramping, navigasi keyboard, dropdown lompat cepat 21 slide, dan layar penuh), Panduan Narasumber (tersembunyi otomatis saat Mode Proyektor agar catatan tidak bocor ke layar peserta), tombol solusi lab, dan tombol ikon ringkas (`LockOpen | LogOut`) untuk keluar dari Mode Narasumber. (Dropdown simulasi waktu disembunyikan via `ENABLE_TIME_SIMULATION` di `src/lib/features.ts`).
 7. **Kartu Saku 7 Kebiasaan Emas:**
@@ -65,15 +65,16 @@ Aplikasi web interaktif ini dirancang untuk mendukung pelatihan peningkatan kesa
 ├── src/
 │   ├── components/
 │   │   ├── labs/           # 10 Modul Simulasi Lab
-│   │   ├── ui/             # Komponen UI (TermTooltip, RichTermText, Callout)
+│   │   ├── ui/             # Komponen UI (TermTooltip, RichTermText, Callout, WorkflowDiagram)
 │   │   ├── ClosingSummaryView.tsx
-│   │   ├── Layout.tsx      # Floating header, modal catatan kasus & navigasi
+│   │   ├── Layout.tsx      # Floating header, sidebar buka/tutup, modal catatan kasus & navigasi
 │   │   ├── MaterialView.tsx
 │   │   ├── ModulePage.tsx
 │   │   └── PrintableHandout.tsx
-│   ├── data/               # Data modul, istilah teknis, dan kebiasaan emas
-│   ├── lib/                # Router hash dan perhitungan rundown
+│   ├── data/               # Data modul, diagram alur kerja, istilah teknis, dan kebiasaan emas
+│   ├── lib/                # Router hash, perhitungan rundown, dan hook eksplorasi lab
 │   └── state/              # Manajemen progres lokal (LocalStorage)
+├── DESIGN.md               # Arah visual, palet warna, tipografi, dan standar antislop
 ├── CHANGELOG.md            # Riwayat versi dan perubahan fitur
 ├── REVISI.md               # Catatan kepatuhan audit dan matriks revisi
 └── vite.config.ts

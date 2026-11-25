@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   BookOpen,
   CheckCircle2,
@@ -13,6 +13,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type ChannelType = 'webmail' | 'whatsapp';
@@ -231,19 +233,36 @@ interface MessageExplorationState {
   inspectedActions: ActionKind[];
 }
 
+interface Lab03SessionState {
+  filter: ChannelFilter;
+  activeMessageId: number;
+  exploredByMsg: Record<number, MessageExplorationState>;
+  manualDone: boolean;
+}
+
+const INITIAL_LAB03_STATE: Lab03SessionState = {
+  filter: 'all',
+  activeMessageId: 1,
+  exploredByMsg: {},
+  manualDone: false,
+};
+
 export function Lab03PhishingSim({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [filter, setFilter] = useState<ChannelFilter>('all');
-  const [activeMessageId, setActiveMessageId] = useState<number>(1);
-  const [exploredByMsg, setExploredByMsg] = useState<
-    Record<number, MessageExplorationState>
-  >({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab03SessionState>(moduleId, INITIAL_LAB03_STATE);
+  const { filter, activeMessageId, exploredByMsg, manualDone } = sessionState;
   const [inspectedUrl, setInspectedUrl] = useState<string | null>(null);
   const [showAllExplanations, setShowAllExplanations] = useState(false);
-  const [manualDone, setManualDone] = useState(false);
+  const tabRefs = useRef<Record<ChannelFilter, HTMLButtonElement | null>>({
+    all: null,
+    webmail: null,
+    whatsapp: null,
+  });
 
   useEffect(() => {
     if (!instructorMode) {
@@ -257,27 +276,36 @@ export function Lab03PhishingSim({
   const activeMessage =
     MESSAGES.find((m) => m.id === activeMessageId) ?? MESSAGES[0];
 
-  const exploredCount = MESSAGES.filter(
+  const rawExploredCount = MESSAGES.filter(
     (m) => (exploredByMsg[m.id]?.inspectedActions.length ?? 0) > 0,
   ).length;
-  const isExplored = manualDone || exploredCount === MESSAGES.length;
+  const { exploredCount, isExplored } = computeLabProgress(
+    rawExploredCount,
+    MESSAGES.length,
+    manualDone,
+  );
 
   const handleSelectMessage = (id: number) => {
-    setActiveMessageId(id);
+    setSessionState((prev) => ({ ...prev, activeMessageId: id }));
     setInspectedUrl(null);
   };
 
   const handleChangeFilter = (nextFilter: ChannelFilter) => {
-    setFilter(nextFilter);
     const firstInFilter = MESSAGES.find((m) =>
       nextFilter === 'all' ? true : m.channel === nextFilter,
     );
-    if (
-      firstInFilter &&
+    const shouldSwitch =
+      Boolean(firstInFilter) &&
       activeMessage?.channel !== nextFilter &&
-      nextFilter !== 'all'
-    ) {
-      setActiveMessageId(firstInFilter.id);
+      nextFilter !== 'all';
+
+    setSessionState((prev) => ({
+      ...prev,
+      filter: nextFilter,
+      activeMessageId:
+        shouldSwitch && firstInFilter ? firstInFilter.id : prev.activeMessageId,
+    }));
+    if (shouldSwitch) {
       setInspectedUrl(null);
     }
   };
@@ -295,12 +323,12 @@ export function Lab03PhishingSim({
         inspectedActions: nextActions,
       },
     };
-    setExploredByMsg(nextMap);
+    setSessionState((prev) => ({ ...prev, exploredByMsg: nextMap }));
 
     const nextCount = MESSAGES.filter(
       (m) => (nextMap[m.id]?.inspectedActions.length ?? 0) > 0,
     ).length;
-    onMarkExplored(nextCount, MESSAGES.length);
+    onMarkExplored(manualDone ? MESSAGES.length : nextCount, MESSAGES.length);
   };
 
   const handleToggleAll = () => {
@@ -314,24 +342,21 @@ export function Lab03PhishingSim({
           inspectedActions: ['process', 'report'],
         };
       }
-      setExploredByMsg(allMap);
+      setSessionState((prev) => ({ ...prev, exploredByMsg: allMap }));
       onMarkExplored(MESSAGES.length, MESSAGES.length);
     }
   };
 
   const handleMarkDone = () => {
-    setManualDone(true);
+    setSessionState((prev) => ({ ...prev, manualDone: true }));
     onMarkExplored(MESSAGES.length, MESSAGES.length);
   };
 
   const handleReset = () => {
-    setFilter('all');
-    setActiveMessageId(1);
-    setExploredByMsg({});
+    resetSessionState();
     setInspectedUrl(null);
     setShowAllExplanations(false);
-    setManualDone(false);
-    onMarkExplored(0, MESSAGES.length);
+    resetModuleExploration(moduleId);
   };
 
   if (!activeMessage) return null;
@@ -403,15 +428,39 @@ export function Lab03PhishingSim({
               { id: 'webmail', label: 'Webmail SaaS (3)' },
               { id: 'whatsapp', label: 'WhatsApp Kerja (2)' },
             ] as const
-          ).map((tab) => {
+          ).map((tab, idx, allTabs) => {
             const isSelected = filter === tab.id;
             return (
               <button
                 key={tab.id}
+                ref={(el) => {
+                  tabRefs.current[tab.id] = el;
+                }}
                 type="button"
                 role="tab"
+                id={`phishing-tab-${tab.id}`}
                 aria-selected={isSelected}
+                aria-controls="phishing-tab-panel"
+                tabIndex={isSelected ? 0 : -1}
                 onClick={() => handleChangeFilter(tab.id)}
+                onKeyDown={(e) => {
+                  let targetIdx: number | null = null;
+                  if (e.key === 'ArrowRight') {
+                    targetIdx = (idx + 1) % allTabs.length;
+                  } else if (e.key === 'ArrowLeft') {
+                    targetIdx = (idx - 1 + allTabs.length) % allTabs.length;
+                  } else if (e.key === 'Home') {
+                    targetIdx = 0;
+                  } else if (e.key === 'End') {
+                    targetIdx = allTabs.length - 1;
+                  }
+                  if (targetIdx === null) return;
+                  e.preventDefault();
+                  const nextTab = allTabs[targetIdx];
+                  if (!nextTab) return;
+                  handleChangeFilter(nextTab.id);
+                  tabRefs.current[nextTab.id]?.focus();
+                }}
                 className={`inline-flex min-h-[44px] items-center gap-2 rounded-md border px-3.5 py-2 text-sm font-semibold transition-colors ${
                   isSelected
                     ? 'border-[#0B1F3A] bg-[#0B1F3A] text-white dark:border-emerald-400 dark:bg-emerald-500 dark:text-slate-950'
@@ -428,7 +477,12 @@ export function Lab03PhishingSim({
           })}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <div
+          id="phishing-tab-panel"
+          role="tabpanel"
+          aria-labelledby={`phishing-tab-${filter}`}
+          className="grid grid-cols-1 gap-4 lg:grid-cols-12"
+        >
           <div
             className="space-y-2 lg:col-span-5"
             role="list"
@@ -502,7 +556,7 @@ export function Lab03PhishingSim({
                       PESAN 0{activeMessage.id} / {activeMessage.channelLabel.toUpperCase()}
                     </span>
                   </span>
-                  <span className="font-mono text-xs text-slate-500 dark:text-slate-400">
+                  <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
                     {activeMessage.timestamp}
                   </span>
                 </div>
@@ -570,7 +624,7 @@ export function Lab03PhishingSim({
                       aria-hidden="true"
                     />
                     <div className="min-w-0 break-all">
-                      <span className="font-semibold text-slate-500 dark:text-slate-400">
+                      <span className="font-semibold text-slate-600 dark:text-slate-400">
                         Pratinjau URL Asli:{' '}
                       </span>
                       <span>
@@ -593,7 +647,7 @@ export function Lab03PhishingSim({
                       <div className="break-all font-mono text-xs font-bold text-slate-900 dark:text-slate-100">
                         {activeMessage.attachment.filename}
                       </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">
+                      <div className="text-xs text-slate-600 dark:text-slate-400">
                         Lampiran berkas ({activeMessage.attachment.sizeLabel})
                       </div>
                     </div>
@@ -731,9 +785,20 @@ export function Lab03PhishingSim({
                   <p className="font-semibold text-slate-800 dark:text-slate-200">
                     <RichTermText text={msg.subject} />
                   </p>
-                  <p className="mt-1 text-slate-600 dark:text-slate-300">
+                  <p className="mt-1 text-slate-700 dark:text-slate-300">
+                    <strong className="font-semibold">
+                      {msg.truthCategory === 'phish'
+                        ? 'Alasan Jebakan: '
+                        : 'Indikator Sah: '}
+                    </strong>
                     <RichTermText text={msg.outcomes.process.rationale} />
                   </p>
+                  {msg.truthCategory === 'safe' && (
+                    <p className="mt-1 text-slate-600 dark:text-slate-300">
+                      <strong className="font-semibold">Jika Dilaporkan: </strong>
+                      <RichTermText text={msg.outcomes.report.rationale} />
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

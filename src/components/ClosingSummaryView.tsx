@@ -67,7 +67,7 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
 
         <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
               Modul Dieksplorasi
             </p>
             <p className="mt-1 font-mono text-2xl font-bold tabular-nums text-[#0B1F3A] dark:text-slate-50">
@@ -79,7 +79,7 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
           </div>
 
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
               Progres Eksplorasi
             </p>
             <p className="mt-1 font-mono text-2xl font-bold tabular-nums text-[#047857] dark:text-[#10B981]">
@@ -91,7 +91,7 @@ export function ClosingSummaryView({ instructorMode = false }: ClosingSummaryVie
           </div>
 
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
               Narasumber &amp; Mitra Sistem
             </p>
             <p className="mt-1 text-base font-bold text-[#0B1F3A] dark:text-slate-50">

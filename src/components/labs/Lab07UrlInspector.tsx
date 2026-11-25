@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -9,6 +9,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type UrlClassification = 'safe' | 'risk';
@@ -405,19 +407,39 @@ const URL_CHALLENGES: UrlChallenge[] = [
   },
 ];
 
+interface Lab07SessionState {
+  currentIdx: number;
+  selectedTokenByUrl: Record<string, string | null>;
+  selectedClassByUrl: Record<string, UrlClassification | null>;
+  exploredUrls: Record<string, boolean>;
+  manualDone: boolean;
+}
+
+const INITIAL_LAB07_STATE: Lab07SessionState = {
+  currentIdx: 0,
+  selectedTokenByUrl: {},
+  selectedClassByUrl: {},
+  exploredUrls: {},
+  manualDone: false,
+};
+
 export function Lab07UrlInspector({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [selectedTokenByUrl, setSelectedTokenByUrl] = useState<Record<string, string | null>>({});
-  const [selectedClassByUrl, setSelectedClassByUrl] = useState<
-    Record<string, UrlClassification | null>
-  >({});
-  const [exploredUrls, setExploredUrls] = useState<Record<string, boolean>>({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab07SessionState>(moduleId, INITIAL_LAB07_STATE);
+  const {
+    currentIdx,
+    selectedTokenByUrl,
+    selectedClassByUrl,
+    exploredUrls,
+    manualDone,
+  } = sessionState;
   const [showAllConditions, setShowAllConditions] = useState(false);
-  const [manualDone, setManualDone] = useState(false);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -428,26 +450,62 @@ export function Lab07UrlInspector({
   const totalUrls = URL_CHALLENGES.length;
   const currentChallenge = URL_CHALLENGES[currentIdx];
 
-  const exploredCount = URL_CHALLENGES.filter((item) => exploredUrls[item.id]).length;
-  const isExplored = manualDone || exploredCount >= totalUrls;
+  const rawExploredCount = URL_CHALLENGES.filter((item) => exploredUrls[item.id]).length;
+  const { exploredCount, isExplored } = computeLabProgress(
+    rawExploredCount,
+    totalUrls,
+    manualDone,
+  );
 
-  const markUrlExplored = (urlId: string) => {
-    if (!exploredUrls[urlId]) {
-      const nextExplored = { ...exploredUrls, [urlId]: true };
-      setExploredUrls(nextExplored);
-      const nextCount = URL_CHALLENGES.filter((item) => nextExplored[item.id]).length;
-      onMarkExplored(nextCount, totalUrls);
-    }
+  const setCurrentIdx = (updater: number | ((prev: number) => number)) => {
+    setSessionState((prev) => ({
+      ...prev,
+      currentIdx:
+        typeof updater === 'function' ? updater(prev.currentIdx) : updater,
+    }));
   };
 
   const handleSelectToken = (urlId: string, token: string) => {
-    setSelectedTokenByUrl((prev) => ({ ...prev, [urlId]: token }));
-    markUrlExplored(urlId);
+    const nextExplored = exploredUrls[urlId]
+      ? exploredUrls
+      : { ...exploredUrls, [urlId]: true };
+    setSessionState((prev) => ({
+      ...prev,
+      selectedTokenByUrl: { ...prev.selectedTokenByUrl, [urlId]: token },
+      exploredUrls: nextExplored,
+    }));
+    if (!exploredUrls[urlId]) {
+      const nextCount = URL_CHALLENGES.filter((item) => nextExplored[item.id]).length;
+      onMarkExplored(manualDone ? totalUrls : nextCount, totalUrls);
+    }
   };
 
   const handleSelectClassification = (urlId: string, classification: UrlClassification) => {
-    setSelectedClassByUrl((prev) => ({ ...prev, [urlId]: classification }));
-    markUrlExplored(urlId);
+    const nextExplored = exploredUrls[urlId]
+      ? exploredUrls
+      : { ...exploredUrls, [urlId]: true };
+    setSessionState((prev) => ({
+      ...prev,
+      selectedClassByUrl: { ...prev.selectedClassByUrl, [urlId]: classification },
+      exploredUrls: nextExplored,
+    }));
+    if (!exploredUrls[urlId]) {
+      const nextCount = URL_CHALLENGES.filter((item) => nextExplored[item.id]).length;
+      onMarkExplored(manualDone ? totalUrls : nextCount, totalUrls);
+    }
+  };
+
+  const handleToggleAllConditions = () => {
+    const nextShow = !showAllConditions;
+    setShowAllConditions(nextShow);
+    if (nextShow) {
+      const allExplored: Record<string, boolean> = {};
+      for (const item of URL_CHALLENGES) {
+        allExplored[item.id] = true;
+      }
+      setSessionState((prev) => ({ ...prev, exploredUrls: allExplored }));
+      onMarkExplored(totalUrls, totalUrls);
+    }
   };
 
   const handleMarkDone = () => {
@@ -455,19 +513,18 @@ export function Lab07UrlInspector({
     for (const item of URL_CHALLENGES) {
       allExplored[item.id] = true;
     }
-    setExploredUrls(allExplored);
-    setManualDone(true);
+    setSessionState((prev) => ({
+      ...prev,
+      exploredUrls: allExplored,
+      manualDone: true,
+    }));
     onMarkExplored(totalUrls, totalUrls);
   };
 
   const handleReset = () => {
-    setCurrentIdx(0);
-    setSelectedTokenByUrl({});
-    setSelectedClassByUrl({});
-    setExploredUrls({});
+    resetSessionState();
     setShowAllConditions(false);
-    setManualDone(false);
-    onMarkExplored(0, totalUrls);
+    resetModuleExploration(moduleId);
   };
 
   const activeTokenName = currentChallenge ? selectedTokenByUrl[currentChallenge.id] : null;
@@ -486,7 +543,7 @@ export function Lab07UrlInspector({
       session="siang"
       title="Inspeksi URL & Struktur Domain"
       instructions="Eksplorasi 6 URL portal login PT. Sigit Adi Aman Siber (SaaS) berikut secara bebas. Klik segmen URL mana pun untuk memahami fungsinya, lalu coba klasifikasi Resmi & Aman maupun Palsu / Berisiko untuk melihat dampaknya."
-      exploredCount={isExplored ? totalUrls : exploredCount}
+      exploredCount={exploredCount}
       totalCount={totalUrls}
       isExplored={isExplored}
       onMarkDone={handleMarkDone}
@@ -527,10 +584,32 @@ export function Lab07UrlInspector({
               return (
                 <button
                   key={item.id}
+                  ref={(el) => {
+                    tabRefs.current[idx] = el;
+                  }}
                   type="button"
                   role="tab"
+                  id={`url-tab-${idx}`}
                   aria-selected={isCurrent}
+                  aria-controls="url-inspector-panel"
+                  tabIndex={isCurrent ? 0 : -1}
                   onClick={() => setCurrentIdx(idx)}
+                  onKeyDown={(e) => {
+                    let targetIdx: number | null = null;
+                    if (e.key === 'ArrowRight') {
+                      targetIdx = (idx + 1) % URL_CHALLENGES.length;
+                    } else if (e.key === 'ArrowLeft') {
+                      targetIdx = (idx - 1 + URL_CHALLENGES.length) % URL_CHALLENGES.length;
+                    } else if (e.key === 'Home') {
+                      targetIdx = 0;
+                    } else if (e.key === 'End') {
+                      targetIdx = URL_CHALLENGES.length - 1;
+                    }
+                    if (targetIdx === null) return;
+                    e.preventDefault();
+                    setCurrentIdx(targetIdx);
+                    tabRefs.current[targetIdx]?.focus();
+                  }}
                   className={`min-h-[44px] rounded-md border px-3 py-1.5 font-mono text-xs font-semibold transition-colors ${isCurrent
                       ? 'border-[#0B1F3A] bg-[#0B1F3A] text-white dark:border-emerald-400 dark:bg-emerald-500 dark:text-slate-950'
                       : isDone
@@ -547,7 +626,7 @@ export function Lab07UrlInspector({
           {instructorMode && (
             <button
               type="button"
-              onClick={() => setShowAllConditions((prev) => !prev)}
+              onClick={handleToggleAllConditions}
               aria-pressed={showAllConditions}
               className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${showAllConditions
                   ? 'border-[#0B1F3A] bg-[#0B1F3A] text-white dark:border-emerald-400 dark:bg-emerald-500 dark:text-slate-950'
@@ -569,7 +648,12 @@ export function Lab07UrlInspector({
         </div>
 
         {!showAllConditions && currentChallenge && (
-          <div className="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+          <div
+            id="url-inspector-panel"
+            role="tabpanel"
+            aria-labelledby={`url-tab-${currentIdx}`}
+            className="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900"
+          >
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <span className="rounded bg-[#0B1F3A] px-2.5 py-1 font-mono text-xs font-semibold text-white dark:bg-slate-800 dark:text-emerald-300">
                 URL {currentIdx + 1} / {totalUrls}
@@ -796,6 +880,33 @@ export function Lab07UrlInspector({
                     <dd className="inline break-words">{challenge.anatomy.portAndPath}</dd>
                   </div>
                 </dl>
+
+                <div className="mt-3 space-y-1.5 rounded border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                  <div className="font-mono text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
+                    Rincian Segmen URL
+                  </div>
+                  <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+                    {challenge.tokens.map((tok) => (
+                      <li key={tok.token} className="flex flex-wrap items-baseline gap-1.5">
+                        <code
+                          className={`rounded px-1.5 py-0.5 font-mono font-semibold ${
+                            tok.isRegistrableDomain
+                              ? 'bg-emerald-700 text-white dark:bg-emerald-500 dark:text-slate-950'
+                              : 'bg-slate-200 text-slate-900 dark:bg-slate-800 dark:text-slate-100'
+                          }`}
+                        >
+                          {tok.token}
+                        </code>
+                        <span className="font-semibold text-slate-900 dark:text-slate-100">
+                          ({tok.roleLabel}):
+                        </span>
+                        <span>
+                          <RichTermText text={tok.explanation} />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 <div className="mt-3 space-y-2.5">
                   <FeedbackBox

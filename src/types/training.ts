@@ -30,6 +30,19 @@ export interface InstructorGuide {
   discussionPrompt: string;
 }
 
+export interface WorkflowStep {
+  step: number;
+  title: string;
+  action: string;
+  tag: string;
+}
+
+export interface WorkflowDiagramSpec {
+  title: string;
+  subtitle: string;
+  steps: WorkflowStep[];
+}
+
 export interface ModuleContent {
   id: number;
   slug: string;
@@ -38,6 +51,7 @@ export interface ModuleContent {
   title: string;
   tagline: string;
   objectives: string[];
+  workflowDiagram: WorkflowDiagramSpec;
   sections: MaterialSection[];
   analogy: Analogy;
   sasCases: CaseStudy[];

@@ -11,6 +11,8 @@ import {
   WifiOff,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface StageOption {
@@ -201,15 +203,28 @@ const CRISIS_STAGES: CrisisStage[] = [
 
 const TOTAL_STAGES = CRISIS_STAGES.length;
 
+interface Lab08SessionState {
+  stageIndex: number;
+  clickedOptionsByStage: Record<number, string[]>;
+  isMarkedDone: boolean;
+}
+
+const INITIAL_LAB08_STATE: Lab08SessionState = {
+  stageIndex: 0,
+  clickedOptionsByStage: {},
+  isMarkedDone: false,
+};
+
 export function Lab08IncidentSim({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [stageIndex, setStageIndex] = useState(0);
-  const [clickedOptionsByStage, setClickedOptionsByStage] = useState<Record<number, string[]>>({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab08SessionState>(moduleId, INITIAL_LAB08_STATE);
+  const { stageIndex, clickedOptionsByStage, isMarkedDone } = sessionState;
   const [showAllExplanations, setShowAllExplanations] = useState(false);
-  const [isMarkedDone, setIsMarkedDone] = useState(false);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -224,13 +239,25 @@ export function Lab08IncidentSim({
     (stage) => (clickedOptionsByStage[stage.id]?.length ?? 0) > 0
   ).length;
 
-  const effectiveExploredCount = isMarkedDone ? TOTAL_STAGES : exploredStagesCount;
+  const { exploredCount, isExplored } = computeLabProgress(
+    exploredStagesCount,
+    TOTAL_STAGES,
+    isMarkedDone,
+  );
+
+  const setStageIndex = (updater: number | ((prev: number) => number)) => {
+    setSessionState((prev) => ({
+      ...prev,
+      stageIndex:
+        typeof updater === 'function' ? updater(prev.stageIndex) : updater,
+    }));
+  };
 
   const handleToggleOption = (stageId: number, optionId: string) => {
     const existing = clickedOptionsByStage[stageId] ?? [];
     const nextList = existing.includes(optionId) ? existing : [...existing, optionId];
     const nextMap = { ...clickedOptionsByStage, [stageId]: nextList };
-    setClickedOptionsByStage(nextMap);
+    setSessionState((prev) => ({ ...prev, clickedOptionsByStage: nextMap }));
 
     const nextExplored = CRISIS_STAGES.filter(
       (stage) => (nextMap[stage.id]?.length ?? 0) > 0
@@ -241,33 +268,25 @@ export function Lab08IncidentSim({
   const handleToggleShowAll = () => {
     const nextShow = !showAllExplanations;
     setShowAllExplanations(nextShow);
-    if (nextShow && currentStage) {
-      const allIds = currentStage.options.map((o) => o.id);
-      const nextMap = { ...clickedOptionsByStage, [currentStage.id]: allIds };
-      setClickedOptionsByStage(nextMap);
-      const nextExplored = CRISIS_STAGES.filter(
-        (stage) => (nextMap[stage.id]?.length ?? 0) > 0
-      ).length;
-      onMarkExplored(isMarkedDone ? TOTAL_STAGES : nextExplored, TOTAL_STAGES);
+    if (nextShow) {
+      const fullMap: Record<number, string[]> = {};
+      for (const stage of CRISIS_STAGES) {
+        fullMap[stage.id] = stage.options.map((o) => o.id);
+      }
+      setSessionState((prev) => ({ ...prev, clickedOptionsByStage: fullMap }));
+      onMarkExplored(TOTAL_STAGES, TOTAL_STAGES);
     }
   };
 
   const handleMarkDone = () => {
-    const fullMap: Record<number, string[]> = {};
-    for (const stage of CRISIS_STAGES) {
-      fullMap[stage.id] = stage.options.map((o) => o.id);
-    }
-    setClickedOptionsByStage(fullMap);
-    setShowAllExplanations(true);
-    setIsMarkedDone(true);
+    setSessionState((prev) => ({ ...prev, isMarkedDone: true }));
     onMarkExplored(TOTAL_STAGES, TOTAL_STAGES);
   };
 
   const handleReset = () => {
-    setStageIndex(0);
-    setClickedOptionsByStage({});
+    resetSessionState();
     setShowAllExplanations(false);
-    setIsMarkedDone(false);
+    resetModuleExploration(moduleId);
   };
 
   return (
@@ -280,9 +299,9 @@ export function Lab08IncidentSim({
           ? 'Eksplorasi seluruh 4 tahap protokol insiden (Isolate, Preserve, Report, Rotasi Kredensial). Klik setiap opsi aman maupun berisiko untuk melihat dampak nyatanya di lapangan, atau aktifkan Buka Semua Penjelasan Kondisi untuk perbandingan langsung di kelas.'
           : 'Eksplorasi seluruh 4 tahap protokol insiden (Isolate, Preserve, Report, Rotasi Kredensial). Klik setiap opsi aman maupun berisiko untuk melihat dampak nyatanya di lapangan.'
       }
-      exploredCount={effectiveExploredCount}
+      exploredCount={exploredCount}
       totalCount={TOTAL_STAGES}
-      isExplored={isMarkedDone || exploredStagesCount === TOTAL_STAGES}
+      isExplored={isExplored}
       onMarkDone={handleMarkDone}
       onReset={handleReset}
     >

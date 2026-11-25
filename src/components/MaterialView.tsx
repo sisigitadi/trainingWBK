@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { GOLDEN_RULES } from '../data/goldenRules';
 import type { ModuleContent } from '../types/training';
-import { Callout, RichTermText } from './ui';
+import { Callout, RichTermText, WorkflowDiagram } from './ui';
 
 export interface MaterialViewProps {
   module: ModuleContent;
@@ -159,6 +159,8 @@ export function MaterialView({
         </ul>
       </section>
 
+      <WorkflowDiagram diagram={module.workflowDiagram} />
+
       <section aria-labelledby="material-sections-heading" className="space-y-4">
         <div className="flex items-center gap-2 px-1">
           <BookOpen
@@ -267,7 +269,7 @@ export function MaterialView({
 
                 <div className="space-y-2.5 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                   <div>
-                    <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                    <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
                       Konteks Operasional
                     </p>
                     <p className="mt-0.5">
@@ -276,7 +278,7 @@ export function MaterialView({
                   </div>
 
                   <div>
-                    <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                    <p className="font-mono text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
                       Skenario Kejadian
                     </p>
                     <p className="mt-0.5">

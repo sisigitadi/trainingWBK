@@ -15,9 +15,46 @@ export const modules08to10: ModuleContent[] = [
       'Memahami alasan teknis mengapa laptop terinfeksi tidak boleh langsung di-restart atau dibersihkan sendiri.',
       'Menerapkan budaya no-blame reporting dengan melapor cepat sebelum dampak meluas ke server SaaSCore.'
     ],
+    workflowDiagram: {
+      title: 'Protokol Tanggap Insiden 5 Menit Pertama',
+      subtitle:
+        'Menahan penyebaran kompromi perangkat sebelum menjalar ke email sigitadi.id dan jaringan BPR klien.',
+      steps: [
+        {
+          step: 1,
+          title: 'Deteksi Gejala IoC',
+          action: 'Waspadai kipas CPU tinggi mendadak, kilatan PowerShell, ekstensi asing, atau MFA tak dikenal.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 2,
+          title: 'Isolate Jaringan',
+          action: 'Matikan Wi-Fi, cabut kabel LAN, dan putuskan VPN klien BPR seketika.',
+          tag: 'Gate: Detik Pertama',
+        },
+        {
+          step: 3,
+          title: 'Preserve Bukti',
+          action: 'Biarkan laptop menyala offline agar memori RAM utuh, lalu foto layar dan catat waktu kejadian.',
+          tag: 'Gate: Jangan Restart',
+        },
+        {
+          step: 4,
+          title: 'Report < 5 Menit',
+          action: 'Hubungi tim IT Security SaaS lewat kanal resmi dengan kronologi jujur dalam budaya no-blame.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 5,
+          title: 'Rotasi dari Perangkat Bersih',
+          action: 'Ganti passphrase dan cabut sesi token aktif hanya dari perangkat lain yang dipastikan aman.',
+          tag: 'Peran: Security / Korban',
+        },
+      ],
+    },
     sections: [
       {
-        heading: '1. Mengenali Gejala Awal Kompromi Laptop dan Akun',
+        heading: 'Mengenali Gejala Awal Kompromi Laptop dan Akun',
         paragraphs: [
           'Serangan terhadap vendor perbankan seperti PT. Sigit Adi Aman Siber (SaaS) umumnya berjalan senyap agar penyerang bisa mencuri token VPN atau kredensial SaaSCore tanpa terdeteksi. Mengenali gejala awal atau Indicator of Compromise (IoC) pada perangkat kerja menjadi garis pertahanan pertama sebelum akses melebar ke jaringan BPR.'
         ],
@@ -29,7 +66,7 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '2. Protokol 5 Menit Pertama: Isolate, Preserve, Report',
+        heading: 'Protokol 5 Menit Pertama: Isolate, Preserve, Report',
         paragraphs: [
           'Lima menit pertama setelah salah klik tautan berbahaya atau melihat anomali adalah jendela waktu paling kritis untuk menahan penyebaran serangan. Alih-alih panik atau bertanya di grup chat umum, ikuti protokol baku SaaS: Isolate, Preserve, dan Report.'
         ],
@@ -40,7 +77,7 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '3. Mengapa Tidak Langsung Restart atau Hapus Jejak?',
+        heading: 'Mengapa Tidak Langsung Restart atau Hapus Jejak?',
         paragraphs: [
           'Mematikan paksa laptop atau menjalankan aplikasi pembersih disk saat panik justru menghancurkan bukti di memori sementara (RAM). Tim keamanan membutuhkan data volatile tersebut untuk melakukan forensic triage, menentukan apakah kredensial SaaSCore bocor, dan melakukan rotasi kredensial secara tepat sasaran.'
         ],
@@ -51,7 +88,7 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '4. Budaya Lapor Cepat Tanpa Takut Disalahkan (No-Blame Reporting)',
+        heading: 'Budaya Lapor Cepat Tanpa Takut Disalahkan (No-Blame Reporting)',
         paragraphs: [
           'Rasa takut dimarahi sering membuat staf menyembunyikan salah klik hingga berjam-jam, memberi waktu bagi penyerang untuk masuk ke lingkungan BPR. SaaS menerapkan prinsip no-blame reporting: pelapor yang cepat dan jujur dilindungi serta diapresiasi karena membantu menghentikan insiden lebih awal.'
         ],
@@ -149,9 +186,46 @@ export const modules08to10: ModuleContent[] = [
       'Menerapkan larangan mengirim IP server, kredensial, dan screenshot data nasabah BPR di WhatsApp atau Telegram.',
       'Menggunakan jalur terpisah (out-of-band), redaction, dan pemeriksaan penerima email secara disiplin.'
     ],
+    workflowDiagram: {
+      title: 'Alur Kolaborasi Cloud & Komunikasi Tim',
+      subtitle:
+        'Mencegah kebocoran kredensial SaaSCore dan data pribadi nasabah di Google Drive, OneDrive, email, dan chat grup.',
+      steps: [
+        {
+          step: 1,
+          title: 'Setel Cloud Restricted',
+          action: 'Hindari Anyone with the link; batasi akses ke email spesifik dengan expiration date.',
+          tag: 'Peran: Pemilik Folder',
+        },
+        {
+          step: 2,
+          title: 'Redaction Screenshot',
+          action: 'Sensor nama, NIK, nomor rekening, dan saldo nasabah sebelum berbagi gambar error.',
+          tag: 'Gate: Kepatuhan UU PDP',
+        },
+        {
+          step: 3,
+          title: 'Hindari Chat Kredensial',
+          action: 'Jangan kirim IP server atau password di WhatsApp atau Telegram; pakai vault atau secret link.',
+          tag: 'Gate: Tanpa IP/Password',
+        },
+        {
+          step: 4,
+          title: 'Cek Penerima Email',
+          action: 'Verifikasi domain penerima 3 detik sebelum kirim dan gunakan BCC untuk siaran multi-BPR.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 5,
+          title: 'Audit Pasca-UAT',
+          action: 'Tinjau ulang dan cabut izin folder cloud eksternal segera setelah UAT berakhir.',
+          tag: 'Gate: Proyek Selesai',
+        },
+      ],
+    },
     sections: [
       {
-        heading: '1. Risiko Tautan Publik ("Anyone with the Link") di Cloud',
+        heading: 'Risiko Tautan Publik ("Anyone with the Link") di Cloud',
         paragraphs: [
           'Membagikan folder proyek dengan opsi "Anyone with the link" terasa praktis saat berkoordinasi dengan BPR, tetapi artinya siapa pun yang memperoleh URL tersebut dapat membukanya tanpa login. Tautan terbuka sangat mudah bocor lewat penerusan pesan, riwayat browser, atau tetap aktif berbulan-bulan setelah proyek selesai.'
         ],
@@ -163,7 +237,7 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '2. Larangan Kredensial dan Data Nasabah di WhatsApp/Telegram',
+        heading: 'Larangan Kredensial dan Data Nasabah di WhatsApp/Telegram',
         paragraphs: [
           'Mengirim pasangan IP server, username, dan password SaaSCore ke grup WhatsApp atau Telegram sama saja menyebar kredensial ke galeri ponsel dan backup cloud pribadi seluruh anggota grup. Selain itu, membagikan screenshot error yang masih menampilkan nama, NIK, atau saldo nasabah BPR melanggar perlindungan Data Pribadi (UU PDP).'
         ],
@@ -175,7 +249,7 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '3. Disiplin Email Bisnis dan Jalur Pengiriman Aman',
+        heading: 'Disiplin Email Bisnis dan Jalur Pengiriman Aman',
         paragraphs: [
           'Kesalahan memilih saran auto-complete pada aplikasi email dapat mengirim dokumen sensitif ke BPR lain atau alamat pribadi yang namanya mirip. Untuk siaran ke banyak klien sekaligus, mencantumkan semua email di kolom To atau CC membuka daftar klien SaaS serta memicu risiko Reply All.'
         ],
@@ -274,9 +348,46 @@ export const modules08to10: ModuleContent[] = [
       'Membangun budaya saling mengingatkan secara sehat dan suportif saat melihat potensi celah keamanan.',
       'Menyusun langkah aksi konkret 24 jam dan 7 hari pertama setelah BimTek selesai.'
     ],
+    workflowDiagram: {
+      title: 'Siklus Budaya Keamanan Harian SaaS',
+      subtitle:
+        'Mengubah 7 Kebiasaan Emas menjadi refleks kolektif lintas peran dalam menjaga kepercayaan BPR mitra.',
+      steps: [
+        {
+          step: 1,
+          title: '7 Kebiasaan Emas',
+          action: 'Jalankan ketujuh standar harian secara konsisten bahkan saat tenggat go-live ketat.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 2,
+          title: 'Akuntabilitas Lintas Peran',
+          action: 'Terapkan data dummy, akun personal, disiplin VPN, dan access review berkala.',
+          tag: 'Peran: Dev, QA, Support, Infra',
+        },
+        {
+          step: 3,
+          title: 'Saling Mengingatkan',
+          action: 'Tegur rekan secara sopan dan pribadi saat melihat layar terbuka atau risiko pengiriman data.',
+          tag: 'Gate: Konstruktif',
+        },
+        {
+          step: 4,
+          title: 'Jaga Budaya No-Blame',
+          action: 'Apresiasi pelaporan dini agar kesalahan manusia terhenti sebelum berdampak ke BPR.',
+          tag: 'Peran: Lead & Tim',
+        },
+        {
+          step: 5,
+          title: 'Audit Mandiri Berkala',
+          action: 'Periksa MFA, BitLocker, folder Downloads, izin cloud, dan ekstensi browser secara rutin.',
+          tag: 'Gate: Hari-1 / Mingguan / Bulanan',
+        },
+      ],
+    },
     sections: [
       {
-        heading: '1. Dari Materi BimTek Menjadi Budaya Kerja Harian',
+        heading: 'Dari Materi BimTek Menjadi Budaya Kerja Harian',
         paragraphs: [
           'Keamanan siber tidak cukup hanya dipahami dalam satu hari pelatihan; nilainya baru terasa saat menjadi kebiasaan otomatis ketika tim bekerja di bawah tekanan tenggat go-live BPR. Sebagai pengembang dan pengelola SaaSCore, kepercayaan seluruh klien perbankan bergantung pada konsistensi setiap individu di PT. Sigit Adi Aman Siber (SaaS).'
         ],
@@ -287,7 +398,7 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '2. Rangkuman 7 Kebiasaan Emas Keamanan Siber SaaS',
+        heading: 'Rangkuman 7 Kebiasaan Emas Keamanan Siber SaaS',
         paragraphs: [
           'Seluruh materi dari Modul 1 hingga Modul 9 dirangkum menjadi 7 Kebiasaan Emas agar mudah diingat dan langsung dipraktikkan setiap hari. Ketujuh kebiasaan ini membentuk lapisan pertahanan berlapis (Defense in Depth) yang melindungi akun, perangkat, jaringan, dan data BPR klien.'
         ],
@@ -302,9 +413,9 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '3. Tanggung Jawab Kolektif Lintas Peran di SaaS',
+        heading: 'Tanggung Jawab Kolektif Lintas Peran di SaaS',
         paragraphs: [
-          'Setiap divisi di SaaS memegang mata rantai keamanan yang saling terhubung dalam ekosistem SaaSCore. Kebiasaan saling mengingatkan secara sopan saat ada rekan yang lupa mengunci layar atau hampir mengirim kredensial di chat akan memperkuat ketahanan tim secara menyeluruh.'
+          'Setiap divisi di SaaS memegang mata rantai keamanan yang saling terhubung dalam layanan SaaSCore. Kebiasaan saling mengingatkan secara sopan saat ada rekan yang lupa mengunci layar atau hampir mengirim kredensial di chat akan memperkuat ketahanan tim secara bersama-sama.'
         ],
         bullets: [
           'Developer & QA: Tidak menaruh password di kode (hardcoded) dan memakai data anonymization saat pengujian.',
@@ -313,7 +424,7 @@ export const modules08to10: ModuleContent[] = [
         ]
       },
       {
-        heading: '4. Langkah Aksi Pribadi Setelah Pelatihan',
+        heading: 'Langkah Aksi Pribadi Setelah Pelatihan',
         paragraphs: [
           'Perubahan budaya selalu dimulai dari tindakan kecil pada perangkat dan akun kita masing-masing hari ini. Lakukan audit mandiri berkala agar celah lama dari proyek terdahulu tidak tertinggal menjadi pintu masuk serangan.'
         ],

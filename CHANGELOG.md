@@ -4,6 +4,30 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.4.0] - 2026-11-25
+
+### Ditambahkan
+- **10 Diagram Alur Kerja Operasional SaaSCore (`src/types/training.ts`, `WorkflowDiagram.tsx`, `MaterialView.tsx`, `src/data/modules/*`):**
+  - Menambahkan kontrak `WorkflowStep` dan `WorkflowDiagramSpec` pada `ModuleContent` serta komponen visual `WorkflowDiagram` yang merangkum 5 langkah berurutan per modul lengkap dengan label peran dan gerbang kontrol.
+- **Sidebar Desktop Buka/Tutup dengan Persistensi (`Layout.tsx`):**
+  - Menambahkan tombol toggle daftar modul di header desktop (`PanelLeftClose` / `PanelLeftOpen`), tombol tutup cepat di panel sidebar, pintasan keyboard `Alt+B` dan `[`, breadcrumb ringkas saat sidebar dilipat, serta penyimpanan status pada `localStorage` (`saas_desktop_sidebar_open_v1`).
+- **Persistensi Sesi Lab & Reset Eksplorasi Terpusat (`useLabExploration.ts`, `ProgressContext.tsx`):**
+  - Menambahkan hook `useLabSessionState` berbasis `sessionStorage` agar progres lab tidak hilang saat berpindah tab `Materi <-> Lab`, helper `computeLabProgress`, serta `resetModuleExploration` untuk membersihkan progres modul secara tuntas saat tombol Reset ditekan.
+- **Ekspansi Kamus Balloon Tooltips (`src/data/tooltipTerms.ts`):**
+  - Menambahkan entri `IT Security`, `Cybersecurity`, `Urgency`, `Fear`, `Authority`, dan `Flashdisk`, serta memperluas pola pencocokan `maker-checker`, `anonymization`, `Isolate`, `Preserve`, `Report`, `.7z`, `.pdf`, `.html`, `.csv`, dan `.docm`.
+
+### Diubah & Diperbaiki
+- **Penghapusan Banner Peringatan Hitung Mundur 15 Menit (`Layout.tsx`, `rundown.ts`):**
+  - Menghapus total banner kuning `showRundownWarning` beserta helper peringatan terkait di `rundown.ts`, sambil mempertahankan tampilan tanggal, jam berjalan, dan status sesi rundown aktif di header.
+- **Kepatuhan UI, Aksesibilitas, & Kontras (`DESIGN.md`, `Layout.tsx`, `ModulePage.tsx`, `TermTooltip.tsx`, `ClosingSummaryView.tsx`):**
+  - Menerapkan aturan single-blur (menghapus `backdrop-blur` pada scrim drawer, scrim modal, dan bilah proyektor), target sentuh minimum 44px pada kontrol interaktif, focus trap & body scroll-lock untuk drawer dan modal, dukungan `Home`/`End` pada tablist modul, serta penyesuaian kontras `text-slate-600`.
+- **Penyelarasan Salinan Materi & Dokumentasi (`modules01to04.ts`, `modules05to07.ts`, `modules08to10.ts`, `prd.md`, `README.md`, `REVISI.md`):**
+  - Menghapus 12 pasang backtick literal di `modules01to04.ts`, menyeragamkan standar passphrase minimal 16 karakter, menghapus awalan nomor tak konsisten di heading Modul 08 s.d. 10, menyelaraskan deskripsi Lab 09 di `README.md`, dan memperbarui `prd.md` penuh ke entitas `PT. Sigit Adi Aman Siber (SaaS)` dan `SaaSCore` tanpa em dash maupun en dash.
+- **Peningkatan & Perbaikan 10 Lab Interaktif (`src/components/labs/*`):**
+  - Memperbaiki deteksi kata kamus dan pola tahun pada `Lab04AuthLab` agar contoh `Saas@2026!` dan `admin123` akurat dinilai lemah/berisiko, menambahkan pratinjau data mentah vs tersamarkan di `Lab05DataHandling`, memperbaiki kontras tombol dan konfirmasi positif di `Lab06EndpointAudit`, menambahkan navigasi keyboard pada `Lab03`/`Lab06`/`Lab07`, mengunci `showAllExplanations` khusus `instructorMode`, serta memperbaiki ukuran tap grid `Lab10CaseReview`.
+
+---
+
 ## [2.3.0] - 2026-11-18
 
 ### Ditambahkan

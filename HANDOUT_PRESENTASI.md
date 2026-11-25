@@ -365,7 +365,7 @@ Seseorang mengetuk pintu rumah mengenakan rompi mirip petugas listrik dan berter
 
 #### Passphrase Panjang vs Password Pendek yang Rumit
 
-Kata sandi pendek delapan karakter dengan substitusi huruf umum seperti `Saas!2025` atau `Bpr@1234` mudah ditebak oleh kamus serangan otomatis modern. Sebaliknya, Passphrase menggabungkan empat kata acak atau lebih dengan panjang minimal empat belas hingga enam belas karakter sehingga memiliki Entropi tinggi dan tetap mudah diingat manusia.
+Kata sandi pendek delapan karakter dengan substitusi huruf umum seperti `Saas@2026` atau `Bpr@1234` mudah ditebak oleh kamus serangan otomatis modern. Sebaliknya, Passphrase menggabungkan empat kata acak atau lebih dengan panjang minimal enam belas karakter sehingga memiliki Entropi tinggi dan tetap mudah diingat manusia.
 
 - Panjang karakter menaikkan jumlah kombinasi tebakan jauh lebih besar daripada sekadar menambah satu dua simbol.
 - Hindari memakai nama perusahaan, nama produk SaaSCore, tanggal lahir, atau pola papan ketik berurutan.
@@ -417,7 +417,7 @@ Memakai satu kata sandi untuk semua sistem ibarat membawa satu kunci induk yang 
 
 | Lakukan (Do) | Hindari (Don't) | Mengapa |
 | :--- | :--- | :--- |
-| Buat Passphrase panjang minimal 14 hingga 16 karakter dari kombinasi kata acak yang unik untuk setiap akun. | Menggunakan password pendek dengan pola umum seperti `Saas@2026` atau memakai kata sandi yang sama di berbagai portal. | Panjang passphrase meningkatkan Entropi secara drastis dan mencegah pembobolan berantai antarlayanan. |
+| Buat Passphrase panjang minimal 16 karakter dari kombinasi kata acak yang unik untuk setiap akun. | Menggunakan password pendek dengan pola umum seperti `Saas@2026` atau memakai kata sandi yang sama di berbagai portal. | Panjang passphrase meningkatkan Entropi secara drastis dan mencegah pembobolan berantai antarlayanan. |
 | Kelola seluruh kredensial unik melalui Password Manager yang dilindungi satu passphrase utama yang kuat. | Menyimpan daftar password server klien di file teks biasa, spreadsheet tanpa enkripsi, atau catatan tempel di monitor. | Berkas teks terbuka mudah terbaca orang sekitar maupun dicuri otomatis oleh malware. |
 | Terapkan Least Privilege dengan hak akses minimum sesuai peran dan batas waktu koneksi VPN yang jelas. | Memberikan hak administrator penuh secara permanen ke semua akun staf untuk menghindari repot meminta izin. | Membatasi dampak insiden apabila satu akun mengalami kesalahan operasional atau diambil alih pihak luar. |
 | Aktifkan MFA berbasis aplikasi autentikator (TOTP) atau security key fisik pada seluruh portal kerja kritikal. | Memilih SMS OTP atau mematikan MFA dengan alasan mempercepat proses login harian. | Aplikasi autentikator dan security key jauh lebih tahan terhadap SIM Swapping serta penyadapan jaringan seluler. |

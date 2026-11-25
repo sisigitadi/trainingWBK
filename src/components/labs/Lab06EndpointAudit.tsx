@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   CheckCircle2,
   Eye,
@@ -8,6 +8,8 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type AuditStatus = 'aman' | 'perbaikan' | 'belum_yakin';
@@ -317,14 +319,29 @@ const STATUS_OPTIONS: { value: AuditStatus; label: string }[] = [
   { value: 'belum_yakin', label: 'Belum Yakin' },
 ];
 
+interface Lab06SessionState {
+  statuses: Record<string, AuditStatus>;
+  allConditionsOpened: boolean;
+  manualDone: boolean;
+}
+
+const INITIAL_LAB06_STATE: Lab06SessionState = {
+  statuses: {},
+  allConditionsOpened: false,
+  manualDone: false,
+};
+
 export function Lab06EndpointAudit({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [statuses, setStatuses] = useState<Record<string, AuditStatus>>({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab06SessionState>(moduleId, INITIAL_LAB06_STATE);
+  const { statuses, allConditionsOpened, manualDone } = sessionState;
   const [showAllConditions, setShowAllConditions] = useState(false);
-  const [manualDone, setManualDone] = useState(false);
+  const radioRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   useEffect(() => {
     if (!instructorMode) {
@@ -340,25 +357,63 @@ export function Lab06EndpointAudit({
     (item) => statuses[item.id] === 'belum_yakin'
   ).length;
 
-  const isExplored = manualDone || checkedCount >= totalItems;
+  const { exploredCount, isExplored } = computeLabProgress(
+    allConditionsOpened ? totalItems : checkedCount,
+    totalItems,
+    manualDone,
+  );
 
   const handleSetStatus = (itemId: string, status: AuditStatus) => {
     const nextStatuses = { ...statuses, [itemId]: status };
-    setStatuses(nextStatuses);
+    setSessionState((prev) => ({ ...prev, statuses: nextStatuses }));
     const nextChecked = AUDIT_ITEMS.filter((item) => nextStatuses[item.id] !== undefined).length;
-    onMarkExplored(nextChecked, totalItems);
+    onMarkExplored(
+      manualDone || allConditionsOpened ? totalItems : nextChecked,
+      totalItems,
+    );
+  };
+
+  const handleToggleAllConditions = () => {
+    const nextShow = !showAllConditions;
+    setShowAllConditions(nextShow);
+    if (nextShow) {
+      setSessionState((prev) => ({ ...prev, allConditionsOpened: true }));
+      onMarkExplored(totalItems, totalItems);
+    }
+  };
+
+  const handleRadioKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    itemId: string,
+    currentIdx: number
+  ) => {
+    let nextIdx: number | null = null;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      nextIdx = (currentIdx + 1) % STATUS_OPTIONS.length;
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      nextIdx = (currentIdx - 1 + STATUS_OPTIONS.length) % STATUS_OPTIONS.length;
+    } else if (event.key === 'Home') {
+      nextIdx = 0;
+    } else if (event.key === 'End') {
+      nextIdx = STATUS_OPTIONS.length - 1;
+    }
+    if (nextIdx === null) return;
+    event.preventDefault();
+    const nextOpt = STATUS_OPTIONS[nextIdx];
+    if (!nextOpt) return;
+    handleSetStatus(itemId, nextOpt.value);
+    radioRefs.current[`${itemId}-${nextOpt.value}`]?.focus();
   };
 
   const handleMarkDone = () => {
-    setManualDone(true);
+    setSessionState((prev) => ({ ...prev, manualDone: true }));
     onMarkExplored(totalItems, totalItems);
   };
 
   const handleReset = () => {
-    setStatuses({});
+    resetSessionState();
     setShowAllConditions(false);
-    setManualDone(false);
-    onMarkExplored(0, totalItems);
+    resetModuleExploration(moduleId);
   };
 
   const itemsNeedingAction = AUDIT_ITEMS.filter(
@@ -371,7 +426,7 @@ export function Lab06EndpointAudit({
       session="siang"
       title="Audit Mandiri Kesehatan Laptop Kerja"
       instructions="Periksa kondisi laptop kerja Anda pada 8 poin kontrol keamanan berikut sebagai bahan refleksi teknis harian tanpa penilaian angka. Anda bebas memilih kondisi apa saja untuk melihat risiko di lapangan serta langkah perbaikannya."
-      exploredCount={isExplored ? totalItems : checkedCount}
+      exploredCount={exploredCount}
       totalCount={totalItems}
       isExplored={isExplored}
       onMarkDone={handleMarkDone}
@@ -411,7 +466,7 @@ export function Lab06EndpointAudit({
           {instructorMode && (
             <button
               type="button"
-              onClick={() => setShowAllConditions((prev) => !prev)}
+              onClick={handleToggleAllConditions}
               aria-pressed={showAllConditions}
               className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${
                 showAllConditions
@@ -467,8 +522,10 @@ export function Lab06EndpointAudit({
                   role="radiogroup"
                   aria-label={`Status untuk ${item.title}`}
                 >
-                  {STATUS_OPTIONS.map((opt) => {
+                  {STATUS_OPTIONS.map((opt, idx) => {
                     const active = currentValue === opt.value;
+                    const tabIndex =
+                      active || (currentValue === undefined && idx === 0) ? 0 : -1;
                     let btnStyle =
                       'border-slate-300 bg-slate-50 text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-200 dark:hover:bg-slate-800';
 
@@ -480,16 +537,21 @@ export function Lab06EndpointAudit({
                         'border-rose-700 bg-rose-700 text-white dark:border-rose-500 dark:bg-rose-500 dark:text-slate-950';
                     } else if (active && opt.value === 'belum_yakin') {
                       btnStyle =
-                        'border-amber-700 bg-amber-600 text-white dark:border-amber-400 dark:bg-amber-400 dark:text-slate-950';
+                        'border-amber-700 bg-amber-700 text-white dark:border-amber-400 dark:bg-amber-400 dark:text-slate-950';
                     }
 
                     return (
                       <button
                         key={opt.value}
+                        ref={(el) => {
+                          radioRefs.current[`${item.id}-${opt.value}`] = el;
+                        }}
                         type="button"
                         role="radio"
                         aria-checked={active}
+                        tabIndex={tabIndex}
                         onClick={() => handleSetStatus(item.id, opt.value)}
+                        onKeyDown={(e) => handleRadioKeyDown(e, item.id, idx)}
                         className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border px-3 py-2 text-xs font-semibold transition-colors sm:text-sm ${btnStyle}`}
                       >
                         {opt.value === 'aman' && (
@@ -553,6 +615,20 @@ export function Lab06EndpointAudit({
             );
           })}
         </div>
+
+        {checkedCount === totalItems && itemsNeedingAction.length === 0 && (
+          <FeedbackBox
+            variant="safe"
+            label="SELURUH 8 KONTROL LAPTOP SIAP"
+            title="Kesiapan Endpoint Kerja Terverifikasi Aman"
+          >
+            <p>
+              Seluruh 8 poin pemeriksaan laptop kerja telah ditandai Sudah Aman. Pertahankan
+              kedisiplinan patch otomatis, enkripsi disk, screen lock Win+L, dan penggunaan
+              Password Manager dalam operasional harian SaaSCore.
+            </p>
+          </FeedbackBox>
+        )}
 
         {itemsNeedingAction.length > 0 && (
           <section className="space-y-3 rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">

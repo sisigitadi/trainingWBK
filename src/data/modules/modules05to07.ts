@@ -15,6 +15,43 @@ export const modules05to07: ModuleContent[] = [
       'Mempraktikkan pengiriman kredensial terpisah (Out-of-Band) agar kebocoran satu kanal tidak membuka akses penuh.',
       'Membiasakan pemakaian data anonim (data masking) untuk keperluan uji coba serta pembersihan berkas setelah tiket selesai.'
     ],
+    workflowDiagram: {
+      title: 'Alur Penanganan Data Klien & Kredensial',
+      subtitle:
+        'Menjaga kerahasiaan database BPR melalui klasifikasi data, enkripsi AES-256, dan pengiriman Out-of-Band.',
+      steps: [
+        {
+          step: 1,
+          title: 'Klasifikasi Berkas',
+          action: 'Tentukan level Publik, Internal, Rahasia, atau Sangat Rahasia termasuk cek isi PII pada log.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 2,
+          title: 'Masking atau Enkripsi',
+          action: 'Pakai data dummy untuk uji coba atau bungkus dump sementara dengan enkripsi AES-256.',
+          tag: 'Gate: Tanpa Plaintext',
+        },
+        {
+          step: 3,
+          title: 'Sanitasi Log Debug',
+          action: 'Sensor NIK, nomor rekening, dan string koneksi sebelum log diunggah ke tiket.',
+          tag: 'Peran: Dev / Support',
+        },
+        {
+          step: 4,
+          title: 'Kirim Out-of-Band',
+          action: 'Kirim file terenkripsi atau username di kanal pertama dan password pembuka lewat kanal terpisah.',
+          tag: 'Gate: Dua Kanal',
+        },
+        {
+          step: 5,
+          title: 'Bersihkan Perangkat',
+          action: 'Hapus berkas sementara dari Downloads dan kosongkan Recycle Bin setelah analisis tuntas.',
+          tag: 'Gate: Tiket Selesai',
+        },
+      ],
+    },
     sections: [
       {
         heading: 'Empat Tingkat Klasifikasi Data PT. Sigit Adi Aman Siber (SaaS)',
@@ -151,6 +188,43 @@ export const modules05to07: ModuleContent[] = [
       'Memastikan enkripsi disk penuh (BitLocker atau FileVault) serta prinsip akun non-admin (UAC/Least Privilege) berjalan aktif.',
       'Membiasakan penguncian layar (Win + L) dan penolakan perangkat USB tak dikenal guna mencegah akses fisik maupun serangan BadUSB.'
     ],
+    workflowDiagram: {
+      title: 'Alur Kebersihan Endpoint & Perangkat Kerja',
+      subtitle:
+        'Menjaga laptop kerja sebagai gerbang menuju server BPR dari infostealer, celah OS, dan akses fisik.',
+      steps: [
+        {
+          step: 1,
+          title: 'Aplikasi Resmi',
+          action: 'Instal hanya software berlisensi resmi tanpa crack, keygen, atau aktivator KMS.',
+          tag: 'Gate: Bebas Bajakan',
+        },
+        {
+          step: 2,
+          title: 'Patch & UAC Aktif',
+          action: 'Terapkan update OS dan browser pada hari rilis serta pertahankan UAC dan EDR aktif.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 3,
+          title: 'Enkripsi Disk Penuh',
+          action: 'Pastikan SSD terenkripsi penuh dan Recovery Key disimpan di brankas resmi terpisah.',
+          tag: 'Gate: BitLocker / FileVault',
+        },
+        {
+          step: 4,
+          title: 'Tolak USB Asing',
+          action: 'Jangan colokkan flashdisk tak dikenal ke laptop kerja; tukar file lewat cloud internal.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 5,
+          title: 'Kunci Layar Instan',
+          action: 'Kunci layar setiap kali beranjak dari meja dan atur auto-lock maksimal 5 menit.',
+          tag: 'Gate: Win + L',
+        },
+      ],
+    },
     sections: [
       {
         heading: 'Bahaya Software Bajakan dan Ancaman Infostealer',
@@ -253,7 +327,7 @@ export const modules05to07: ModuleContent[] = [
     keyTakeaways: [
       'Software bajakan adalah pembawa utama infostealer yang mencuri sesi aktif browser, kata sandi, dan konfigurasi VPN.',
       'Pembaruan OS dan browser tepat waktu serta UAC aktif menutup celah eksploitasi paling umum.',
-      'BitLocker atau FileVault melindungi data SSD secara menyeluruh apabila laptop hilang atau dicuri.',
+      'BitLocker atau FileVault melindungi data SSD secara penuh apabila laptop hilang atau dicuri.',
       'Kebiasaan Win + L dan larangan USB tak dikenal mencegah kompromi cepat melalui akses fisik.'
     ],
     instructorGuide: {
@@ -286,6 +360,43 @@ export const modules05to07: ModuleContent[] = [
       'Memvalidasi koneksi SSL/TLS (HTTPS) serta membaca struktur domain untuk mendeteksi subdomain spoofing dan typosquatting.',
       'Mengevaluasi izin akses ekstensi browser guna mencegah kebocoran sesi melalui ekstensi berlebihan.'
     ],
+    workflowDiagram: {
+      title: 'Alur Koneksi Jaringan & Browsing Lapangan',
+      subtitle:
+        'Mengamankan koneksi saat pendampingan BPR di luar kantor dari Evil Twin, subdomain spoofing, dan ekstensi berisiko.',
+      steps: [
+        {
+          step: 1,
+          title: 'Pilih Jaringan Aman',
+          action: 'Prioritaskan tethering hotspot pribadi WPA2/WPA3 dan matikan Auto-Connect Wi-Fi publik.',
+          tag: 'Peran: Tim Lapangan',
+        },
+        {
+          step: 2,
+          title: 'Validasi HTTPS & Domain',
+          action: 'Cek ikon HTTPS sekaligus pastikan domain utama di sebelah kiri garis miring pertama benar-benar resmi.',
+          tag: 'Gate: Kanan ke Kiri',
+        },
+        {
+          step: 3,
+          title: 'Isolasi Profil Browser',
+          action: 'Pisahkan profil browser kerja SaaSCore dari profil pribadi dan audit izin ekstensi.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 4,
+          title: 'VPN Sesuai Tiket',
+          action: 'Nyalakan VPN klien BPR hanya selama sesi maintenance atau investigasi resmi berlangsung.',
+          tag: 'Gate: Terotorisasi',
+        },
+        {
+          step: 5,
+          title: 'Putus Segera',
+          action: 'Klik Disconnect VPN klien seketika setelah pekerjaan di server BPR tuntas.',
+          tag: 'Gate: Selesai Tugas',
+        },
+      ],
+    },
     sections: [
       {
         heading: 'Risiko Wi-Fi Publik dan Serangan Evil Twin',

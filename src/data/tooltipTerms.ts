@@ -9,6 +9,24 @@ export interface TooltipTerm {
 export const TOOLTIP_TERMS: TooltipTerm[] = [
   // Modul 01 & Fundamental Perbankan
   {
+    id: 'it-security',
+    term: 'IT Security (Keamanan Operasional TI)',
+    patterns: ['IT Security'],
+    meaning:
+      'Upaya menjaga keamanan operasional sistem internal, akses server, konfigurasi database, perangkat kerja, dan prosedur harian tim TI.',
+    context:
+      'Menjadi fokus utama staf SaaS saat mengelola server, akun VPN, dan database BPR agar aman dari kesalahan maupun penyalahgunaan.',
+  },
+  {
+    id: 'cybersecurity',
+    term: 'Cybersecurity (Keamanan Siber)',
+    patterns: ['Cybersecurity'],
+    meaning:
+      'Perlindungan menyeluruh terhadap sistem, jaringan, dan data digital dari serangan eksternal yang terhubung melalui internet maupun rekayasa sosial.',
+    context:
+      'Melindungi jalur rilis SaaSCore, email sigitadi.id, dan perangkat kerja dari ancaman phishing, ransomware, serta supply chain attack.',
+  },
+  {
     id: 'confidentiality',
     term: 'Confidentiality (Kerahasiaan)',
     patterns: ['Confidentiality (Kerahasiaan)', 'Confidentiality'],
@@ -134,7 +152,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'otorisasi',
     term: 'Otorisasi & Maker-Checker',
-    patterns: ['otorisasi ganda', 'otorisasi', 'terotorisasi', 'berotorisasi'],
+    patterns: ['maker-checker', 'otorisasi ganda', 'otorisasi', 'terotorisasi', 'berotorisasi'],
     meaning:
       'Persetujuan resmi dari pihak berwenang; prinsip maker-checker mensyaratkan satu orang mengajukan perubahan dan pihak lain menyetujui.',
     context:
@@ -235,6 +253,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
       'macro',
       'makro',
       '.xlsm',
+      '.docm',
     ],
     meaning:
       'Skrip otomasi di dalam dokumen Office yang sering disalahgunakan penyerang untuk menjalankan perintah sistem secara otomatis saat dibuka.',
@@ -261,6 +280,33 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   },
 
   // Modul 03: Phishing & Social Engineering
+  {
+    id: 'urgency-trigger',
+    term: 'Urgency (Tekanan Mendesak)',
+    patterns: ['Urgency'],
+    meaning:
+      'Taktik rekayasa sosial yang memaksa korban bertindak terburu-buru dalam hitungan menit agar melewatkan langkah pemeriksaan fakta.',
+    context:
+      'Sering memakai dalih layanan teller BPR terhenti atau akun akan diblokir otomatis hari ini.',
+  },
+  {
+    id: 'fear-trigger',
+    term: 'Fear (Ancaman & Rasa Takut)',
+    patterns: ['Fear'],
+    meaning:
+      'Taktik manipulasi psikologis yang menakut-nakuti korban dengan sanksi, audit mendadak, atau komplain direksi klien.',
+    context:
+      'Membuat staf panik sehingga langsung mengeklik tautan palsu atau mengirim data tanpa verifikasi.',
+  },
+  {
+    id: 'authority-trigger',
+    term: 'Authority (Penyalahgunaan Wewenang)',
+    patterns: ['Authority'],
+    meaning:
+      'Taktik meniru sosok atasan, auditor, atau pejabat bank agar korban merasa sungkan menolak atau memverifikasi ulang permintaan.',
+    context:
+      'Selalu patahkan dengan Verifikasi Out-of-Band ke nomor resmi pimpinan atau PIC BPR.',
+  },
   {
     id: 'social-engineering',
     term: 'Social Engineering (Rekayasa Sosial)',
@@ -355,7 +401,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
     term: 'Passphrase',
     patterns: ['Passphrase'],
     meaning:
-      'Kata sandi panjang (minimal 14-16 karakter) dari rangkaian beberapa kata acak yang mudah diingat manusia namun sangat sulit ditebak komputer.',
+      'Kata sandi panjang (minimal 16 karakter) dari rangkaian beberapa kata acak yang mudah diingat manusia namun sangat sulit ditebak komputer.',
     context:
       'Standar pengganti kata sandi pendek untuk akun email, VPN, dan Password Manager pegawai SaaS.',
   },
@@ -496,7 +542,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'data-masking',
     term: 'Data Masking & Anonymization',
-    patterns: ['Data Anonymization', 'Data Masking', 'anonimisasi', 'anonymized'],
+    patterns: ['Data Anonymization', 'Data Masking', 'anonymization', 'anonimisasi', 'anonymized'],
     meaning:
       'Teknik mengganti atau menyamarkan kolom identitas asli (nama, NIK, nomor rekening) menjadi data acak dummy untuk pengujian.',
     context:
@@ -532,7 +578,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'csv',
     term: 'Berkas CSV',
-    patterns: ['CSV'],
+    patterns: ['CSV', '.csv'],
     meaning:
       'Format berkas teks sederhana (Comma-Separated Values) untuk menyimpan data tabel tanpa enkripsi bawaan.',
     context:
@@ -800,6 +846,9 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
       'Isolate - Preserve - Report',
       'Isolate-Preserve-Report',
       'Isolate, Preserve, Report',
+      'Isolate',
+      'Preserve',
+      'Report',
     ],
     meaning:
       'Tiga langkah darurat 5 menit pertama: putus jaringan (Isolate), biarkan bukti tetap utuh (Preserve), dan segera lapor (Report).',
@@ -1766,6 +1815,15 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
       'Port USB laptop kerja tidak boleh dicolokkan flashdisk asing karena berisiko membawa malware maupun serangan BadUSB.',
   },
   {
+    id: 'flashdisk',
+    term: 'Flashdisk / Media USB Eksternal',
+    patterns: ['flashdisk'],
+    meaning:
+      'Media penyimpanan portabel berbasis memori flash yang mudah hilang, berpindah tangan, dan kerap membawa malware atau BadUSB.',
+    context:
+      'Dilarang menyalin data CIF atau database BPR ke flashdisk pribadi maupun mencolokkan flashdisk temuan ke laptop kerja.',
+  },
+  {
     id: 'ssd',
     term: 'SSD (Solid State Drive)',
     patterns: ['SSD'],
@@ -1867,7 +1925,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'arsip-zip-7z',
     term: 'Arsip ZIP & 7-Zip (.7z)',
-    patterns: ['7-Zip', '7z', 'ZIP'],
+    patterns: ['7-Zip', '.7z', '7z', 'ZIP'],
     meaning:
       'Format pengemasan dan kompresi satu atau beberapa berkas; 7-Zip mendukung enkripsi kuat AES-256 termasuk penyandian nama file di dalamnya.',
     context:
@@ -1912,7 +1970,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'format-html',
     term: 'Berkas HTML',
-    patterns: ['HTML'],
+    patterns: ['HTML', '.html'],
     meaning:
       'Bahasa markup halaman web; lampiran email berformat .html sering dipakai penyerang menampilkan formulir login palsu secara lokal di browser.',
     context:
@@ -1921,7 +1979,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'format-pdf',
     term: 'Berkas PDF',
-    patterns: ['PDF'],
+    patterns: ['PDF', '.pdf'],
     meaning:
       'Format dokumen portabel (Portable Document Format) untuk menampilkan teks dan tata letak tetap lintas perangkat.',
     context:

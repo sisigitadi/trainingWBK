@@ -108,6 +108,7 @@ export interface ProgressContextValue {
   explorationPercent: number;
   recordExploration: (moduleId: number, exploredItems: number, totalItems: number) => void;
   markModuleCompleted: (moduleId: number) => void;
+  resetModuleExploration: (moduleId: number) => void;
   toggleTheme: () => void;
   resetAll: () => void;
   storageError: string | null;
@@ -204,6 +205,28 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     [persist]
   );
 
+  const resetModuleExploration = useCallback(
+    (moduleId: number) => {
+      if (!Number.isInteger(moduleId) || moduleId < 1 || moduleId > TOTAL_MODULES) {
+        return;
+      }
+      setState((prev) => {
+        if (!(moduleId in prev.modules)) {
+          return prev;
+        }
+        const nextModules = { ...prev.modules };
+        delete nextModules[moduleId];
+        const nextState: LearningProgressState = {
+          ...prev,
+          modules: nextModules,
+        };
+        persist(nextState);
+        return nextState;
+      });
+    },
+    [persist]
+  );
+
   const toggleTheme = useCallback(() => {
     setState((prev) => {
       const nextTheme: 'light' | 'dark' = prev.theme === 'dark' ? 'light' : 'dark';
@@ -255,6 +278,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       explorationPercent,
       recordExploration,
       markModuleCompleted,
+      resetModuleExploration,
       toggleTheme,
       resetAll,
       storageError,
@@ -266,6 +290,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       explorationPercent,
       recordExploration,
       markModuleCompleted,
+      resetModuleExploration,
       toggleTheme,
       resetAll,
       storageError,

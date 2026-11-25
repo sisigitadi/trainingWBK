@@ -10,3 +10,5 @@ export { RichTermText } from './RichTermText';
 export type { RichTermTextProps } from './RichTermText';
 export { TermTooltip } from './TermTooltip';
 export type { TermTooltipProps } from './TermTooltip';
+export { WorkflowDiagram } from './WorkflowDiagram';
+export type { WorkflowDiagramProps } from './WorkflowDiagram';

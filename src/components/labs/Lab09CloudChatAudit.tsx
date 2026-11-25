@@ -9,6 +9,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface CloudOption {
@@ -240,15 +242,28 @@ const CHAT_MESSAGES: ChatMessageItem[] = [
 
 const TOTAL_ITEMS = CLOUD_CONFIGS.length + CHAT_MESSAGES.length;
 
+interface Lab09SessionState {
+  clickedCloudOptions: Record<string, string[]>;
+  openedChatMessages: Record<string, boolean>;
+  isMarkedDone: boolean;
+}
+
+const INITIAL_LAB09_STATE: Lab09SessionState = {
+  clickedCloudOptions: {},
+  openedChatMessages: {},
+  isMarkedDone: false,
+};
+
 export function Lab09CloudChatAudit({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [clickedCloudOptions, setClickedCloudOptions] = useState<Record<string, string[]>>({});
-  const [openedChatMessages, setOpenedChatMessages] = useState<Record<string, boolean>>({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab09SessionState>(moduleId, INITIAL_LAB09_STATE);
+  const { clickedCloudOptions, openedChatMessages, isMarkedDone } = sessionState;
   const [showAllExplanations, setShowAllExplanations] = useState(false);
-  const [isMarkedDone, setIsMarkedDone] = useState(false);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -267,15 +282,17 @@ export function Lab09CloudChatAudit({
     return cloudCount + chatCount;
   };
 
-  const exploredCount = isMarkedDone
-    ? TOTAL_ITEMS
-    : countExplored(clickedCloudOptions, openedChatMessages);
+  const { exploredCount, isExplored } = computeLabProgress(
+    countExplored(clickedCloudOptions, openedChatMessages),
+    TOTAL_ITEMS,
+    isMarkedDone,
+  );
 
   const handleClickCloudOption = (cloudId: string, optionId: string) => {
     const existing = clickedCloudOptions[cloudId] ?? [];
     const nextList = existing.includes(optionId) ? existing : [...existing, optionId];
     const nextCloudMap = { ...clickedCloudOptions, [cloudId]: nextList };
-    setClickedCloudOptions(nextCloudMap);
+    setSessionState((prev) => ({ ...prev, clickedCloudOptions: nextCloudMap }));
 
     const nextTotal = isMarkedDone
       ? TOTAL_ITEMS
@@ -285,7 +302,7 @@ export function Lab09CloudChatAudit({
 
   const handleToggleChatLine = (msgId: string) => {
     const nextChatMap = { ...openedChatMessages, [msgId]: !openedChatMessages[msgId] };
-    setOpenedChatMessages(nextChatMap);
+    setSessionState((prev) => ({ ...prev, openedChatMessages: nextChatMap }));
 
     const nextTotal = isMarkedDone
       ? TOTAL_ITEMS
@@ -305,33 +322,24 @@ export function Lab09CloudChatAudit({
       for (const msg of CHAT_MESSAGES) {
         allChat[msg.id] = true;
       }
-      setClickedCloudOptions(allCloud);
-      setOpenedChatMessages(allChat);
+      setSessionState((prev) => ({
+        ...prev,
+        clickedCloudOptions: allCloud,
+        openedChatMessages: allChat,
+      }));
       onMarkExplored(TOTAL_ITEMS, TOTAL_ITEMS);
     }
   };
 
   const handleMarkDone = () => {
-    const allCloud: Record<string, string[]> = {};
-    for (const item of CLOUD_CONFIGS) {
-      allCloud[item.id] = item.options.map((o) => o.id);
-    }
-    const allChat: Record<string, boolean> = {};
-    for (const msg of CHAT_MESSAGES) {
-      allChat[msg.id] = true;
-    }
-    setClickedCloudOptions(allCloud);
-    setOpenedChatMessages(allChat);
-    setShowAllExplanations(true);
-    setIsMarkedDone(true);
+    setSessionState((prev) => ({ ...prev, isMarkedDone: true }));
     onMarkExplored(TOTAL_ITEMS, TOTAL_ITEMS);
   };
 
   const handleReset = () => {
-    setClickedCloudOptions({});
-    setOpenedChatMessages({});
+    resetSessionState();
     setShowAllExplanations(false);
-    setIsMarkedDone(false);
+    resetModuleExploration(moduleId);
   };
 
   return (
@@ -342,7 +350,7 @@ export function Lab09CloudChatAudit({
       instructions="Eksplorasi 3 pengaturan berbagi cloud dan 6 baris percakapan grup WhatsApp/Telegram di bawah ini. Klik opsi atau baris pesan mana saja untuk melihat mengapa kondisi tersebut aman atau berisiko menurut UU PDP dan standar perbankan."
       exploredCount={exploredCount}
       totalCount={TOTAL_ITEMS}
-      isExplored={isMarkedDone || exploredCount === TOTAL_ITEMS}
+      isExplored={isExplored}
       onMarkDone={handleMarkDone}
       onReset={handleReset}
     >
@@ -397,7 +405,7 @@ export function Lab09CloudChatAudit({
                 >
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
-                      <span className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400">
+                      <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-400">
                         BERKAS #{idx + 1} / {item.platform}
                       </span>
                       <h4 className="mt-0.5 break-all font-mono text-sm font-bold text-slate-900 dark:text-slate-100">
@@ -516,7 +524,7 @@ export function Lab09CloudChatAudit({
                         <span className="rounded bg-slate-200 px-1.5 py-0.5 text-[11px] font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                           {msg.role}
                         </span>
-                        <span className="text-slate-500 dark:text-slate-400">{msg.time} WIB</span>
+                        <span className="text-slate-600 dark:text-slate-400">{msg.time} WIB</span>
                       </div>
 
                       {msg.attachment && (

@@ -13,6 +13,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface DefensiveOption {
@@ -223,17 +225,28 @@ interface StageExplorationState {
   inspectedOptionIds: string[];
 }
 
+interface Lab02SessionState {
+  activeStageId: number;
+  exploredByStage: Record<number, StageExplorationState>;
+  manualDone: boolean;
+}
+
+const INITIAL_LAB02_STATE: Lab02SessionState = {
+  activeStageId: 1,
+  exploredByStage: {},
+  manualDone: false,
+};
+
 export function Lab02AttackPath({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [activeStageId, setActiveStageId] = useState<number>(1);
-  const [exploredByStage, setExploredByStage] = useState<
-    Record<number, StageExplorationState>
-  >({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab02SessionState>(moduleId, INITIAL_LAB02_STATE);
+  const { activeStageId, exploredByStage, manualDone } = sessionState;
   const [showAllExplanations, setShowAllExplanations] = useState(false);
-  const [manualDone, setManualDone] = useState(false);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -241,11 +254,24 @@ export function Lab02AttackPath({
     }
   }, [instructorMode]);
 
-  const exploredCount = STAGES.filter(
+  const rawExploredCount = STAGES.filter(
     (s) => (exploredByStage[s.id]?.inspectedOptionIds.length ?? 0) > 0,
   ).length;
-  const isExplored = manualDone || exploredCount === STAGES.length;
+  const { exploredCount, isExplored } = computeLabProgress(
+    rawExploredCount,
+    STAGES.length,
+    manualDone,
+  );
   const activeStage = STAGES.find((s) => s.id === activeStageId) ?? STAGES[0];
+
+  const handleSelectStage = (stageId: number) => {
+    setSessionState((prev) => ({ ...prev, activeStageId: stageId }));
+    if (showAllExplanations && typeof document !== 'undefined') {
+      document
+        .getElementById(`lab02-stage-${stageId}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  };
 
   const handleExploreOption = (stageId: number, optionId: string) => {
     const current = exploredByStage[stageId] ?? { inspectedOptionIds: [] };
@@ -260,12 +286,12 @@ export function Lab02AttackPath({
         inspectedOptionIds: nextIds,
       },
     };
-    setExploredByStage(nextState);
+    setSessionState((prev) => ({ ...prev, exploredByStage: nextState }));
 
     const nextCount = STAGES.filter(
       (s) => (nextState[s.id]?.inspectedOptionIds.length ?? 0) > 0,
     ).length;
-    onMarkExplored(nextCount, STAGES.length);
+    onMarkExplored(manualDone ? STAGES.length : nextCount, STAGES.length);
   };
 
   const handleToggleAll = () => {
@@ -280,22 +306,20 @@ export function Lab02AttackPath({
           inspectedOptionIds: stage.options.map((o) => o.id),
         };
       }
-      setExploredByStage(allMap);
+      setSessionState((prev) => ({ ...prev, exploredByStage: allMap }));
       onMarkExplored(STAGES.length, STAGES.length);
     }
   };
 
   const handleMarkDone = () => {
-    setManualDone(true);
+    setSessionState((prev) => ({ ...prev, manualDone: true }));
     onMarkExplored(STAGES.length, STAGES.length);
   };
 
   const handleReset = () => {
-    setActiveStageId(1);
-    setExploredByStage({});
+    resetSessionState();
     setShowAllExplanations(false);
-    setManualDone(false);
-    onMarkExplored(0, STAGES.length);
+    resetModuleExploration(moduleId);
   };
 
   if (!activeStage) return null;
@@ -357,7 +381,7 @@ export function Lab02AttackPath({
             <h3 className="text-sm font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
               Diagram Alur Kerja Support SaaS (Pilih Titik Hotspot)
             </h3>
-            <span className="font-mono text-xs text-slate-500 dark:text-slate-400">
+            <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
               {exploredCount}/{STAGES.length} tahap telah dieksplorasi
             </span>
           </div>
@@ -377,7 +401,7 @@ export function Lab02AttackPath({
                 <div key={stage.id} role="listitem" className="flex items-stretch gap-2">
                   <button
                     type="button"
-                    onClick={() => setActiveStageId(stage.id)}
+                    onClick={() => handleSelectStage(stage.id)}
                     aria-current={isActive ? 'step' : undefined}
                     className={`flex min-h-[44px] w-full flex-col justify-between gap-2 rounded-lg border p-3.5 text-left transition-colors ${
                       isActive
@@ -437,13 +461,14 @@ export function Lab02AttackPath({
             return (
               <section
                 key={stage.id}
+                id={`lab02-stage-${stage.id}`}
                 className="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900"
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <span className="rounded bg-[#0B1F3A] px-2.5 py-1 font-mono text-xs font-semibold text-emerald-300 dark:bg-slate-800">
                     {stage.stepLabel}: {stage.title.toUpperCase()}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                  <span className="text-xs text-slate-600 dark:text-slate-400">
                     <RichTermText text={stage.normalFlow} />
                   </span>
                 </div>

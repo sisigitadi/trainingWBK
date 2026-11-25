@@ -8,6 +8,8 @@ import {
   MessageSquareText,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface CaseOption {
@@ -502,15 +504,28 @@ const CROSS_MODULE_CASES: CrossModuleCase[] = [
 
 const TOTAL_CASES = CROSS_MODULE_CASES.length;
 
+interface Lab10SessionState {
+  currentIdx: number;
+  clickedOptionsByCase: Record<number, string[]>;
+  isMarkedDone: boolean;
+}
+
+const INITIAL_LAB10_STATE: Lab10SessionState = {
+  currentIdx: 0,
+  clickedOptionsByCase: {},
+  isMarkedDone: false,
+};
+
 export function Lab10CaseReview({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [clickedOptionsByCase, setClickedOptionsByCase] = useState<Record<number, string[]>>({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab10SessionState>(moduleId, INITIAL_LAB10_STATE);
+  const { currentIdx, clickedOptionsByCase, isMarkedDone } = sessionState;
   const [showAllExplanations, setShowAllExplanations] = useState(false);
-  const [isMarkedDone, setIsMarkedDone] = useState(false);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -525,13 +540,25 @@ export function Lab10CaseReview({
     (c) => (clickedOptionsByCase[c.id]?.length ?? 0) > 0
   ).length;
 
-  const effectiveExploredCount = isMarkedDone ? TOTAL_CASES : exploredCasesCount;
+  const { exploredCount: effectiveExploredCount, isExplored } = computeLabProgress(
+    exploredCasesCount,
+    TOTAL_CASES,
+    isMarkedDone,
+  );
+
+  const setCurrentIdx = (updater: number | ((prev: number) => number)) => {
+    setSessionState((prev) => ({
+      ...prev,
+      currentIdx:
+        typeof updater === 'function' ? updater(prev.currentIdx) : updater,
+    }));
+  };
 
   const handleToggleOption = (caseId: number, optionId: string) => {
     const existing = clickedOptionsByCase[caseId] ?? [];
     const nextList = existing.includes(optionId) ? existing : [...existing, optionId];
     const nextMap = { ...clickedOptionsByCase, [caseId]: nextList };
-    setClickedOptionsByCase(nextMap);
+    setSessionState((prev) => ({ ...prev, clickedOptionsByCase: nextMap }));
 
     const nextCount = CROSS_MODULE_CASES.filter(
       (c) => (nextMap[c.id]?.length ?? 0) > 0
@@ -542,34 +569,25 @@ export function Lab10CaseReview({
   const handleToggleShowAll = () => {
     const nextShow = !showAllExplanations;
     setShowAllExplanations(nextShow);
-    if (nextShow && currentCase) {
-      const allIds = currentCase.options.map((o) => o.id);
-      const nextMap = { ...clickedOptionsByCase, [currentCase.id]: allIds };
-      setClickedOptionsByCase(nextMap);
-
-      const nextCount = CROSS_MODULE_CASES.filter(
-        (c) => (nextMap[c.id]?.length ?? 0) > 0
-      ).length;
-      onMarkExplored(isMarkedDone ? TOTAL_CASES : nextCount, TOTAL_CASES);
+    if (nextShow) {
+      const fullMap: Record<number, string[]> = {};
+      for (const item of CROSS_MODULE_CASES) {
+        fullMap[item.id] = item.options.map((o) => o.id);
+      }
+      setSessionState((prev) => ({ ...prev, clickedOptionsByCase: fullMap }));
+      onMarkExplored(TOTAL_CASES, TOTAL_CASES);
     }
   };
 
   const handleMarkDone = () => {
-    const fullMap: Record<number, string[]> = {};
-    for (const item of CROSS_MODULE_CASES) {
-      fullMap[item.id] = item.options.map((o) => o.id);
-    }
-    setClickedOptionsByCase(fullMap);
-    setShowAllExplanations(true);
-    setIsMarkedDone(true);
+    setSessionState((prev) => ({ ...prev, isMarkedDone: true }));
     onMarkExplored(TOTAL_CASES, TOTAL_CASES);
   };
 
   const handleReset = () => {
-    setCurrentIdx(0);
-    setClickedOptionsByCase({});
+    resetSessionState();
     setShowAllExplanations(false);
-    setIsMarkedDone(false);
+    resetModuleExploration(moduleId);
   };
 
   return (
@@ -580,7 +598,7 @@ export function Lab10CaseReview({
       instructions="Eksplorasi 10 studi kasus operasional lintas Modul 01 sampai Modul 10 untuk diskusi kelas bersama Narasumber Sigit Adi. Klik bebas setiap opsi tindakan untuk membandingkan kondisi aman dan berisiko di lapangan."
       exploredCount={effectiveExploredCount}
       totalCount={TOTAL_CASES}
-      isExplored={isMarkedDone || exploredCasesCount === TOTAL_CASES}
+      isExplored={isExplored}
       onMarkDone={handleMarkDone}
       onReset={handleReset}
     >
@@ -615,7 +633,7 @@ export function Lab10CaseReview({
             )}
           </div>
 
-          <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
+          <div className="grid grid-cols-5 gap-2 md:grid-cols-10">
             {CROSS_MODULE_CASES.map((item, idx) => {
               const isCurrent = idx === currentIdx;
               const hasExplored = (clickedOptionsByCase[item.id]?.length ?? 0) > 0;
@@ -650,7 +668,7 @@ export function Lab10CaseReview({
               <span className="rounded bg-[#0B1F3A] px-2.5 py-1 font-mono text-xs font-semibold text-emerald-300 dark:bg-slate-800">
                 {currentCase.moduleRef}
               </span>
-              <span className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-400">
                 Kasus {currentCase.id} dari {TOTAL_CASES}
               </span>
             </div>

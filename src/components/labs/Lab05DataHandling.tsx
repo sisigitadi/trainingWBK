@@ -8,6 +8,8 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 interface DecisionOption {
@@ -243,15 +245,29 @@ const WORKFLOW_STEPS: WorkflowStep[] = [
   },
 ];
 
+interface Lab05SessionState {
+  selectedByStep: Record<string, string | null>;
+  exploredSteps: Record<string, boolean>;
+  manualDone: boolean;
+}
+
+const INITIAL_LAB05_STATE: Lab05SessionState = {
+  selectedByStep: {},
+  exploredSteps: {},
+  manualDone: false,
+};
+
 export function Lab05DataHandling({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [selectedByStep, setSelectedByStep] = useState<Record<string, string | null>>({});
-  const [exploredSteps, setExploredSteps] = useState<Record<string, boolean>>({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab05SessionState>(moduleId, INITIAL_LAB05_STATE);
+  const { selectedByStep, exploredSteps, manualDone } = sessionState;
   const [showAllConditions, setShowAllConditions] = useState(false);
-  const [manualDone, setManualDone] = useState(false);
+  const [showMaskedSample, setShowMaskedSample] = useState(false);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -260,17 +276,39 @@ export function Lab05DataHandling({
   }, [instructorMode]);
 
   const totalSteps = WORKFLOW_STEPS.length;
-  const exploredCount = WORKFLOW_STEPS.filter((step) => exploredSteps[step.id]).length;
-  const isExplored = manualDone || exploredCount >= totalSteps;
+  const rawExploredCount = WORKFLOW_STEPS.filter((step) => exploredSteps[step.id]).length;
+  const { exploredCount, isExplored } = computeLabProgress(
+    rawExploredCount,
+    totalSteps,
+    manualDone,
+  );
 
   const handleSelectOption = (stepId: string, optionId: string) => {
-    setSelectedByStep((prev) => ({ ...prev, [stepId]: optionId }));
+    const wasExplored = Boolean(exploredSteps[stepId]);
+    const nextExplored = wasExplored ? exploredSteps : { ...exploredSteps, [stepId]: true };
 
-    if (!exploredSteps[stepId]) {
-      const nextExplored = { ...exploredSteps, [stepId]: true };
-      setExploredSteps(nextExplored);
+    setSessionState((prev) => ({
+      ...prev,
+      selectedByStep: { ...prev.selectedByStep, [stepId]: optionId },
+      exploredSteps: nextExplored,
+    }));
+
+    if (!wasExplored) {
       const nextCount = WORKFLOW_STEPS.filter((step) => nextExplored[step.id]).length;
-      onMarkExplored(nextCount, totalSteps);
+      onMarkExplored(manualDone ? totalSteps : nextCount, totalSteps);
+    }
+  };
+
+  const handleToggleAllConditions = () => {
+    const nextShow = !showAllConditions;
+    setShowAllConditions(nextShow);
+    if (nextShow) {
+      const allExplored: Record<string, boolean> = {};
+      for (const step of WORKFLOW_STEPS) {
+        allExplored[step.id] = true;
+      }
+      setSessionState((prev) => ({ ...prev, exploredSteps: allExplored }));
+      onMarkExplored(totalSteps, totalSteps);
     }
   };
 
@@ -279,17 +317,19 @@ export function Lab05DataHandling({
     for (const step of WORKFLOW_STEPS) {
       allExplored[step.id] = true;
     }
-    setExploredSteps(allExplored);
-    setManualDone(true);
+    setSessionState((prev) => ({
+      ...prev,
+      exploredSteps: allExplored,
+      manualDone: true,
+    }));
     onMarkExplored(totalSteps, totalSteps);
   };
 
   const handleReset = () => {
-    setSelectedByStep({});
-    setExploredSteps({});
+    resetSessionState();
     setShowAllConditions(false);
-    setManualDone(false);
-    onMarkExplored(0, totalSteps);
+    setShowMaskedSample(false);
+    resetModuleExploration(moduleId);
   };
 
   return (
@@ -302,7 +342,7 @@ export function Lab05DataHandling({
           ? 'Eksplorasi seluruh opsi aman maupun berisiko di 4 tahap pengiriman file konfigurasi SaaSCore. Klik opsi mana saja secara bebas untuk melihat dampak nyatanya, atau aktifkan mode perbandingan semua kondisi untuk diskusi kelas.'
           : 'Eksplorasi seluruh opsi aman maupun berisiko di 4 tahap pengiriman file konfigurasi SaaSCore. Klik opsi mana saja secara bebas untuk melihat dampak nyatanya serta langkah pengamanan yang tepat.'
       }
-      exploredCount={isExplored ? totalSteps : exploredCount}
+      exploredCount={exploredCount}
       totalCount={totalSteps}
       isExplored={isExplored}
       onMarkDone={handleMarkDone}
@@ -320,10 +360,43 @@ export function Lab05DataHandling({
             <code className="break-all rounded bg-slate-200 px-1.5 py-0.5 font-mono text-xs font-semibold text-slate-900 dark:bg-slate-800 dark:text-emerald-300">
               saascore_prod_db_bpr.json
             </code>{' '}
-            <RichTermText text="yang berisi detail koneksi database produksi berikut:" />
+            <RichTermText text="(data dummy rekaan simulasi) yang memuat detail koneksi database berikut:" />
           </p>
-          <pre className="mt-3 overflow-x-auto rounded-md border border-slate-300 bg-slate-900 p-3 font-mono text-xs leading-relaxed text-emerald-300 dark:border-slate-700">
-{`{
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+            <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">
+              {showMaskedSample
+                ? 'Pratinjau Setelah Data Masking (Aman untuk Tiket/Analisis)'
+                : 'Pratinjau Mentah Sebelum Pengamanan (Data Dummy Simulasi)'}
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowMaskedSample((prev) => !prev)}
+              aria-pressed={showMaskedSample}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              {showMaskedSample ? (
+                <EyeOff className="h-4 w-4 shrink-0" aria-hidden="true" />
+              ) : (
+                <Eye className="h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+              <span>
+                {showMaskedSample
+                  ? 'Lihat Contoh Mentah (Dummy)'
+                  : 'Simulasikan Data Masking (Redacted)'}
+              </span>
+            </button>
+          </div>
+          <pre className="mt-2 overflow-x-auto rounded-md border border-slate-300 bg-slate-900 p-3 font-mono text-xs leading-relaxed text-emerald-300 dark:border-slate-700">
+            {showMaskedSample
+              ? `{
+  "environment": "production-bpr (disamarkan)",
+  "db_host": "10.24.x.x",
+  "db_port": 5432,
+  "database": "saascore_bpr_***",
+  "service_user": "svc_***",
+  "service_password": "[DIHAPUS_GUNAKAN_SECRET_VAULT]"
+}`
+              : `{
   "environment": "production-bpr",
   "db_host": "10.24.8.15",
   "db_port": 5432,
@@ -344,7 +417,7 @@ export function Lab05DataHandling({
           {instructorMode && (
             <button
               type="button"
-              onClick={() => setShowAllConditions((prev) => !prev)}
+              onClick={handleToggleAllConditions}
               aria-pressed={showAllConditions}
               className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${
                 showAllConditions
@@ -422,7 +495,7 @@ export function Lab05DataHandling({
                           type="button"
                           onClick={() => handleSelectOption(step.id, option.id)}
                           aria-pressed={isSelected}
-                          className={`min-h-[44px] w-full rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#047857] dark:focus-visible:ring-[#10B981] ${cardStyle}`}
+                          className={`min-h-[44px] w-full rounded-lg border p-4 text-left transition-colors ${cardStyle}`}
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0 flex-1">

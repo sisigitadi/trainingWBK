@@ -11,6 +11,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { LabProps } from '../../types/training';
+import { computeLabProgress, useLabSessionState } from '../../lib/useLabExploration';
+import { useProgress } from '../../state/ProgressContext';
 import { Callout, FeedbackBox, LabShell, RichTermText } from '../ui';
 
 type CiaPillar = 'Confidentiality' | 'Integrity' | 'Availability';
@@ -367,14 +369,26 @@ interface ExploredIncidentState {
   inspectedMitigations: string[];
 }
 
+interface Lab01SessionState {
+  exploredMap: Record<number, ExploredIncidentState>;
+  manualDone: boolean;
+}
+
+const INITIAL_LAB01_STATE: Lab01SessionState = {
+  exploredMap: {},
+  manualDone: false,
+};
+
 export function Lab01CIA({
   moduleId,
   instructorMode = false,
   onMarkExplored,
 }: LabProps) {
-  const [exploredMap, setExploredMap] = useState<Record<number, ExploredIncidentState>>({});
+  const { resetModuleExploration } = useProgress();
+  const [sessionState, setSessionState, resetSessionState] =
+    useLabSessionState<Lab01SessionState>(moduleId, INITIAL_LAB01_STATE);
+  const { exploredMap, manualDone } = sessionState;
   const [showAllExplanations, setShowAllExplanations] = useState(false);
-  const [manualDone, setManualDone] = useState(false);
 
   useEffect(() => {
     if (!instructorMode) {
@@ -382,24 +396,28 @@ export function Lab01CIA({
     }
   }, [instructorMode]);
 
-  const exploredCount = INCIDENTS.filter((inc) => {
+  const rawExploredCount = INCIDENTS.filter((inc) => {
     const st = exploredMap[inc.id];
     return Boolean(
       st && (st.inspectedPillars.length > 0 || st.inspectedMitigations.length > 0),
     );
   }).length;
 
-  const isExplored = manualDone || exploredCount === INCIDENTS.length;
+  const { exploredCount, isExplored } = computeLabProgress(
+    rawExploredCount,
+    INCIDENTS.length,
+    manualDone,
+  );
 
   const updateAndNotify = (nextMap: Record<number, ExploredIncidentState>) => {
-    setExploredMap(nextMap);
+    setSessionState((prev) => ({ ...prev, exploredMap: nextMap }));
     const nextCount = INCIDENTS.filter((inc) => {
       const st = nextMap[inc.id];
       return Boolean(
         st && (st.inspectedPillars.length > 0 || st.inspectedMitigations.length > 0),
       );
     }).length;
-    onMarkExplored(nextCount, INCIDENTS.length);
+    onMarkExplored(manualDone ? INCIDENTS.length : nextCount, INCIDENTS.length);
   };
 
   const handleExplorePillar = (incidentId: number, pillar: CiaPillar) => {
@@ -454,21 +472,20 @@ export function Lab01CIA({
           inspectedMitigations: inc.mitigations.map((m) => m.id),
         };
       }
-      setExploredMap(allOpenMap);
+      setSessionState((prev) => ({ ...prev, exploredMap: allOpenMap }));
       onMarkExplored(INCIDENTS.length, INCIDENTS.length);
     }
   };
 
   const handleMarkDone = () => {
-    setManualDone(true);
+    setSessionState((prev) => ({ ...prev, manualDone: true }));
     onMarkExplored(INCIDENTS.length, INCIDENTS.length);
   };
 
   const handleReset = () => {
-    setExploredMap({});
+    resetSessionState();
     setShowAllExplanations(false);
-    setManualDone(false);
-    onMarkExplored(0, INCIDENTS.length);
+    resetModuleExploration(moduleId);
   };
 
   return (

@@ -136,6 +136,14 @@ export function ModulePage({
         navigateTo(`#/modul/${moduleId}`);
         materiTabRef.current?.focus();
       }
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      navigateTo(`#/modul/${moduleId}`);
+      materiTabRef.current?.focus();
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      navigateTo(`#/modul/${moduleId}/lab`);
+      labTabRef.current?.focus();
     }
   };
 

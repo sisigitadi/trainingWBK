@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ArrowRight,
-  BellRing,
   CalendarClock,
   CheckCircle2,
   ChevronLeft,
@@ -16,6 +14,8 @@ import {
   Minimize2,
   Monitor,
   Moon,
+  PanelLeftClose,
+  PanelLeftOpen,
   Printer,
   RotateCcw,
   Sun,
@@ -48,6 +48,25 @@ export interface LayoutProps {
 }
 
 type SimTimePreset = 'realtime' | '09:40' | '11:50' | '13:30' | '15:50';
+
+const DESKTOP_SIDEBAR_STORAGE_KEY = 'saas_desktop_sidebar_open_v1';
+
+function readInitialDesktopSidebarOpen(): boolean {
+  if (typeof window === 'undefined') return true;
+  try {
+    return window.localStorage.getItem(DESKTOP_SIDEBAR_STORAGE_KEY) !== '0';
+  } catch {
+    return true;
+  }
+}
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  const selector =
+    'a[href], button:not([disabled]), select:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  return Array.from(container.querySelectorAll<HTMLElement>(selector)).filter(
+    (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true'
+  );
+}
 
 function formatShortModuleTitle(title: string): string {
   return title.replace(/^Modul\s+\d+\s*:\s*/i, '').trim();
@@ -105,16 +124,20 @@ export function Layout({
   } = useProgress();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState<boolean>(
+    readInitialDesktopSidebarOpen
+  );
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const [now, setNow] = useState<Date>(() => new Date());
   const [simTimePreset, setSimTimePreset] = useState<SimTimePreset>('realtime');
-  const [dismissedWarningKey, setDismissedWarningKey] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const closeDrawerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const drawerContainerRef = useRef<HTMLDivElement | null>(null);
   const disclaimerButtonRef = useRef<HTMLButtonElement | null>(null);
   const closeDisclaimerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const disclaimerModalRef = useRef<HTMLDivElement | null>(null);
   const topBarRef = useRef<HTMLDivElement | null>(null);
   const [topBarHeight, setTopBarHeight] = useState<number>(100);
   const wasDrawerOpenRef = useRef(false);
@@ -150,6 +173,20 @@ export function Layout({
 
   const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
+  }, []);
+
+  const toggleDesktopSidebar = useCallback(() => {
+    setDesktopSidebarOpen((prev) => {
+      const next = !prev;
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem(DESKTOP_SIDEBAR_STORAGE_KEY, next ? '1' : '0');
+        } catch {
+          // Ignore localStorage write errors in restricted browsing modes
+        }
+      }
+      return next;
+    });
   }, []);
 
   useEffect(() => {
@@ -216,6 +253,9 @@ export function Layout({
     }
 
     wasDrawerOpenRef.current = true;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const focusTimer = window.setTimeout(() => {
       closeDrawerButtonRef.current?.focus();
     }, 10);
@@ -224,11 +264,34 @@ export function Layout({
       if (event.key === 'Escape') {
         event.preventDefault();
         setMobileMenuOpen(false);
+        return;
+      }
+
+      if (event.key === 'Tab' && drawerContainerRef.current) {
+        const focusables = getFocusableElements(drawerContainerRef.current);
+        if (focusables.length === 0) {
+          event.preventDefault();
+          return;
+        }
+        const first = focusables[0]!;
+        const last = focusables[focusables.length - 1]!;
+        const active = document.activeElement as HTMLElement | null;
+
+        if (event.shiftKey) {
+          if (!active || active === first || !drawerContainerRef.current.contains(active)) {
+            event.preventDefault();
+            last.focus();
+          }
+        } else if (!active || active === last || !drawerContainerRef.current.contains(active)) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
 
     window.addEventListener('keydown', handleDrawerKeyDown);
     return () => {
+      document.body.style.overflow = prevOverflow;
       window.clearTimeout(focusTimer);
       window.removeEventListener('keydown', handleDrawerKeyDown);
     };
@@ -244,6 +307,9 @@ export function Layout({
     }
 
     wasDisclaimerOpenRef.current = true;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const focusTimer = window.setTimeout(() => {
       closeDisclaimerButtonRef.current?.focus();
     }, 10);
@@ -252,15 +318,67 @@ export function Layout({
       if (event.key === 'Escape') {
         event.preventDefault();
         setDisclaimerOpen(false);
+        return;
+      }
+
+      if (event.key === 'Tab' && disclaimerModalRef.current) {
+        const focusables = getFocusableElements(disclaimerModalRef.current);
+        if (focusables.length === 0) {
+          event.preventDefault();
+          return;
+        }
+        const first = focusables[0]!;
+        const last = focusables[focusables.length - 1]!;
+        const active = document.activeElement as HTMLElement | null;
+
+        if (event.shiftKey) {
+          if (!active || active === first || !disclaimerModalRef.current.contains(active)) {
+            event.preventDefault();
+            last.focus();
+          }
+        } else if (!active || active === last || !disclaimerModalRef.current.contains(active)) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
 
     window.addEventListener('keydown', handleDisclaimerKeyDown);
     return () => {
+      document.body.style.overflow = prevOverflow;
       window.clearTimeout(focusTimer);
       window.removeEventListener('keydown', handleDisclaimerKeyDown);
     };
   }, [disclaimerOpen]);
+
+  useEffect(() => {
+    if (projectorMode) return;
+
+    const handleSidebarShortcut = (event: KeyboardEvent) => {
+      if (mobileMenuOpen || disclaimerOpen) return;
+      if (isEditableElement(event.target)) return;
+
+      const isAltB =
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        event.key.toLowerCase() === 'b';
+      const isBracket =
+        !event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.shiftKey &&
+        event.key === '[';
+
+      if (isAltB || isBracket) {
+        event.preventDefault();
+        toggleDesktopSidebar();
+      }
+    };
+
+    window.addEventListener('keydown', handleSidebarShortcut);
+    return () => window.removeEventListener('keydown', handleSidebarShortcut);
+  }, [projectorMode, mobileMenuOpen, disclaimerOpen, toggleDesktopSidebar]);
 
   useEffect(() => {
     if (!projectorMode) return;
@@ -364,7 +482,7 @@ export function Layout({
               <div className="flex flex-wrap items-center justify-between gap-1.5 font-mono text-xs">
                 <span
                   className={
-                    isActive ? 'text-slate-300' : 'text-slate-500 dark:text-slate-400'
+                    isActive ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400'
                   }
                 >
                   {mod.timeSlot}
@@ -502,7 +620,7 @@ export function Layout({
                   className={
                     route.view === 'penutup'
                       ? 'text-slate-300'
-                      : 'text-slate-500 dark:text-slate-400'
+                      : 'text-slate-600 dark:text-slate-400'
                   }
                 >
                   16.00 - 16.15
@@ -523,12 +641,6 @@ export function Layout({
       </section>
     </nav>
   );
-
-  const showRundownWarning =
-    rundownStatus.isWarningWindow &&
-    rundownStatus.warningKey !== null &&
-    dismissedWarningKey !== rundownStatus.warningKey &&
-    rundownStatus.warningMessage !== null;
 
   useEffect(() => {
     const element = topBarRef.current;
@@ -552,31 +664,59 @@ export function Layout({
       window.addEventListener('resize', updateHeight);
       return () => window.removeEventListener('resize', updateHeight);
     }
-  }, [showRundownWarning, storageError, instructorMode, projectorMode]);
+  }, [storageError, instructorMode, projectorMode]);
+
+  const activeModule = route.view === 'modul' ? getModuleById(route.moduleId) : undefined;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#091322] dark:text-slate-100">
       <div className="no-print">
         <div
           ref={topBarRef}
-          className="fixed inset-x-0 top-0 z-30 border-b border-slate-200/70 bg-white/80 shadow-sm backdrop-blur-md dark:border-slate-800/70 dark:bg-[#0B1F3A]/85"
+          className="fixed inset-x-0 top-0 z-30 border-b border-slate-200/70 bg-white/95 shadow-sm backdrop-blur-md dark:border-slate-800/70 dark:bg-[#0B1F3A]/95"
         >
           <header>
             <div className="mx-auto flex max-w-[1440px] flex-col gap-1.5 px-4 py-2 sm:px-6">
               <div className="flex flex-wrap items-center justify-between gap-2.5">
                 <div className="flex min-w-0 items-center gap-2.5">
                   {!projectorMode && (
-                    <button
-                      ref={menuButtonRef}
-                      type="button"
-                      onClick={() => setMobileMenuOpen(true)}
-                      aria-label="Buka menu modul"
-                      aria-expanded={mobileMenuOpen}
-                      aria-controls="mobile-module-drawer"
-                      className="inline-flex min-h-[38px] min-w-[38px] shrink-0 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 lg:hidden"
-                    >
-                      <Menu className="h-5 w-5" aria-hidden="true" />
-                    </button>
+                    <>
+                      <button
+                        ref={menuButtonRef}
+                        type="button"
+                        onClick={() => setMobileMenuOpen(true)}
+                        aria-label="Buka menu modul"
+                        aria-expanded={mobileMenuOpen}
+                        aria-controls="mobile-module-drawer"
+                        className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 lg:hidden"
+                      >
+                        <Menu className="h-5 w-5" aria-hidden="true" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={toggleDesktopSidebar}
+                        aria-expanded={desktopSidebarOpen}
+                        aria-controls="desktop-module-sidebar"
+                        aria-label={
+                          desktopSidebarOpen
+                            ? 'Sembunyikan daftar modul (Alt+B atau [)'
+                            : 'Tampilkan daftar modul (Alt+B atau [)'
+                        }
+                        title={
+                          desktopSidebarOpen
+                            ? 'Sembunyikan daftar modul (Alt+B atau [)'
+                            : 'Tampilkan daftar modul (Alt+B atau [)'
+                        }
+                        className="hidden min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 lg:inline-flex"
+                      >
+                        {desktopSidebarOpen ? (
+                          <PanelLeftClose className="h-5 w-5" aria-hidden="true" />
+                        ) : (
+                          <PanelLeftOpen className="h-5 w-5" aria-hidden="true" />
+                        )}
+                      </button>
+                    </>
                   )}
 
                   {instructorMode ? (
@@ -612,7 +752,7 @@ export function Layout({
                     <div className="flex flex-wrap items-center gap-2">
                       <div className="inline-flex flex-wrap items-center gap-x-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 sm:text-sm">
                         <span>Sigit Adi Irianto, S.Kom.</span>
-                        <span aria-hidden="true" className="text-slate-500 dark:text-slate-400">
+                        <span aria-hidden="true" className="text-slate-600 dark:text-slate-400">
                           -
                         </span>
                         <a
@@ -631,7 +771,7 @@ export function Layout({
                           onClick={onLockInstructor}
                           aria-label="Mode Narasumber aktif. Klik untuk keluar dan kunci kembali"
                           title="Mode Narasumber aktif. Klik untuk keluar"
-                          className="group inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center gap-1.5 rounded-md border border-[#047857]/60 bg-emerald-50 px-2.5 py-1 text-[#047857] transition-colors hover:border-[#047857] hover:bg-emerald-100 active:scale-95 dark:border-[#10B981]/60 dark:bg-emerald-500/20 dark:text-emerald-300 dark:hover:border-[#10B981] dark:hover:bg-emerald-500/30 sm:min-h-[30px] sm:px-2"
+                          className="group inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center gap-1.5 rounded-md border border-[#047857]/60 bg-emerald-50 px-2.5 py-1 text-[#047857] transition-colors hover:border-[#047857] hover:bg-emerald-100 active:scale-95 dark:border-[#10B981]/60 dark:bg-emerald-500/20 dark:text-emerald-300 dark:hover:border-[#10B981] dark:hover:bg-emerald-500/30 sm:px-2"
                         >
                           <LockOpen className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                           <span
@@ -680,7 +820,7 @@ export function Layout({
                     <button
                       type="button"
                       onClick={handlePrintHandout}
-                      className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                      className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                     >
                       <Printer
                         className="h-3.5 w-3.5 shrink-0 text-[#0B1F3A] dark:text-sky-400"
@@ -698,7 +838,7 @@ export function Layout({
                     aria-haspopup="dialog"
                     aria-expanded={disclaimerOpen}
                     title="Catatan Contoh Studi Kasus"
-                    className="inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded-md border border-slate-300 bg-white p-2 text-slate-800 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-[38px] sm:min-w-[38px]"
+                    className="inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded-md border border-slate-300 bg-white p-2 text-slate-800 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                   >
                     <Info
                       className="h-4 w-4 shrink-0 text-[#0B1F3A] dark:text-sky-400"
@@ -716,7 +856,7 @@ export function Layout({
                     title={
                       state.theme === 'dark' ? 'Beralih ke mode terang' : 'Beralih ke mode gelap'
                     }
-                    className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 py-2 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                   >
                     {state.theme === 'dark' ? (
                       <>
@@ -740,7 +880,7 @@ export function Layout({
                         projectorMode ? 'Keluar Mode Proyektor' : 'Aktifkan Mode Proyektor'
                       }
                       title={projectorMode ? 'Keluar Mode Proyektor' : 'Aktifkan Mode Proyektor'}
-                      className={`inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded-md border p-2 transition-colors active:scale-95 sm:min-h-[38px] sm:min-w-[38px] ${
+                      className={`inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded-md border p-2 transition-colors active:scale-95 ${
                         projectorMode
                           ? 'border-[#047857] bg-[#047857] text-white hover:bg-[#065F46] dark:border-[#10B981] dark:bg-[#10B981] dark:text-slate-950 dark:hover:bg-emerald-400'
                           : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800'
@@ -780,9 +920,8 @@ export function Layout({
                         value={simTimePreset}
                         onChange={(e) => {
                           setSimTimePreset(e.target.value as SimTimePreset);
-                          setDismissedWarningKey(null);
                         }}
-                        className="min-h-[32px] rounded-md border border-slate-300 bg-white px-2 py-1 font-mono text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                        className="min-h-[44px] rounded-md border border-slate-300 bg-white px-2 py-1 font-mono text-xs text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                       >
                         <option value="realtime">Waktu Nyata</option>
                         <option value="09:40">09:40 (Jelang Rehat)</option>
@@ -797,44 +936,6 @@ export function Layout({
             </div>
           </header>
 
-          {showRundownWarning && (
-            <div
-              role="status"
-              className="border-t border-amber-300 bg-amber-50 px-4 py-2 text-amber-950 dark:border-amber-700/60 dark:bg-amber-950/80 dark:text-amber-100 sm:px-6"
-            >
-              <div className="mx-auto flex max-w-[1440px] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-start gap-2">
-                  <BellRing
-                    className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300"
-                    aria-hidden="true"
-                  />
-                  <p className="text-xs sm:text-sm font-semibold leading-snug">
-                    {rundownStatus.warningMessage}
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  {rundownStatus.nextSegment?.route && (
-                    <button
-                      type="button"
-                      onClick={() => navigateTo(rundownStatus.nextSegment!.route!)}
-                      className="inline-flex min-h-[32px] items-center gap-1.5 rounded-md bg-[#0B1F3A] px-2.5 py-1 text-xs font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-[#10B981] dark:text-slate-950"
-                    >
-                      <span>Buka Sesi Berikutnya</span>
-                      <ArrowRight className="h-3 w-3" aria-hidden="true" />
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setDismissedWarningKey(rundownStatus.warningKey)}
-                    className="inline-flex min-h-[32px] items-center rounded-md border border-amber-400 bg-white px-2.5 py-1 text-xs font-semibold text-amber-950 transition-colors hover:bg-amber-100 dark:border-amber-700 dark:bg-slate-900 dark:text-amber-100 dark:hover:bg-slate-800"
-                  >
-                    Tutup
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
           {storageError && (
             <div
               role="alert"
@@ -846,7 +947,7 @@ export function Layout({
                   <button
                     type="button"
                     onClick={resetAll}
-                    className="inline-flex min-h-[32px] items-center gap-1.5 rounded-md border border-amber-700 bg-amber-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors hover:bg-amber-800 dark:border-amber-500 dark:bg-amber-500 dark:text-slate-950"
+                    className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-amber-700 bg-amber-700 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-amber-800 dark:border-amber-500 dark:bg-amber-500 dark:text-slate-950"
                   >
                     <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                     <span>Atur Ulang Progres</span>
@@ -854,7 +955,7 @@ export function Layout({
                   <button
                     type="button"
                     onClick={dismissStorageError}
-                    className="inline-flex min-h-[32px] items-center rounded-md border border-amber-400 bg-white px-2.5 py-1 text-xs font-semibold text-amber-950 transition-colors hover:bg-amber-100 dark:border-amber-700 dark:bg-slate-900 dark:text-amber-100 dark:hover:bg-slate-800"
+                    className="inline-flex min-h-[44px] items-center rounded-md border border-amber-400 bg-white px-3 py-2 text-xs font-semibold text-amber-950 transition-colors hover:bg-amber-100 dark:border-amber-700 dark:bg-slate-900 dark:text-amber-100 dark:hover:bg-slate-800"
                   >
                     Tutup
                   </button>
@@ -873,11 +974,14 @@ export function Layout({
             id="mobile-module-drawer"
           >
             <div
-              className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm"
+              className="fixed inset-0 bg-slate-950/75"
               onClick={closeMobileMenu}
               aria-hidden="true"
             />
-            <div className="relative z-10 flex h-full w-full max-w-xs flex-col border-r border-slate-200 bg-slate-50 shadow-xl dark:border-slate-800 dark:bg-[#091322]">
+            <div
+              ref={drawerContainerRef}
+              className="relative z-10 flex h-full w-full max-w-xs flex-col border-r border-slate-200 bg-slate-50 shadow-xl dark:border-slate-800 dark:bg-[#091322]"
+            >
               <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-[#0B1F3A]">
                 <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#0B1F3A] dark:text-emerald-300">
                   Rundown &amp; Modul Bimtek
@@ -905,11 +1009,14 @@ export function Layout({
             aria-labelledby="disclaimer-modal-title"
           >
             <div
-              className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm"
+              className="fixed inset-0 bg-slate-950/75"
               onClick={() => setDisclaimerOpen(false)}
               aria-hidden="true"
             />
-            <div className="relative z-10 w-full max-w-lg rounded-lg border border-sky-200 border-l-4 border-l-[#0B1F3A] bg-white p-5 text-slate-900 shadow-2xl dark:border-slate-700 dark:border-l-sky-400 dark:bg-slate-900 dark:text-slate-100 sm:p-6">
+            <div
+              ref={disclaimerModalRef}
+              className="relative z-10 w-full max-w-lg rounded-lg border border-sky-200 border-l-4 border-l-[#0B1F3A] bg-white p-5 text-slate-900 shadow-2xl dark:border-slate-700 dark:border-l-sky-400 dark:bg-slate-900 dark:text-slate-100 sm:p-6"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-2.5">
                   <Info
@@ -959,24 +1066,66 @@ export function Layout({
         >
           <div
             className={
-              projectorMode
+              projectorMode || !desktopSidebarOpen
                 ? 'block'
                 : 'lg:grid lg:grid-cols-[310px_minmax(0,1fr)] lg:items-start lg:gap-7'
             }
           >
-            {!projectorMode && (
+            {!projectorMode && desktopSidebarOpen && (
               <aside
+                id="desktop-module-sidebar"
                 style={{
                   top: `${topBarHeight + 16}px`,
                   maxHeight: `calc(100vh - ${topBarHeight + 32}px)`,
                 }}
                 className="hidden lg:sticky lg:block lg:overflow-y-auto lg:pr-1"
               >
+                <div className="mb-3 flex items-center justify-between border-b border-slate-200 pb-2 dark:border-slate-800">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#0B1F3A] dark:text-emerald-300">
+                    Daftar Modul
+                  </span>
+                  <button
+                    type="button"
+                    onClick={toggleDesktopSidebar}
+                    aria-label="Tutup daftar modul"
+                    title="Tutup daftar modul (Alt+B atau [)"
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                  >
+                    <PanelLeftClose className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
                 {renderSidebarContent()}
               </aside>
             )}
 
             <div className="min-w-0 flex-1">
+              {!projectorMode && !desktopSidebarOpen && route.view === 'modul' && activeModule && (
+                <div className="mb-4 hidden items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-2 dark:border-slate-800 dark:bg-slate-900 lg:flex">
+                  <div className="flex min-w-0 items-center gap-2 font-mono text-xs text-slate-700 dark:text-slate-300">
+                    <span className="font-semibold text-[#047857] dark:text-[#10B981]">
+                      {activeModule.session === 'pagi' ? 'Sesi Pagi' : 'Sesi Siang'}
+                    </span>
+                    <span aria-hidden="true">/</span>
+                    <span className="truncate font-semibold text-slate-900 dark:text-slate-100">
+                      {activeModule.title}
+                    </span>
+                    <span aria-hidden="true">/</span>
+                    <span className="shrink-0">
+                      {route.tab === 'lab' ? 'Simulasi' : 'Materi'}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={toggleDesktopSidebar}
+                    aria-expanded={desktopSidebarOpen}
+                    aria-controls="desktop-module-sidebar"
+                    className="inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                  >
+                    <PanelLeftOpen className="h-4 w-4" aria-hidden="true" />
+                    <span>Tampilkan Daftar Modul</span>
+                  </button>
+                </div>
+              )}
               <main>{children}</main>
             </div>
           </div>
@@ -986,7 +1135,7 @@ export function Layout({
           <div
             role="region"
             aria-label="Kontrol Mode Proyektor"
-            className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-300 bg-white/95 px-4 py-2.5 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-[#0B1F3A]/95 sm:px-6"
+            className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-300 bg-white/95 px-4 py-2.5 shadow-lg dark:border-slate-700 dark:bg-[#0B1F3A]/95 sm:px-6"
           >
             <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2.5">
               <div className="flex items-center gap-2">

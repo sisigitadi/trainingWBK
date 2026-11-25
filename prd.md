@@ -1,72 +1,74 @@
-# PRD: WBK CyberShield Interactive Bimtek Portal (2026)
+# PRD: Training IT Security Awareness and Cybersecurity Protection 2026
 
 ## 1. Tujuan & Konteks Produk
-- **Nama Aplikasi:** WBK CyberShield Interactive Bimtek Portal
-- **Target Pengguna:** 5 Pegawai PT. Warna Bintang Kreasi (WBK — penyedia solusi Core Banking System WINCore dan layanan IT perbankan) + 1 Narasumber/Instruktur.
-- **Profil Teknis Pengguna:** Pemahaman IT dasar hingga menengah (non-spesialis keamanan siber).
-- **Objektif Utama:** Membangun aplikasi web pembelajaran interaktif mandiri (*self-contained client-side web app*) yang memetakan seluruh materi dan praktik sesuai jadwal Bimtek (08.30 – 16.00)[cite: 1]. Peserta dapat membaca materi yang dikontekstualisasikan dengan alur kerja vendor IT perbankan, mengerjakan 10 simulasi praktik langsung di browser tanpa instalasi tambahan, dan mencetak sertifikat kelulusan di akhir sesi.
+- **Nama Aplikasi:** Portal BimTek Training IT Security Awareness and Cybersecurity Protection 2026
+- **Konteks Entitas Rekaan:** PT. Sigit Adi Aman Siber (SaaS), penyedia solusi Core Banking System **SaaSCore** untuk BPR mitra (digunakan sebagai contoh kasus simulasi agar pengalaman belajar terasa nyata), beserta 1 Narasumber/Instruktur (**Sigit Adi Irianto, S.Kom.** - sigitadi.id).
+- **Profil Teknis Pengguna:** Staf dan profesional IT dasar hingga menengah (Developer, QA, Implementor, Support, Infrastruktur).
+- **Objektif Utama:** Membangun aplikasi web pembelajaran eksploratif mandiri (*self-contained client-side web app*) tanpa ujian skor atau sertifikat kelulusan yang memetakan seluruh materi dan praktik sesuai jadwal Bimtek (08.30 - 16.15). Peserta membaca materi berbasis alur kerja vendor IT perbankan, meninjau diagram alur kerja tiap modul, serta mengeksplorasi 10 simulasi praktik langsung di browser tanpa instalasi tambahan.
 
 ## 2. Arsitektur & Stack Teknologi
 - **Framework:** React 18+ dengan TypeScript (`Vite`).
 - **Styling:** Tailwind CSS + `lucide-react` untuk ikon vektor.
 - **Tipografi:** `Plus Jakarta Sans` (teks utama) dan `JetBrains Mono` (simulasi URL, header email, *passphrase*, dan kode/log).
-- **State & Persistensi:** React Context / Custom Hook dengan penyimpanan otomatis ke `localStorage` (kunci: `wbk_cybershield_progress_v1`) agar progres belajar dan skor lab tidak hilang saat browser di-refresh.
-- **Zero Backend Dependency:** Seluruh konten materi, skenario lab, dan mesin penilaian berjalan 100% di sisi klien (*browser*) sehingga kebal terhadap gangguan koneksi internet di ruang pelatihan.
+- **State & Persistensi:**
+  - `localStorage`: Progres eksplorasi modul dan tema (`ProgressContext`), serta preferensi buka/tutup sidebar desktop (`saas_desktop_sidebar_open_v1`).
+  - `sessionStorage`: Status eksplorasi masing-masing lab (`saas_lab_state_v1_<moduleId>`) agar tidak hilang saat berpindah tab Materi <-> Lab.
+- **Zero Backend Dependency:** Seluruh konten materi, skenario lab, dan glosarium balloon tooltip berjalan 100% di sisi klien (*browser*) sehingga kebal terhadap gangguan koneksi internet di ruang pelatihan.
 
 ## 3. Desain Antarmuka (UI/UX) & Mode Tampilan
-1. **Navigasi Berbasis Rundown (Sidebar):**
-   - **Sesi Pagi (08.30 – 12.00):** Modul 1 s.d. Modul 5[cite: 1].
-   - **Sesi Siang (13.00 – 16.00):** Modul 6 s.d. Modul 10[cite: 1].
-   - **Sesi Penutup (16.00):** Halaman Rekap Skor & Generator Sertifikat[cite: 1].
-2. **Global Progress Header:** Menampilkan judul pelatihan, persentase penyelesaian modul secara *real-time* (`0% - 100%`), tombol ganti tema (*Light/Dark Mode* — default *Light High-Contrast* untuk proyektor), dan tombol **Mode Proyektor**.
-3. **Mode Proyektor (Narasumber):** Saat diaktifkan, sidebar disembunyikan, ukuran font materi diperbesar (+25%), dan muncul tombol navigasi cepat (`Sebelumnya` / `Berikutnya`) untuk memudahkan narasumber mempresentasikan materi di layar utama.
+1. **Navigasi Berbasis Rundown (Sidebar Lipat & Drawer Mobile):**
+   - **Sesi Pagi (08.30 - 12.00):** Modul 01 s.d. Modul 05.
+   - **Sesi Siang (13.00 - 16.00):** Modul 06 s.d. Modul 10.
+   - **Sesi Penutup (16.00 - 16.15):** Halaman Rangkuman 7 Kebiasaan Emas & Kartu Saku (`ClosingSummaryView.tsx`).
+   - Sidebar desktop dapat dibuka/tutup dengan persistensi `localStorage` dan pintasan keyboard (`Alt+B` atau `[`), sementara layar kecil menggunakan drawer aksesibel.
+2. **Floating Header & Jam Rundown Real-time:** Menampilkan judul pelatihan, indikator eksplorasi modul, tombol buka/tutup sidebar, tombol ganti tema (*Light/Dark Mode* dengan kontras tinggi WCAG AA), modal catatan entitas rekaan, serta baris tanggal, jam berjalan, dan status sesi aktif dari 13 segmen rundown.
+3. **Mode Narasumber & Mode Proyektor:** Aktivasi diskret 9x klik logo membuka Mode Narasumber (Panduan Narasumber, tombol buka seluruh penjelasan lab, dan ikon Mode Proyektor dengan font +25%, kontrol slide `01/21` s.d. `21/21`, serta layar penuh).
 4. **Struktur Halaman Tiap Modul:**
-   - **Tab 1 — Materi & Studi Kasus:** Penjelasan terstruktur (bebas jargon rumit), kotak *"Analogi Sehari-hari"*, contoh kasus operasional WBK/WINCore, dan tabel perbandingan *"Lakukan (Do's) vs Hindari (Don'ts)"*.
-   - **Tab 2 — Lab Praktik Interaktif:** Simulator praktis dengan sistem penilaian langsung dan umpan balik edukatif (*mengapa jawaban benar/salah*).
+   - **Tab 1 - Materi & Studi Kasus:** Tujuan pembelajaran, **Diagram Alur Kerja Operasional SaaSCore** (4-5 langkah berurutan), pembahasan terstruktur dengan *Balloon Tooltips* interaktif (`RichTermText`), kotak *"Analogi Sehari-hari"*, ilustrasi skenario operasional SaaS/SaaSCore, dan tabel perbandingan *"Lakukan (Do's) vs Hindari (Don'ts)"*.
+   - **Tab 2 - Lab Praktik Interaktif:** Simulator eksploratif berbasis `LabShell` dengan umpan balik edukatif dan reset penuh tanpa sistem skor lulus/gagal.
 
 ## 4. Spesifikasi 10 Modul & Lab Praktik Interaktif
 
-### Blok Sesi Pagi (08.30 – 12.00)[cite: 1]
-- **Modul 01 — Fundamental IT Security dan Prinsip Cybersecurity**[cite: 1]
-  - *Materi:* Segitiga CIA (*Confidentiality, Integrity, Availability*) dalam layanan *core banking* & *support* WBK; peran manusia sebagai garis pertahanan pertama.
-  - *Lab 01 (`Lab01CIA.tsx`):* **Klasifikasi Dampak CIA** — Peserta memetakan 4 insiden operasional (misal: *server tiket lumpuh 3 jam*, *backup database BPR terkirim ke alamat salah*, *file patch berubah checksum*) ke pilar CIA dan mitigasi utamanya.
-- **Modul 02 — Pengenalan Ancaman dan Serangan Siber**[cite: 1]
-  - *Materi:* *Supply Chain Attack* (menargetkan vendor untuk masuk ke bank klien), *Ransomware*, *Credential Stuffing*, dan *Trojan/Malicious Attachment*.
-  - *Lab 02 (`Lab02AttackPath.tsx`):* **Radar Deteksi Jalur Serangan** — Diagram alur kerja harian (Terima Tiket -> Unduh Lampiran -> Koneksi VPN Klien -> Kirim Balasan) dengan 4 titik interaktif (*hotspots*) untuk mengungkap celah serangan dan cara memblokirnya.
-- **Modul 03 — Phishing Awareness dan Social Engineering**[cite: 1]
-  - *Materi:* Manipulasi psikologis (*Urgency, Fear, Authority*), *Spear Phishing* B2B, *Email Spoofing*, dan *Typosquatting* domain (`wbk.co.id` vs domain tiruan).
-  - *Lab 03 (`Lab03PhishingSim.tsx`):* **Simulator Kotak Masuk & WhatsApp Jebakan** — Antarmuka mirip *Webmail* & *Chat* berisi 5 pesan campuran (3 jebakan mengatasnamakan IT BPR/manajemen WBK, 2 pesan sah) lengkap dengan fitur *hover URL preview* dan deteksi ekstensi ganda (`.pdf.exe`).
-- **Modul 04 — Password Security dan Access Management**[cite: 1]
-  - *Materi:* Kelemahan password pendek rumit dibanding *Passphrase* panjang, prinsip *Least Privilege* pada akses VPN/server klien, serta keunggulan MFA berbasis aplikasi dibanding SMS.
-  - *Lab 04 (`Lab04AuthLab.tsx`):* **Uji Entropi Passphrase & Simulasi MFA Fatigue** — (1) Meteran kekuatan *passphrase* lokal secara *real-time*; (2) Pop-up simulasi serangan notifikasi *push MFA* berulang di mana peserta harus memilih tindakan penolakan & pelaporan yang tepat.
-- **Modul 05 — Data Protection dan Information Security**[cite: 1]
-  - *Materi:* 4 tingkat klasifikasi data WBK (Publik, Internal, Rahasia, Sangat Rahasia), larangan menyimpan *dump* database klien tanpa enkripsi, dan pengiriman kredensial terpisah (*Out-of-Band*).
-  - *Lab 05 (`Lab05DataHandling.tsx`):* **Simulator Pengamanan & Enkripsi Dokumen Klien** — Alur langkah demi langkah mengamankan file konfigurasi server sebelum dikirim ke rekan tim (enkripsi file, pemisahan saluran pengiriman kunci, dan pembersihan folder sementara).
+### Blok Sesi Pagi (08.30 - 12.00)
+- **Modul 01: Fundamental IT Security dan Prinsip Cybersecurity**
+  - *Materi & Alur Kerja:* Segitiga CIA (*Confidentiality, Integrity, Availability*) pada alur perubahan aman SaaSCore dan peran pegawai IT sebagai *Human Firewall*.
+  - *Lab 01 (`Lab01CIA.tsx`):* **Klasifikasi Dampak CIA** (eksplorasi 4 skenario operasional SaaS/BPR untuk memetakan dampak CIA dan mitigasi aman).
+- **Modul 02: Pengenalan Ancaman dan Serangan Siber**
+  - *Materi & Alur Kerja:* *Supply Chain Attack*, *Ransomware* (*Double Extortion*), *Credential Stuffing*, dan *Trojan/Malicious Attachment* pada alur kerja vendor.
+  - *Lab 02 (`Lab02AttackPath.tsx`):* **Radar Deteksi Jalur Serangan** (eksplorasi 4 titik alur kerja harian support SaaSCore dan kontrol pemutus rantai serangan).
+- **Modul 03: Phishing Awareness dan Social Engineering**
+  - *Materi & Alur Kerja:* Manipulasi psikologis (*Urgency, Fear, Authority*), *Spear Phishing* B2B, *Email Spoofing*, dan *Typosquatting* domain (`sigitadi.id` vs domain tiruan).
+  - *Lab 03 (`Lab03PhishingSim.tsx`):* **Simulator Kotak Masuk & WhatsApp Jebakan** (inspeksi 5 pesan campuran dengan *hover URL preview* dan deteksi ekstensi ganda).
+- **Modul 04: Password Security dan Access Management**
+  - *Materi & Alur Kerja:* *Passphrase* panjang (minimal 16 karakter), *Password Manager*, prinsip *Least Privilege*, serta MFA aplikasi vs SMS dan penolakan *MFA Fatigue*.
+  - *Lab 04 (`Lab04AuthLab.tsx`):* **Uji Entropi Passphrase & Simulasi MFA Fatigue** (analisis kekuatan kata sandi termasuk deteksi kata kamus/pola tahun serta simulasi keputusan prompt MFA).
+- **Modul 05: Data Protection dan Information Security**
+  - *Materi & Alur Kerja:* 4 tingkat klasifikasi data SaaS (Publik, Internal, Rahasia, Sangat Rahasia), larangan *dump* database plaintext, enkripsi AES-256, dan pengiriman kredensial *Out-of-Band*.
+  - *Lab 05 (`Lab05DataHandling.tsx`):* **Simulator Pengamanan & Enkripsi Dokumen Klien** (klasifikasi berkas, pratinjau masking data dummy, enkripsi AES-256, dan alur *Out-of-Band*).
 
-### Blok Sesi Siang (13.00 – 16.00)[cite: 1]
-- **Modul 06 — Endpoint Security dan Device Protection**[cite: 1]
-  - *Materi:* Bahaya *software* bajakan (*infostealer* pencuri sesi VPN/browser), disiplin *OS/Browser Patching*, enkripsi disk, dan keamanan fisik (*screen lock* `Win + L`, larangan USB tak dikenal).
-  - *Lab 06 (`Lab06EndpointAudit.tsx`):* **Audit Mandiri Kesehatan Laptop Kerja** — Daftar periksa diagnostik interaktif 8 poin kondisi aktual laptop peserta yang menghitung *Device Readiness Score* (0–100%) beserta rekomendasi perbaikan.
-- **Modul 07 — Network Security dan Safe Internet Practices**[cite: 1]
-  - *Materi:* Risiko Wi-Fi publik & *Evil Twin Attack*, aturan penggunaan VPN klien, validasi HTTPS, dan bahaya ekstensi browser berlebihan.
-  - *Lab 07 (`Lab07UrlInspector.tsx`):* **Inspeksi URL & Struktur Domain** — Tantangan membedah 6 URL login/portal klien untuk membedakan domain resmi `wbk.co.id` dari teknik *subdomain spoofing* (contoh: `https://portal.wbk.co.id.auth-check.net`).
-- **Modul 08 — Cybersecurity Incident Response dan Reporting**[cite: 1]
-  - *Materi:* Mengenali gejala awal kompromi laptop, protokol 5 menit pertama (*Isolate, Preserve, Report*), serta budaya lapor cepat tanpa takut disalahkan (*no-blame reporting*).
-  - *Lab 08 (`Lab08IncidentSim.tsx`):* **Simulator Krisis Tanggap Darurat** — Skenario bercabang (*branching scenario*): peserta memicu lampiran mencurigakan saat VPN ke salah satu BPR klien sedang aktif, lalu harus memilih urutan tindakan isolasi yang tepat.
-- **Modul 09 — Email, Cloud, dan Digital Communication Security**[cite: 1]
-  - *Materi:* Risiko tautan publik (*Anyone with the link*) di Google Drive/OneDrive, serta larangan mengirim IP server, *credential*, atau *screenshot* data nasabah di grup WhatsApp/Telegram.
-  - *Lab 09 (`Lab09CloudChatAudit.tsx`):* **Konfigurasi Hak Akses Cloud & Audit Percakapan Grup** — (1) Memperbaiki 3 pengaturan berbagi file Cloud yang terlalu terbuka; (2) Menandai baris pesan berisiko pada simulasi percakapan grup kerja.
-- **Modul 10 — Cybersecurity Best Practices dan Security Awareness Culture**[cite: 1]
-  - *Materi:* Rangkuman 7 Kebiasaan Emas Keamanan Siber WBK dan tanggung jawab kolektif tim.
-  - *Lab 10 (`Lab10FinalExam.tsx`):* **Evaluasi Akhir Terpadu** — 10 soal studi kasus lintas modul (nilai batas lulus: 80%).
+### Blok Sesi Siang (13.00 - 16.00)
+- **Modul 06: Endpoint Security dan Device Protection**
+  - *Materi & Alur Kerja:* Bahaya *software* bajakan (*infostealer*), disiplin *OS/Browser Patching*, UAC/EDR, enkripsi disk penuh (BitLocker/FileVault), *screen lock* (`Win + L`), dan larangan USB asing.
+  - *Lab 06 (`Lab06EndpointAudit.tsx`):* **Audit Mandiri Kesehatan Laptop Kerja** (daftar periksa diagnostik 8 poin kondisi aktual laptop kerja beserta rekomendasi perbaikan).
+- **Modul 07: Network Security dan Safe Internet Practices**
+  - *Materi & Alur Kerja:* Risiko Wi-Fi publik & *Evil Twin Attack*, disiplin VPN klien BPR sesuai tiket, validasi HTTPS/domain kanan-ke-kiri, dan audit ekstensi browser.
+  - *Lab 07 (`Lab07UrlInspector.tsx`):* **Inspeksi URL & Struktur Domain** (membedah contoh URL resmi `sigitadi.id` vs *subdomain spoofing* dan langkah jaringan lapangan aman).
+- **Modul 08: Cybersecurity Incident Response dan Reporting**
+  - *Materi & Alur Kerja:* Gejala awal kompromi (*IoC*), protokol 5 menit pertama (*Isolate, Preserve, Report*), serta budaya lapor cepat tanpa takut disalahkan (*no-blame reporting*).
+  - *Lab 08 (`Lab08IncidentSim.tsx`):* **Simulator Krisis Tanggap Darurat** (skenario bertahap 5 menit pertama saat gejala kompromi muncul ketika VPN BPR aktif).
+- **Modul 09: Email, Cloud, dan Digital Communication Security**
+  - *Materi & Alur Kerja:* Risiko tautan publik (*Anyone with the link*) di cloud, *redaction* data pribadi (UU PDP), larangan mengirim IP/kredensial di WhatsApp/Telegram, dan disiplin BCC email.
+  - *Lab 09 (`Lab09CloudChatAudit.tsx`):* **Konfigurasi Hak Akses Cloud & Audit Percakapan Grup** (mengamankan izin folder cloud dan mengevaluasi pesan chat grup proyek).
+- **Modul 10: Cybersecurity Best Practices dan Security Awareness Culture**
+  - *Materi & Alur Kerja:* Rangkuman 7 Kebiasaan Emas Keamanan Siber SaaS, tanggung jawab lintas peran, dan siklus audit mandiri.
+  - *Lab 10 (`Lab10CaseReview.tsx`):* **Simulasi Diskusi Kasus Terpadu Lintas Modul** (10 situasi insiden lintas modul untuk diskusi kelas tanpa nilai batas lulus).
 
-### Blok Sesi Penutup (16.00)[cite: 1]
-- **Sertifikat & Kartu Saku (`CertificateView.tsx`):**
-  - Terbuka setelah peserta menyelesaikan evaluasi akhir (atau dapat diakses di halaman penutup dengan status kelulusan).
-  - Peserta memasukkan **Nama Lengkap** dan **Divisi/Jabatan**, lalu dapat mencetak atau menyimpan PDF **Sertifikat Penyelesaian Bimtek Cybersecurity 2026** serta **Kartu Saku 7 Kebiasaan Emas WBK** menggunakan CSS `@media print`.
+### Blok Sesi Penutup (16.00 - 16.15)
+- **Rangkuman & Kartu Saku (`ClosingSummaryView.tsx`):**
+  - Ringkasan progres eksplorasi modul, rangkuman **7 Kebiasaan Emas Keamanan Siber SaaS**, dan fitur cetak/simpan PDF **Kartu Saku 7 Kebiasaan Emas** melalui CSS `@media print`.
 
 ## 5. Kontrak Struktur Direktori & Kualitas Kode
-- `src/types/training.ts`: Definisi interface TypeScript untuk modul, sub-bab materi, studi kasus, dan progres pengguna.
-- `src/data/modulesData.ts`: Konten lengkap ke-10 modul dalam bahasa Indonesia yang natural, mendalam, dan spesifik pada industri IT perbankan/WBK (dilarang menggunakan teks dummy *Lorem Ipsum* atau ringkasan terlalu singkat).
-- `src/components/labs/`: 10 komponen independen (`Lab01CIA.tsx` s.d. `Lab10FinalExam.tsx`) yang masing-masing mengembalikan skor (`0-100`) ke *state* global saat selesai.
-- **Standar UI:** Tidak ada teks terpotong elipsis (`...`) pada kartu materi maupun opsi pilihan ganda; kontras warna memenuhi standar keterbacaan proyektor.
+- `src/types/training.ts`: Definisi interface TypeScript (`ModuleContent`, `WorkflowDiagramSpec`, `WorkflowStep`, `GoldenRule`, `LabProps`).
+- `src/data/modulesData.ts` & `src/data/modules/*`: Konten lengkap 10 modul dalam bahasa Indonesia yang natural dan selaras dengan alur operasional SaaS/SaaSCore.
+- `src/components/labs/`: 10 komponen simulasi eksploratif independen (`Lab01CIA.tsx` s.d. `Lab10CaseReview.tsx`) yang berbagi hook `useLabExploration`.
+- **Standar UI:** Nol *em dash*, target sentuh minimum 44x44px, kontras warna memenuhi WCAG AA pada tema terang dan gelap, dan bebas horizontal overflow di desktop maupun mobile.

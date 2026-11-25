@@ -15,6 +15,43 @@ export const modules01to04: ModuleContent[] = [
       'Menjelaskan peran pegawai IT sebagai Human Firewall di garis pertahanan pertama layanan BPR.',
       'Mengklasifikasikan insiden teknis harian ke dalam dampak kerahasiaan, integritas, atau ketersediaan sistem.',
     ],
+    workflowDiagram: {
+      title: 'Alur Perubahan Aman di SaaSCore',
+      subtitle:
+        'Menjaga keseimbangan Confidentiality, Integrity, dan Availability setiap kali tim SaaS menangani permintaan klien BPR.',
+      steps: [
+        {
+          step: 1,
+          title: 'Tiket & Otorisasi',
+          action: 'Terima tiket resmi dan pastikan persetujuan perubahan dari pihak BPR tercatat untuk Audit Trail.',
+          tag: 'Gate: PIC BPR',
+        },
+        {
+          step: 2,
+          title: 'Uji Staging',
+          action: 'Reproduksi bug dan uji skrip perbaikan di staging memakai data sintetis atau tersamarkan.',
+          tag: 'Peran: Dev / Support',
+        },
+        {
+          step: 3,
+          title: 'Backup Pemulihan',
+          action: 'Buat serta verifikasi titik pemulihan database sebelum menyentuh server produksi.',
+          tag: 'Gate: Wajib',
+        },
+        {
+          step: 4,
+          title: 'Eksekusi Individual',
+          action: 'Jalankan perubahan terotorisasi menggunakan akun personal, bukan akun admin bersama.',
+          tag: 'Peran: Engineer',
+        },
+        {
+          step: 5,
+          title: 'Verifikasi CIA',
+          action: 'Pastikan saldo akurat, data nasabah tertutup, dan modul teller maupun EOD berjalan normal.',
+          tag: 'Gate: Layanan Siap',
+        },
+      ],
+    },
     sections: [
       {
         heading: 'Keamanan Siber Dimulai dari Meja Kerja Vendor',
@@ -149,6 +186,43 @@ export const modules01to04: ModuleContent[] = [
       'Mengidentifikasi bahaya Credential Stuffing akibat penggunaan ulang kata sandi di situs eksternal.',
       'Mengenali penyamaran Trojan dan Malicious Attachment di alur kerja teknis pegawai IT.',
     ],
+    workflowDiagram: {
+      title: 'Alur Pencegahan Rantai Serangan Vendor',
+      subtitle:
+        'Memutus jalur masuk Supply Chain Attack, Ransomware, Credential Stuffing, dan Trojan di alur kerja harian SaaS.',
+      steps: [
+        {
+          step: 1,
+          title: 'Saring Dependensi',
+          action: 'Gunakan pustaka open-source dan software berlisensi resmi tanpa crack atau aktivator.',
+          tag: 'Peran: Developer',
+        },
+        {
+          step: 2,
+          title: 'Cek Checksum',
+          action: 'Cocokkan nilai hash paket pembaruan SaaSCore sebelum dikirim ke server BPR.',
+          tag: 'Gate: Rilis Aman',
+        },
+        {
+          step: 3,
+          title: 'Periksa Tiket Masuk',
+          action: 'Tolak lampiran mencurigakan, ekstensi ganda, dan file makro dari pengirim tak terkonfirmasi.',
+          tag: 'Peran: Support',
+        },
+        {
+          step: 4,
+          title: 'Akses VPN Terbatas',
+          action: 'Aktifkan koneksi VPN klien hanya sesuai ruang lingkup tiket untuk menahan Lateral Movement.',
+          tag: 'Gate: Least Privilege',
+        },
+        {
+          step: 5,
+          title: 'Isolasi Backup',
+          action: 'Simpan salinan cadangan terpisah dari jaringan produksi agar kebal dari enkripsi Ransomware.',
+          tag: 'Peran: Infra',
+        },
+      ],
+    },
     sections: [
       {
         heading: 'Supply Chain Attack: Menargetkan Vendor untuk Masuk ke Banyak Bank',
@@ -179,7 +253,7 @@ export const modules01to04: ModuleContent[] = [
         ],
         bullets: [
           'Penggunaan ulang kata sandi antara akun pribadi dan akun kantor membuat kebocoran luar berdampak ke internal.',
-          'Mendaftarkan alamat email domain `sigitadi.id` di layanan luar mempermudah pemetaan target oleh penyerang.',
+          'Mendaftarkan alamat email domain sigitadi.id di layanan luar mempermudah pemetaan target oleh penyerang.',
           'Kredensial bocor tampak seperti login sah apabila portal belum dilindungi autentikasi multifaktor.',
         ],
       },
@@ -190,7 +264,7 @@ export const modules01to04: ModuleContent[] = [
         ],
         bullets: [
           'Program bajakan dan crack hampir selalu menyisipkan malware pencuri kredensial dan sesi VPN.',
-          'Waspadai berkas dengan ekstensi ganda seperti `bukti_mutasi.pdf.exe` atau dokumen Office yang meminta pengaktifan makro.',
+          'Waspadai berkas dengan ekstensi ganda seperti bukti_mutasi.pdf.exe atau dokumen Office yang meminta pengaktifan makro.',
           'Gunakan hanya perangkat lunak resmi dan skrip yang telah diverifikasi tim infrastruktur SaaS.',
         ],
       },
@@ -227,7 +301,7 @@ export const modules01to04: ModuleContent[] = [
       },
       {
         doIt: 'Gunakan kata sandi unik untuk setiap akun kantor dan pisahkan email kerja dari layanan publik pribadi.',
-        dontIt: 'Memakai ulang kata sandi kantor atau email `sigitadi.id` di forum, toko online, atau aplikasi hiburan.',
+        dontIt: 'Memakai ulang kata sandi kantor atau email sigitadi.id di forum, toko online, atau aplikasi hiburan.',
         why: 'Mencegah serangan Credential Stuffing memanfaatkan kebocoran data dari situs pihak ketiga.',
       },
       {
@@ -283,6 +357,43 @@ export const modules01to04: ModuleContent[] = [
       'Memeriksa indikator Email Spoofing dan penyamaran akun WhatsApp di balik nama tampilan pengirim.',
       'Mendeteksi jebakan Typosquatting yang meniru domain resmi sigitadi.id melalui pemeriksaan Domain Akar.',
     ],
+    workflowDiagram: {
+      title: 'Alur Verifikasi Pesan & Tautan Masuk',
+      subtitle:
+        'Mematahkan manipulasi psikologis Social Engineering, Email Spoofing, dan jebakan domain tiruan sigitadi.id.',
+      steps: [
+        {
+          step: 1,
+          title: 'Tahan Emosi',
+          action: 'Kenali pemicu Urgency, Fear, dan Authority sebelum mengklik atau membalas pesan mendadak.',
+          tag: 'Gate: Jeda 5 Detik',
+        },
+        {
+          step: 2,
+          title: 'Cek Pengirim Utuh',
+          action: 'Periksa alamat email aktual di balik Display Name dan kolom Reply-To.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 3,
+          title: 'Baca Domain Akar',
+          action: 'Arahkan kursor ke tautan dan baca domain tepat di kiri garis miring pertama untuk deteksi Typosquatting.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 4,
+          title: 'Verifikasi Out-of-Band',
+          action: 'Konfirmasi permintaan OTP, reset akses, atau data sensitif lewat telepon ke nomor resmi tersimpan.',
+          tag: 'Gate: Kanal Resmi',
+        },
+        {
+          step: 5,
+          title: 'Tolak & Laporkan',
+          action: 'Jangan masukkan kredensial; laporkan email atau WhatsApp tiruan agar tim lain terlindungi.',
+          tag: 'Peran: Tim Keamanan',
+        },
+      ],
+    },
     sections: [
       {
         heading: 'Manipulasi Psikologis: Urgency, Fear, dan Authority',
@@ -320,11 +431,11 @@ export const modules01to04: ModuleContent[] = [
       {
         heading: 'Typosquatting: Membedakan sigitadi.id dan Domain Tiruan',
         paragraphs: [
-          'Typosquatting memanfaatkan kemiripan huruf dan kebiasaan membaca cepat untuk menipu korban agar membuka halaman login palsu, misalnya mengganti `sigitadi.id` menjadi `sigitadi-support.id`, `s1gitadi.id`, atau memakai subdomain mengecoh seperti `sigitadi.id.login-verify.net`. Begitu kredensial dan kode OTP dimasukkan, data langsung jatuh ke tangan penyerang.',
+          'Typosquatting memanfaatkan kemiripan huruf dan kebiasaan membaca cepat untuk menipu korban agar membuka halaman login palsu, misalnya mengganti sigitadi.id menjadi sigitadi-support.id, s1gitadi.id, atau memakai subdomain mengecoh seperti sigitadi.id.login-verify.net. Begitu kredensial dan kode OTP dimasukkan, data langsung jatuh ke tangan penyerang.',
         ],
         bullets: [
-          'Cara aman membaca URL adalah menemukan Domain Akar tepat di sebelah kiri garis miring pertama (`/`).',
-          'Waspadai karakter mirip (homoglyph) seperti `rn` menggantikan `m`, angka `0` menggantikan `o`, atau huruf `l` kecil dan `I` besar.',
+          'Cara aman membaca URL adalah menemukan Domain Akar tepat di sebelah kiri garis miring pertama (/).',
+          'Waspadai karakter mirip (homoglyph) seperti rn menggantikan m, angka 0 menggantikan o, atau huruf l kecil dan I besar.',
           'Akses portal kritikal seperti webmail, VPN, dan sistem tiket selalu melalui bookmark resmi, bukan tautan dari pesan masuk.',
         ],
       },
@@ -348,7 +459,7 @@ export const modules01to04: ModuleContent[] = [
         context:
           'Beberapa pegawai SaaS menerima email bertajuk pemberitahuan penutupan akses VPN pada sore hari dengan logo perusahaan yang rapi.',
         whatHappened:
-          'Pesan mengancam akses ke seluruh server BPR akan terputus otomatis bila pengguna tidak melakukan validasi ulang lewat tombol di email. Pemeriksaan alamat pengirim dan tujuan tombol menunjukkan domain `portal-sigitadi.co-id.site` bukan `sigitadi.id`, sehingga tim segera melaporkan email tersebut agar seluruh pegawai waspada.',
+          'Pesan mengancam akses ke seluruh server BPR akan terputus otomatis bila pengguna tidak melakukan validasi ulang lewat tombol di email. Pemeriksaan alamat pengirim dan tujuan tombol menunjukkan domain portal-sigitadi.co-id.site bukan sigitadi.id, sehingga tim segera melaporkan email tersebut agar seluruh pegawai waspada.',
         lesson:
           'Kerapian logo dan tata bahasa tidak menjamin keaslian pesan; validasi Domain Akar dan kebiasaan menggunakan bookmark resmi adalah kunci pencegahan.',
       },
@@ -357,7 +468,7 @@ export const modules01to04: ModuleContent[] = [
       {
         doIt: 'Periksa Domain Akar URL tepat sebelum garis miring pertama dari kanan ke kiri sebelum memasukkan kredensial.',
         dontIt: 'Mengklik tombol login dari email atau pesan chat lalu langsung mengetik username dan kata sandi.',
-        why: 'Menghindari jebakan Typosquatting dan subdomain palsu yang meniru tampilan portal `sigitadi.id`.',
+        why: 'Menghindari jebakan Typosquatting dan subdomain palsu yang meniru tampilan portal sigitadi.id.',
       },
       {
         doIt: 'Terapkan Verifikasi Out-of-Band melalui telepon atau kanal internal resmi untuk permintaan akses, OTP, atau perubahan data sensitif.',
@@ -383,14 +494,14 @@ export const modules01to04: ModuleContent[] = [
     keyTakeaways: [
       'Social Engineering membidik emosi manusia lewat Urgency, Fear, dan Authority agar korban melewatkan langkah verifikasi.',
       'Spear Phishing B2B memakai konteks asli pekerjaan SaaSCore dan nama BPR mitra agar tampak meyakinkan.',
-      'Pengecekan alamat email aktual dan Domain Akar URL menangkal Email Spoofing serta Typosquatting domain `sigitadi.id`.',
+      'Pengecekan alamat email aktual dan Domain Akar URL menangkal Email Spoofing serta Typosquatting domain sigitadi.id.',
       'Permintaan kode OTP, kredensial, atau data sensitif wajib selalu dikonfirmasi melalui Verifikasi Out-of-Band.',
     ],
     instructorGuide: {
       durationMinutes: 45,
       talkingPoints: [
         'Tunjukkan bagaimana tiga pemicu psikologis (Urgency, Fear, Authority) sering muncul bersamaan dalam pesan WhatsApp maupun email kantor.',
-        'Peragakan cara membaca URL dari kanan ke kiri sebelum garis miring pertama untuk membedakan `sigitadi.id` asli dengan subdomain palsu.',
+        'Peragakan cara membaca URL dari kanan ke kiri sebelum garis miring pertama untuk membedakan sigitadi.id asli dengan subdomain palsu.',
         'Tekankan prinsip bahwa tidak ada alasan operasional yang mengharuskan staf mengirim kode OTP atau kata sandi kepada atasan sekalipun.',
         'Bimbing peserta mengerjakan Lab 03 untuk memeriksa setiap pesan kotak masuk dan WhatsApp guna memahami ciri aman serta jebakannya.',
       ],
@@ -417,11 +528,48 @@ export const modules01to04: ModuleContent[] = [
       'Menerapkan prinsip Least Privilege pada pemberian dan pembatasan akses VPN maupun server BPR.',
       'Membandingkan keamanan MFA berbasis aplikasi autentikator terhadap SMS OTP serta cara menghadapi MFA Fatigue.',
     ],
+    workflowDiagram: {
+      title: 'Alur Pengelolaan Identitas & Hak Akses',
+      subtitle:
+        'Membangun gerbang akses SaaSCore yang tahan brute-force, SIM Swapping, dan serangan MFA Fatigue.',
+      steps: [
+        {
+          step: 1,
+          title: 'Passphrase Unik',
+          action: 'Buat passphrase minimal 16 karakter unik per akun dan simpan di Password Manager.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 2,
+          title: 'Aktifkan MFA Aplikasi',
+          action: 'Gunakan aplikasi autentikator TOTP atau security key FIDO2 sebagai pengganti SMS OTP.',
+          tag: 'Gate: Wajib',
+        },
+        {
+          step: 3,
+          title: 'Akses Sesuai Peran',
+          action: 'Pakai akun read-only untuk investigasi dan elevasi izin sementara sesuai jadwal tiket.',
+          tag: 'Gate: Least Privilege',
+        },
+        {
+          step: 4,
+          title: 'Tangkal MFA Fatigue',
+          action: 'Tekan Tolak pada notifikasi MFA asing, cabut sesi aktif, dan segera ganti passphrase.',
+          tag: 'Peran: Semua Staf',
+        },
+        {
+          step: 5,
+          title: 'Cabut Pasca-Tugas',
+          action: 'Tutup akses VPN dan jalankan offboarding akun segera setelah proyek atau penugasan selesai.',
+          tag: 'Peran: Infra',
+        },
+      ],
+    },
     sections: [
       {
         heading: 'Passphrase Panjang vs Password Pendek yang Rumit',
         paragraphs: [
-          'Kata sandi pendek delapan karakter dengan substitusi huruf umum seperti `Saas!2025` atau `Bpr@1234` mudah ditebak oleh kamus serangan otomatis modern. Sebaliknya, Passphrase menggabungkan empat kata acak atau lebih dengan panjang minimal empat belas hingga enam belas karakter sehingga memiliki Entropi tinggi dan tetap mudah diingat manusia.',
+          'Kata sandi pendek delapan karakter dengan substitusi huruf umum seperti Saas@2026 atau Bpr@1234 mudah ditebak oleh kamus serangan otomatis modern. Sebaliknya, Passphrase menggabungkan empat kata acak atau lebih dengan panjang minimal 16 karakter sehingga memiliki Entropi tinggi dan tetap mudah diingat manusia.',
         ],
         bullets: [
           'Panjang karakter menaikkan jumlah kombinasi tebakan jauh lebih besar daripada sekadar menambah satu dua simbol.',
@@ -489,8 +637,8 @@ export const modules01to04: ModuleContent[] = [
     ],
     doDont: [
       {
-        doIt: 'Buat Passphrase panjang minimal 14 hingga 16 karakter dari kombinasi kata acak yang unik untuk setiap akun.',
-        dontIt: 'Menggunakan password pendek dengan pola umum seperti `Saas@2026` atau memakai kata sandi yang sama di berbagai portal.',
+        doIt: 'Buat Passphrase panjang minimal 16 karakter dari kombinasi kata acak yang unik untuk setiap akun.',
+        dontIt: 'Menggunakan password pendek dengan pola umum seperti Saas@2026 atau memakai kata sandi yang sama di berbagai portal.',
         why: 'Panjang passphrase meningkatkan Entropi secara drastis dan mencegah pembobolan berantai antarlayanan.',
       },
       {
