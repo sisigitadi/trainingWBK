@@ -268,7 +268,7 @@ export const modules05to07: ModuleContent[] = [
         bullets: [
           'Selalu tekan Win + L (Windows) atau Control + Command + Q (macOS) setiap kali meninggalkan meja, bahkan untuk satu menit.',
           'Aktifkan penguncian layar otomatis (idle lock) maksimal lima menit tanpa aktivitas.',
-          'Tolak mencolokkan flashdisk temuan, suvenir tak jelas, atau USB pribadi yang belum dipindai ke port laptop kerja.',
+          'Tolak mencolokkan flashdisk temuan, suvenir tak jelas, atau USB pribadi yang belum dipindai ke slot USB laptop kerja.',
           'Gunakan repositori atau cloud internal terotorisasi untuk bertukar file antar-rekan tim SaaS.'
         ]
       }
@@ -363,7 +363,7 @@ export const modules05to07: ModuleContent[] = [
     workflowDiagram: {
       title: 'Alur Koneksi Jaringan & Browsing Lapangan',
       subtitle:
-        'Mengamankan koneksi saat pendampingan BPR di luar kantor dari Evil Twin, subdomain spoofing, dan ekstensi berisiko.',
+        'Mengamankan koneksi saat pendampingan BPR di luar kantor dari Evil Twin, subdomain spoofing, dan ekstensi browser berisiko.',
       steps: [
         {
           step: 1,
@@ -380,7 +380,7 @@ export const modules05to07: ModuleContent[] = [
         {
           step: 3,
           title: 'Isolasi Profil Browser',
-          action: 'Pisahkan profil browser kerja SaaSCore dari profil pribadi dan audit izin ekstensi.',
+          action: 'Pisahkan profil browser kerja SaaSCore dari profil pribadi dan audit izin ekstensi browser.',
           tag: 'Peran: Semua Staf',
         },
         {
@@ -401,7 +401,7 @@ export const modules05to07: ModuleContent[] = [
       {
         heading: 'Risiko Wi-Fi Publik dan Serangan Evil Twin',
         paragraphs: [
-          'Saat melakukan pendampingan SaaSCore ke BPR luar kota, staf sering bekerja dari hotel, kafe, atau bandara. Jaringan Wi-Fi umum bersifat tidak tepercaya karena berbagi segmen dengan orang asing dan rentan terhadap serangan Evil Twin, yaitu pemancar palsu yang meniru nama Wi-Fi resmi (misalnya Hotel_Guest_WiFi) untuk memancing login palsu atau menyadap lalu lintas.'
+          'Saat melakukan pendampingan SaaSCore ke BPR luar kota, staf sering bekerja dari hotel, kafe, atau bandara. Jaringan Wi-Fi umum bersifat tidak tepercaya karena berbagi segmen jaringan dengan orang asing dan rentan terhadap serangan Evil Twin, yaitu pemancar palsu yang meniru nama Wi-Fi resmi (misalnya Hotel_Guest_WiFi) untuk memancing login palsu atau menyadap lalu lintas.'
         ],
         bullets: [
           'Untuk akses sistem SaaS atau server BPR di luar kantor, prioritaskan tethering hotspot ponsel pribadi dengan sandi WPA2/WPA3.',
@@ -435,11 +435,11 @@ export const modules05to07: ModuleContent[] = [
       {
         heading: 'Bahaya Ekstensi Browser Berlebihan dan Extension Takeover',
         paragraphs: [
-          'Ekstensi gratis seperti pengunduh media, tema, atau pemblokir iklan tak dikenal sering meminta izin membaca seluruh data di semua situs web. Izin seluas ini memungkinkan ekstensi membaca password, token sesi dasbor SaaSCore, hingga risiko extension takeover ketika ekstensi lama dibeli pihak jahat dan didorong pembaruan berbahaya.'
+          'Ekstensi browser gratis seperti pengunduh media, tema, atau pemblokir iklan tak dikenal sering meminta izin membaca seluruh data di semua situs web. Izin seluas ini memungkinkan ekstensi browser membaca password, token sesi dasbor SaaSCore, hingga risiko extension takeover ketika ekstensi lama dibeli pihak jahat dan didorong pembaruan berbahaya.'
         ],
         bullets: [
-          'Pasang hanya ekstensi kerja yang esensial dan telah diverifikasi keamanannya.',
-          'Audit izin ekstensi secara berkala dan ubah akses situs menjadi "On click" atau "On specific sites" bila tersedia.',
+          'Pasang hanya ekstensi browser kerja yang esensial dan telah diverifikasi keamanannya.',
+          'Audit izin ekstensi browser secara berkala dan ubah akses situs menjadi "On click" atau "On specific sites" bila tersedia.',
           'Pisahkan profil browser khusus kerja dari profil browser pribadi agar data sesi perusahaan tetap terisolasi.'
         ]
       }
@@ -491,8 +491,8 @@ export const modules05to07: ModuleContent[] = [
       },
       {
         doIt: 'Gunakan ekstensi browser seminimal mungkin dan pisahkan profil browser kerja dari profil pribadi.',
-        dontIt: 'Memasang ekstensi acak dengan izin membaca semua website di browser yang dipakai membuka dasbor SaaSCore.',
-        why: 'Ekstensi berizin luas dapat membaca input sensitif dan rentan disusupi lewat pembaruan pihak ketiga.'
+        dontIt: 'Memasang ekstensi browser acak dengan izin membaca semua website di browser yang dipakai membuka dasbor SaaSCore.',
+        why: 'Ekstensi browser berizin luas dapat membaca input sensitif dan rentan disusupi lewat pembaruan pihak ketiga.'
       }
     ],
     keyTakeaways: [

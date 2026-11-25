@@ -236,7 +236,7 @@ Jika kantor BPR adalah rumah dengan pagar tinggi dan gembok kokoh, maka PT. Sigi
 - Credential Stuffing berhasil hanya jika pegawai mendaur ulang kata sandi yang pernah bocor di layanan lain.
 - Disiplin bebas software bajakan dan kewaspadaan terhadap lampiran adalah kunci mencegah infeksi Trojan.
 
-**Simulasi Terkait:** Lab 02: Radar Deteksi Jalur Serangan - Eksplorasi empat titik alur kerja harian support SaaSCore (terima tiket, unduh lampiran, koneksi VPN klien, hingga kirim balasan) untuk melihat bagaimana tiap kontrol memutus atau meloloskan jalur serangan.
+**Simulasi Terkait:** Lab 02: Pemetaan Jalur Serangan - Eksplorasi empat titik alur kerja harian support SaaSCore (terima tiket, unduh lampiran, koneksi VPN klien, hingga kirim balasan) untuk melihat bagaimana tiap kontrol memutus atau meloloskan jalur serangan.
 
 ---
 
@@ -613,7 +613,7 @@ Ancaman endpoint juga datang dari akses fisik dalam hitungan detik, seperti meni
 
 - Selalu tekan Win + L (Windows) atau Control + Command + Q (macOS) setiap kali meninggalkan meja, bahkan untuk satu menit.
 - Aktifkan penguncian layar otomatis (idle lock) maksimal lima menit tanpa aktivitas.
-- Tolak mencolokkan flashdisk temuan, suvenir tak jelas, atau USB pribadi yang belum dipindai ke port laptop kerja.
+- Tolak mencolokkan flashdisk temuan, suvenir tak jelas, atau USB pribadi yang belum dipindai ke slot USB laptop kerja.
 - Gunakan repositori atau cloud internal terotorisasi untuk bertukar file antar-rekan tim SaaS.
 
 ### Analogi Sehari-hari: Brankas Beton di Rumah dengan Pintu yang Selalu Dikunci
@@ -693,7 +693,7 @@ Laptop kerja Anda ibarat rumah penyimpan berkas nasabah. Memasang software bajak
 
 #### Risiko Wi-Fi Publik dan Serangan Evil Twin
 
-Saat melakukan pendampingan SaaSCore ke BPR luar kota, staf sering bekerja dari hotel, kafe, atau bandara. Jaringan Wi-Fi umum bersifat tidak tepercaya karena berbagi segmen dengan orang asing dan rentan terhadap serangan Evil Twin, yaitu pemancar palsu yang meniru nama Wi-Fi resmi (misalnya Hotel_Guest_WiFi) untuk memancing login palsu atau menyadap lalu lintas.
+Saat melakukan pendampingan SaaSCore ke BPR luar kota, staf sering bekerja dari hotel, kafe, atau bandara. Jaringan Wi-Fi umum bersifat tidak tepercaya karena berbagi segmen jaringan dengan orang asing dan rentan terhadap serangan Evil Twin, yaitu pemancar palsu yang meniru nama Wi-Fi resmi (misalnya Hotel_Guest_WiFi) untuk memancing login palsu atau menyadap lalu lintas.
 
 - Untuk akses sistem SaaS atau server BPR di luar kantor, prioritaskan tethering hotspot ponsel pribadi dengan sandi WPA2/WPA3.
 - Matikan opsi Auto-Connect pada Wi-Fi publik agar laptop tidak tersambung diam-diam ke SSID tiruan.
@@ -718,10 +718,10 @@ Awalan https:// dengan protokol SSL/TLS hanya menandakan jalur antara browser da
 
 #### Bahaya Ekstensi Browser Berlebihan dan Extension Takeover
 
-Ekstensi gratis seperti pengunduh media, tema, atau pemblokir iklan tak dikenal sering meminta izin membaca seluruh data di semua situs web. Izin seluas ini memungkinkan ekstensi membaca password, token sesi dasbor SaaSCore, hingga risiko extension takeover ketika ekstensi lama dibeli pihak jahat dan didorong pembaruan berbahaya.
+Ekstensi browser gratis seperti pengunduh media, tema, atau pemblokir iklan tak dikenal sering meminta izin membaca seluruh data di semua situs web. Izin seluas ini memungkinkan ekstensi browser membaca password, token sesi dasbor SaaSCore, hingga risiko extension takeover ketika ekstensi lama dibeli pihak jahat dan didorong pembaruan berbahaya.
 
-- Pasang hanya ekstensi kerja yang esensial dan telah diverifikasi keamanannya.
-- Audit izin ekstensi secara berkala dan ubah akses situs menjadi "On click" atau "On specific sites" bila tersedia.
+- Pasang hanya ekstensi browser kerja yang esensial dan telah diverifikasi keamanannya.
+- Audit izin ekstensi browser secara berkala dan ubah akses situs menjadi "On click" atau "On specific sites" bila tersedia.
 - Pisahkan profil browser khusus kerja dari profil browser pribadi agar data sesi perusahaan tetap terisolasi.
 
 ### Analogi Sehari-hari: Memeriksa Alamat Sertifikat Gedung di Balik Spanduk Teras
@@ -750,7 +750,7 @@ Membuka situs hanya karena melihat gembok HTTPS tanpa membaca domain utamanya ib
 | Matikan fitur Auto-Connect Wi-Fi publik pada pengaturan jaringan laptop. | Membiarkan laptop tersambung otomatis ke SSID terbuka yang namanya pernah tersimpan. | Penyerang dapat menyiarkan ulang SSID populer untuk menyambungkan laptop korban tanpa klik. |
 | Aktifkan VPN klien BPR hanya saat mengerjakan tiket resmi dan segera putuskan setelah tuntas. | Membiarkan VPN BPR menyala seharian sambil membuka situs hiburan atau mengunduh file pribadi. | Koneksi VPN yang terus aktif memperlebar jalur risiko dari laptop ke jaringan internal bank. |
 | Validasi domain utama di sebelah kanan sebelum garis miring pertama selain memeriksa ikon HTTPS. | Langsung login hanya karena melihat ikon gembok HTTPS dan nama sigitadi.id di awal alamat URL. | Sertifikat HTTPS bisa dipakai situs phishing dan subdomain palsu dapat menaruh nama resmi di depan. |
-| Gunakan ekstensi browser seminimal mungkin dan pisahkan profil browser kerja dari profil pribadi. | Memasang ekstensi acak dengan izin membaca semua website di browser yang dipakai membuka dasbor SaaSCore. | Ekstensi berizin luas dapat membaca input sensitif dan rentan disusupi lewat pembaruan pihak ketiga. |
+| Gunakan ekstensi browser seminimal mungkin dan pisahkan profil browser kerja dari profil pribadi. | Memasang ekstensi browser acak dengan izin membaca semua website di browser yang dipakai membuka dasbor SaaSCore. | Ekstensi browser berizin luas dapat membaca input sensitif dan rentan disusupi lewat pembaruan pihak ketiga. |
 
 ### Kamus Istilah & Kalimat Teknis
 
@@ -884,7 +884,7 @@ Saat mencium bau gas bocor di dapur, Anda langsung menutup katup regulator (Isol
 
 ### Poin Kunci & Simulasi Eksploratif
 
-- Waspadai gejala dini kompromi seperti lonjakan CPU, kilatan terminal, ekstensi asing, dan prompt MFA tak dikenal.
+- Waspadai gejala dini kompromi seperti lonjakan CPU, kilatan terminal, ekstensi browser asing, dan prompt MFA tak dikenal.
 - Jalankan urutan 5 menit pertama: Isolate (putus jaringan), Preserve (tahan perangkat tetap menyala offline), dan Report (lapor resmi).
 - Jangan pernah me-restart paksa atau mengganti password dari laptop yang sedang dicurigai terinfeksi.
 - Budaya no-blame reporting menjadikan staf yang melapor cepat sebagai penyelamat operasional SaaS dan BPR.

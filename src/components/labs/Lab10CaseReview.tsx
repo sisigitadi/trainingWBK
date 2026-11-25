@@ -353,7 +353,7 @@ const CROSS_MODULE_CASES: CrossModuleCase[] = [
         label: 'Pasang ekstensi browser VPN gratis tak dikenal untuk melapisi Wi-Fi hotel',
         status: 'risk',
         fieldImpact:
-          'Ekstensi pihak ketiga gratis sering membaca seluruh lalu lintas browser dan berisiko mencuri cookie sesi portal kerja.',
+          'Ekstensi browser pihak ketiga gratis sering membaca seluruh lalu lintas browser dan berisiko mencuri cookie sesi portal kerja.',
         whyAndAction:
           'Mengapa berisiko: gunakan hanya klien VPN resmi perusahaan dan periksa kebersihan ekstensi browser secara berkala.',
       },
@@ -644,13 +644,12 @@ export function Lab10CaseReview({
                   onClick={() => setCurrentIdx(idx)}
                   aria-label={`Kasus nomor ${item.id}`}
                   aria-current={isCurrent ? 'step' : undefined}
-                  className={`flex min-h-[44px] items-center justify-center gap-1 rounded-md border font-mono text-xs font-bold transition-colors ${
-                    isCurrent
+                  className={`flex min-h-[44px] items-center justify-center gap-1 rounded-md border font-mono text-xs font-bold transition-colors ${isCurrent
                       ? 'border-[#0B1F3A] bg-[#0B1F3A] text-white ring-2 ring-[#047857]/40 dark:border-emerald-400 dark:bg-emerald-500 dark:text-slate-950'
                       : hasExplored
                         ? 'border-emerald-700/50 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 dark:border-emerald-500/50 dark:bg-emerald-950/40 dark:text-emerald-200'
                         : 'border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
-                  }`}
+                    }`}
                 >
                   <span>{item.id}</span>
                   {hasExplored && !isCurrent && (
@@ -702,22 +701,20 @@ export function Lab10CaseReview({
                       type="button"
                       aria-expanded={isInspected}
                       onClick={() => handleToggleOption(currentCase.id, opt.id)}
-                      className={`flex min-h-[44px] w-full items-start gap-3 rounded-lg border p-3.5 text-left transition-colors ${
-                        isInspected
+                      className={`flex min-h-[44px] w-full items-start gap-3 rounded-lg border p-3.5 text-left transition-colors ${isInspected
                           ? opt.status === 'safe'
                             ? 'border-emerald-700/60 bg-emerald-50/70 text-slate-950 dark:border-emerald-500/60 dark:bg-emerald-950/30 dark:text-slate-50'
                             : 'border-rose-700/60 bg-rose-50/70 text-slate-950 dark:border-rose-500/60 dark:bg-rose-950/30 dark:text-slate-50'
                           : 'border-slate-200 bg-slate-50/70 text-slate-900 hover:border-slate-400 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800'
-                      }`}
+                        }`}
                     >
                       <span
-                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold ${
-                          isInspected
+                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold ${isInspected
                             ? opt.status === 'safe'
                               ? 'bg-emerald-700 text-white dark:bg-emerald-500 dark:text-slate-950'
                               : 'bg-rose-700 text-white dark:bg-rose-500 dark:text-slate-950'
                             : 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200'
-                        }`}
+                          }`}
                       >
                         {letter}
                       </span>

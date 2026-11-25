@@ -330,8 +330,8 @@ export function Lab02AttackPath({
     <LabShell
       moduleId={moduleId}
       session="pagi"
-      title="Radar Deteksi Jalur Serangan (Simulasi Eksplorasi)"
-      instructions="Telusuri 4 tahapan alur kerja harian tim support PT. Sigit Adi Aman Siber (SaaS). Klik setiap titik hotspot dan uji berbagai pilihan respons secara bebas untuk melihat jalur mana yang memutus atau meloloskan serangan."
+      title="Pemetaan Jalur Serangan (Simulasi Eksplorasi)"
+      instructions="Telusuri 4 tahapan alur kerja harian tim support PT. Sigit Adi Aman Siber (SaaS). Klik setiap titik pemeriksaan dan uji berbagai pilihan respons secara bebas untuk melihat jalur mana yang memutus atau meloloskan serangan."
       exploredCount={exploredCount}
       totalCount={STAGES.length}
       isExplored={isExplored}
@@ -350,7 +350,7 @@ export function Lab02AttackPath({
                 text={
                   instructorMode
                     ? 'Klik bebas seluruh pilihan pada tiap tahap, atau buka semua penjelasan untuk membandingkan 4 tahap sekaligus di layar proyektor.'
-                    : 'Klik titik hotspot pada tiap tahap dan uji seluruh pilihan respons secara bebas untuk melihat jalur yang memutus atau meloloskan serangan.'
+                    : 'Klik titik pemeriksaan pada tiap tahap dan uji seluruh pilihan respons secara bebas untuk melihat jalur yang memutus atau meloloskan serangan.'
                 }
               />
             </span>
@@ -379,7 +379,7 @@ export function Lab02AttackPath({
         <div className="rounded-lg border border-slate-200 bg-white p-4 sm:p-5 dark:border-slate-800 dark:bg-slate-900">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-sm font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
-              Diagram Alur Kerja Support SaaS (Pilih Titik Hotspot)
+              Diagram Alur Kerja Support SaaS (Pilih Titik Pemeriksaan)
             </h3>
             <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
               {exploredCount}/{STAGES.length} tahap telah dieksplorasi
@@ -421,7 +421,7 @@ export function Lab02AttackPath({
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded border border-amber-600/40 bg-amber-100 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-amber-900 dark:border-amber-400/40 dark:bg-amber-950/70 dark:text-amber-300">
                           <AlertTriangle className="h-3 w-3" aria-hidden="true" />
-                          <span>Hotspot</span>
+                          <span>Perlu Dicek</span>
                         </span>
                       )}
                     </div>
@@ -476,7 +476,7 @@ export function Lab02AttackPath({
                 <Callout
                   title={`Vektor Serangan: ${stage.attackTitle}`}
                   variant="amber"
-                  badge="RADAR ANCAMAN"
+                  badge="VEKTOR ANCAMAN"
                   icon={
                     <AlertTriangle
                       className="h-4 w-4 text-amber-700 dark:text-amber-400"

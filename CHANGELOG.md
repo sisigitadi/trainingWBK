@@ -4,6 +4,17 @@ Semua perubahan penting pada proyek **Training IT Security Awareness and Cyberse
 
 ---
 
+## [2.4.1] - 2026-11-25
+
+### Diubah & Diperbaiki
+- **Audit & Revisi Kejernihan Istilah Teknis (`tooltipTerms.ts`, `Lab02`, `Lab06`, `Lab07`, `Lab10`, Modul 06–08, `HANDOUT_PRESENTASI.md`, `prd.md`):**
+  - Menghapus istilah non-teknis/ambigu `"titik hotspot"`, `"Hotspot"`, `"Radar Deteksi"`, dan `"RADAR ANCAMAN"` di `Lab02AttackPath.tsx` (diganti ke `"titik pemeriksaan"`, `"Perlu Dicek"`, `"Pemetaan Jalur Serangan"`, dan `"VEKTOR ANCAMAN"`) agar tidak memicu tooltip Wi-Fi seluler.
+  - Mengganti `"segmen URL"` di `Lab07UrlInspector.tsx` menjadi `"bagian URL"` dan memperjelas `"berbagi segmen jaringan"` di Modul 07.
+  - Mengganti `"port USB"` / `"port laptop kerja"` menjadi `"slot USB"` / `"slot USB laptop kerja"` di `Lab06EndpointAudit.tsx` dan Modul 06 agar tidak memicu tooltip *Port Jaringan*.
+  - Memperjelas `"ekstensi"` menjadi `"ekstensi browser"` pada Modul 07, Modul 08, dan `Lab10CaseReview.tsx`, serta memperketat pola `segmen-jaringan`, `protokol`, dan `ekstensi-file` di `tooltipTerms.ts` sehingga tidak salah memicu tooltip pada SOP insiden, ekstensi browser, maupun TLD domain.
+
+---
+
 ## [2.4.0] - 2026-11-25
 
 ### Ditambahkan

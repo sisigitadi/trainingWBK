@@ -23,7 +23,7 @@ export const modules08to10: ModuleContent[] = [
         {
           step: 1,
           title: 'Deteksi Gejala IoC',
-          action: 'Waspadai kipas CPU tinggi mendadak, kilatan PowerShell, ekstensi asing, atau MFA tak dikenal.',
+          action: 'Waspadai kipas CPU tinggi mendadak, kilatan PowerShell, ekstensi browser asing, atau MFA tak dikenal.',
           tag: 'Peran: Semua Staf',
         },
         {
@@ -151,7 +151,7 @@ export const modules08to10: ModuleContent[] = [
       }
     ],
     keyTakeaways: [
-      'Waspadai gejala dini kompromi seperti lonjakan CPU, kilatan terminal, ekstensi asing, dan prompt MFA tak dikenal.',
+      'Waspadai gejala dini kompromi seperti lonjakan CPU, kilatan terminal, ekstensi browser asing, dan prompt MFA tak dikenal.',
       'Jalankan urutan 5 menit pertama: Isolate (putus jaringan), Preserve (tahan perangkat tetap menyala offline), dan Report (lapor resmi).',
       'Jangan pernah me-restart paksa atau mengganti password dari laptop yang sedang dicurigai terinfeksi.',
       'Budaya no-blame reporting menjadikan staf yang melapor cepat sebagai penyelamat operasional SaaS dan BPR.'

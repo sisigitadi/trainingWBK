@@ -338,7 +338,7 @@ export const modules01to04: ModuleContent[] = [
         'Dari empat vektor ancaman di modul ini, titik mana dalam alur kerja harian tim SaaS yang paling berisiko membuka jalan ke jaringan BPR klien, dan kontrol sederhana apa yang bisa langsung diterapkan minggu ini?',
     },
     lab: {
-      title: 'Lab 02: Radar Deteksi Jalur Serangan',
+      title: 'Lab 02: Pemetaan Jalur Serangan',
       summary:
         'Eksplorasi empat titik alur kerja harian support SaaSCore (terima tiket, unduh lampiran, koneksi VPN klien, hingga kirim balasan) untuk melihat bagaimana tiap kontrol memutus atau meloloskan jalur serangan.',
     },

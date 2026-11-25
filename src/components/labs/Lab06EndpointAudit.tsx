@@ -262,7 +262,7 @@ const AUDIT_ITEMS: AuditItem[] = [
         variant: 'risk',
         statusLabel: 'Kondisi Berisiko',
         fieldImpact:
-          'Flashdisk dari sumber tidak tepercaya dapat membawa file jebakan atau menyuntikkan perintah berbahaya otomatis begitu terhubung ke port USB.',
+          'Flashdisk dari sumber tidak tepercaya dapat membawa file jebakan atau menyuntikkan perintah berbahaya otomatis begitu terhubung ke slot USB.',
         whyAndNextStep:
           'Hentikan pemakaian flashdisk untuk pertukaran file kerja dan beralih ke portal transfer resmi PT. Sigit Adi Aman Siber (SaaS).',
       },

@@ -1,12 +1,14 @@
 # PRD: Training IT Security Awareness and Cybersecurity Protection 2026
 
 ## 1. Tujuan & Konteks Produk
+
 - **Nama Aplikasi:** Portal BimTek Training IT Security Awareness and Cybersecurity Protection 2026
 - **Konteks Entitas Rekaan:** PT. Sigit Adi Aman Siber (SaaS), penyedia solusi Core Banking System **SaaSCore** untuk BPR mitra (digunakan sebagai contoh kasus simulasi agar pengalaman belajar terasa nyata), beserta 1 Narasumber/Instruktur (**Sigit Adi Irianto, S.Kom.** - sigitadi.id).
 - **Profil Teknis Pengguna:** Staf dan profesional IT dasar hingga menengah (Developer, QA, Implementor, Support, Infrastruktur).
 - **Objektif Utama:** Membangun aplikasi web pembelajaran eksploratif mandiri (*self-contained client-side web app*) tanpa ujian skor atau sertifikat kelulusan yang memetakan seluruh materi dan praktik sesuai jadwal Bimtek (08.30 - 16.15). Peserta membaca materi berbasis alur kerja vendor IT perbankan, meninjau diagram alur kerja tiap modul, serta mengeksplorasi 10 simulasi praktik langsung di browser tanpa instalasi tambahan.
 
 ## 2. Arsitektur & Stack Teknologi
+
 - **Framework:** React 18+ dengan TypeScript (`Vite`).
 - **Styling:** Tailwind CSS + `lucide-react` untuk ikon vektor.
 - **Tipografi:** `Plus Jakarta Sans` (teks utama) dan `JetBrains Mono` (simulasi URL, header email, *passphrase*, dan kode/log).
@@ -16,6 +18,7 @@
 - **Zero Backend Dependency:** Seluruh konten materi, skenario lab, dan glosarium balloon tooltip berjalan 100% di sisi klien (*browser*) sehingga kebal terhadap gangguan koneksi internet di ruang pelatihan.
 
 ## 3. Desain Antarmuka (UI/UX) & Mode Tampilan
+
 1. **Navigasi Berbasis Rundown (Sidebar Lipat & Drawer Mobile):**
    - **Sesi Pagi (08.30 - 12.00):** Modul 01 s.d. Modul 05.
    - **Sesi Siang (13.00 - 16.00):** Modul 06 s.d. Modul 10.
@@ -30,12 +33,13 @@
 ## 4. Spesifikasi 10 Modul & Lab Praktik Interaktif
 
 ### Blok Sesi Pagi (08.30 - 12.00)
+
 - **Modul 01: Fundamental IT Security dan Prinsip Cybersecurity**
   - *Materi & Alur Kerja:* Segitiga CIA (*Confidentiality, Integrity, Availability*) pada alur perubahan aman SaaSCore dan peran pegawai IT sebagai *Human Firewall*.
   - *Lab 01 (`Lab01CIA.tsx`):* **Klasifikasi Dampak CIA** (eksplorasi 4 skenario operasional SaaS/BPR untuk memetakan dampak CIA dan mitigasi aman).
 - **Modul 02: Pengenalan Ancaman dan Serangan Siber**
   - *Materi & Alur Kerja:* *Supply Chain Attack*, *Ransomware* (*Double Extortion*), *Credential Stuffing*, dan *Trojan/Malicious Attachment* pada alur kerja vendor.
-  - *Lab 02 (`Lab02AttackPath.tsx`):* **Radar Deteksi Jalur Serangan** (eksplorasi 4 titik alur kerja harian support SaaSCore dan kontrol pemutus rantai serangan).
+  - *Lab 02 (`Lab02AttackPath.tsx`):* **Pemetaan Jalur Serangan** (eksplorasi 4 titik pemeriksaan alur kerja harian support SaaSCore dan kontrol pemutus rantai serangan).
 - **Modul 03: Phishing Awareness dan Social Engineering**
   - *Materi & Alur Kerja:* Manipulasi psikologis (*Urgency, Fear, Authority*), *Spear Phishing* B2B, *Email Spoofing*, dan *Typosquatting* domain (`sigitadi.id` vs domain tiruan).
   - *Lab 03 (`Lab03PhishingSim.tsx`):* **Simulator Kotak Masuk & WhatsApp Jebakan** (inspeksi 5 pesan campuran dengan *hover URL preview* dan deteksi ekstensi ganda).
@@ -47,6 +51,7 @@
   - *Lab 05 (`Lab05DataHandling.tsx`):* **Simulator Pengamanan & Enkripsi Dokumen Klien** (klasifikasi berkas, pratinjau masking data dummy, enkripsi AES-256, dan alur *Out-of-Band*).
 
 ### Blok Sesi Siang (13.00 - 16.00)
+
 - **Modul 06: Endpoint Security dan Device Protection**
   - *Materi & Alur Kerja:* Bahaya *software* bajakan (*infostealer*), disiplin *OS/Browser Patching*, UAC/EDR, enkripsi disk penuh (BitLocker/FileVault), *screen lock* (`Win + L`), dan larangan USB asing.
   - *Lab 06 (`Lab06EndpointAudit.tsx`):* **Audit Mandiri Kesehatan Laptop Kerja** (daftar periksa diagnostik 8 poin kondisi aktual laptop kerja beserta rekomendasi perbaikan).
@@ -64,10 +69,12 @@
   - *Lab 10 (`Lab10CaseReview.tsx`):* **Simulasi Diskusi Kasus Terpadu Lintas Modul** (10 situasi insiden lintas modul untuk diskusi kelas tanpa nilai batas lulus).
 
 ### Blok Sesi Penutup (16.00 - 16.15)
+
 - **Rangkuman & Kartu Saku (`ClosingSummaryView.tsx`):**
   - Ringkasan progres eksplorasi modul, rangkuman **7 Kebiasaan Emas Keamanan Siber SaaS**, dan fitur cetak/simpan PDF **Kartu Saku 7 Kebiasaan Emas** melalui CSS `@media print`.
 
 ## 5. Kontrak Struktur Direktori & Kualitas Kode
+
 - `src/types/training.ts`: Definisi interface TypeScript (`ModuleContent`, `WorkflowDiagramSpec`, `WorkflowStep`, `GoldenRule`, `LabProps`).
 - `src/data/modulesData.ts` & `src/data/modules/*`: Konten lengkap 10 modul dalam bahasa Indonesia yang natural dan selaras dengan alur operasional SaaS/SaaSCore.
 - `src/components/labs/`: 10 komponen simulasi eksploratif independen (`Lab01CIA.tsx` s.d. `Lab10CaseReview.tsx`) yang berbagi hook `useLabExploration`.

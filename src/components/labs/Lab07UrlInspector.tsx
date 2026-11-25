@@ -542,7 +542,7 @@ export function Lab07UrlInspector({
       moduleId={moduleId}
       session="siang"
       title="Inspeksi URL & Struktur Domain"
-      instructions="Eksplorasi 6 URL portal login PT. Sigit Adi Aman Siber (SaaS) berikut secara bebas. Klik segmen URL mana pun untuk memahami fungsinya, lalu coba klasifikasi Resmi & Aman maupun Palsu / Berisiko untuk melihat dampaknya."
+      instructions="Eksplorasi 6 URL portal login PT. Sigit Adi Aman Siber (SaaS) berikut secara bebas. Klik bagian URL mana pun untuk memahami fungsinya, lalu coba klasifikasi Resmi & Aman maupun Palsu / Berisiko untuk melihat dampaknya."
       exploredCount={exploredCount}
       totalCount={totalUrls}
       isExplored={isExplored}
@@ -680,12 +680,12 @@ export function Lab07UrlInspector({
             <div className="mt-5 space-y-5">
               <div>
                 <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  <RichTermText text="a) Klik segmen URL di bawah untuk memeriksa perannya dan menemukan domain utama:" />
+                  <RichTermText text="a) Klik bagian URL di bawah untuk memeriksa perannya dan menemukan domain utama:" />
                 </div>
                 <div
                   className="mt-2.5 flex flex-wrap gap-2.5"
                   role="group"
-                  aria-label="Segmen struktur URL"
+                  aria-label="Bagian struktur URL"
                 >
                   {currentChallenge.tokens.map((item) => {
                     const isSelected = activeTokenName === item.token;
@@ -883,7 +883,7 @@ export function Lab07UrlInspector({
 
                 <div className="mt-3 space-y-1.5 rounded border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
                   <div className="font-mono text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
-                    Rincian Segmen URL
+                    Rincian Bagian URL
                   </div>
                   <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
                     {challenge.tokens.map((tok) => (

@@ -1298,9 +1298,17 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'protokol',
     term: 'Protokol Jaringan',
-    patterns: ['protokol'],
+    patterns: [
+      'protokol jaringan',
+      'protokol SSL/TLS',
+      'protokol HTTPS',
+      'Protokol HTTP',
+      'protokol komunikasi',
+      'protokol terenkripsi',
+      'Protokol Tanpa Enkripsi',
+    ],
     meaning:
-      'Aturan baku cara perangkat dan aplikasi bertukar data atau menjalankan prosedur kerja tertentu (seperti HTTPS, SSH, atau protokol tanggap insiden).',
+      'Aturan baku cara perangkat dan aplikasi bertukar data di jaringan komputer (seperti HTTPS, TLS, SSH, atau VPN).',
     context:
       'Memilih protokol terenkripsi (HTTPS/SSH/VPN) melindungi data yang melintas di jaringan dari penyadapan.',
   },
@@ -1316,11 +1324,11 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'segmen-jaringan',
     term: 'Segmen Jaringan',
-    patterns: ['segmen jaringan', 'segmen'],
+    patterns: ['segmen jaringan'],
     meaning:
       'Bagian terpisah dalam jaringan komputer yang disekat untuk membatasi akses dan menahan pergerakan serangan antar-area sistem.',
     context:
-      'Pemisahan segmen mencegah perangkat di jaringan tamu atau kantor menjangkau langsung server database produksi.',
+      'Pemisahan segmen jaringan mencegah perangkat di jaringan tamu atau kantor menjangkau langsung server database produksi.',
   },
   {
     id: 'topologi-jaringan',
@@ -1916,7 +1924,7 @@ export const TOOLTIP_TERMS: TooltipTerm[] = [
   {
     id: 'ekstensi-file',
     term: 'Ekstensi Berkas (File Extension)',
-    patterns: ['ekstensi file', 'ekstensi berkas', 'ekstensi'],
+    patterns: ['ekstensi file', 'ekstensi berkas', 'ekstensi lampiran', 'nama ekstensi'],
     meaning:
       'Akhiran setelah tanda titik terakhir pada nama file (seperti .pdf, .xlsx, .exe) yang menentukan jenis berkas dan cara sistem membukanya.',
     context:
